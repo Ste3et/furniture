@@ -31,7 +31,7 @@ public class main extends JavaPlugin {
 	
 	@Override
 	public void onEnable(){
-		getCommand("equipment").setExecutor(new command());
+		getCommand("Furniture").setExecutor(new command());
 		Main = this;
 		this.itemse = new ItemsEquipment();
 		getServer().getPluginManager().registerEvents(new OnInteract(), this);
