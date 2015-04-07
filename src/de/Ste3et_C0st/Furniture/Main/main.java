@@ -86,13 +86,7 @@ public class main extends JavaPlugin {
         }
     }
 	
-	//NORDEN IST KOMPLETT
-	
 	public static Location getNew(Location loc, BlockFace b, Double z, Double x){
-		//WESTEN FALSCH HERUM
-		//NORDEN IST RICHTIG
-		//OSTEN FALSCH HERUM
-		//Süden Falschherum
 		Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 		if(b.equals(BlockFace.NORTH)){
 			l.add(x,0,z);
@@ -110,11 +104,8 @@ public class main extends JavaPlugin {
 		return l;
 	}
 	
+	
 	public static EulerAngle getNewEuler(BlockFace b, Double z, Double x,Double y){
-		//!! SÜDEN GEHT !!
-		//!! NORDEN GEHT !!
-		//!! OSTEN GEHT !!
-		//!! Westen FALSCHHERUM !!
 		EulerAngle l = new EulerAngle(0, 0, 0);
 		if(b.equals(BlockFace.NORTH)){l = new EulerAngle(x,y,-z);
 		}else if(b.equals(BlockFace.SOUTH)){l = new EulerAngle(-x,y,z);

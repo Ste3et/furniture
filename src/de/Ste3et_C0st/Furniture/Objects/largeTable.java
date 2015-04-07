@@ -17,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
@@ -32,79 +31,126 @@ public class largeTable implements Listener {
 	public largeTable(Location loc, Plugin plugin){
 		BlockFace b = Utils.yawToFace(loc.getYaw());
 		Location location = Utils.getCenter(loc.getBlock().getLocation());
-		plugin.getServer().broadcastMessage(b.name());
-		
-		//East WORK
-		//SOUT Z WORK
-		location = main.getNew(location, b, 0.0, 0.0);
-		
-		Double d = .0;
-		//Glass Platte
-		for(int i = 0; i<=2;i++){
-			Double winkel = 1.57;
-			Location l = new Location(loc.getWorld(), location.getX()+d, location.getY()-1.0, location.getZ());
-			l.setYaw(0);
-			ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setVisible(false);
-			as.setGravity(false);
+		float yaw = Utils.FaceToYaw(b);
+		location = main.getNew(location, b, 0.1, 0.28);
+		location.add(0,.2,0);
+		Double winkel = 1.57;
+		for(int x=1; x<=3;x++){
+			Location l = null;
+			l = main.getNew(location, b, 0.0, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			ArmorStand as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
 			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
 			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			this.armorList.add(as);
-			this.location.add(as.getLocation());
-			l = main.getNew(l, b, 0.0, -0.62);
-			as = (ArmorStand) loc.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setVisible(false);
-			as.setGravity(false);
+			this.location.add(l.add(0,.5,0).getBlock().getLocation());
+			armorList.add(as);
+			
+			l = main.getNew(location, b, 0.63, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
 			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
 			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			this.armorList.add(as);
-			this.location.add(as.getLocation());
-			l = main.getNew(l, b, 0.0, -0.62);
-			as = (ArmorStand) loc.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setVisible(false);
-			as.setGravity(false);
+			this.location.add(l.add(0,.5,0).getBlock().getLocation());
+			armorList.add(as);
+			
+			l = main.getNew(location, b, 1.26, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
 			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
 			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			d+=.62;
-			this.armorList.add(as);
-			this.location.add(as.getLocation());
+			this.location.add(l.add(0,.5,0).getBlock().getLocation());
+			
+			armorList.add(as);
 		}
 		
-		Location middle = Utils.getCenter(armorList.get(4).getLocation()).add(1, -.88, -1.0);
-		middle.setYaw(0);
-		ArmorStand as = (ArmorStand) middle.getWorld().spawnEntity(middle, EntityType.ARMOR_STAND);
+		/*Teller {
+		
+			###
+			###
+			###
+			
+			3;7;5;1
+		}*/
+		
+		Location middle = Utils.getCenter(armorList.get(0).getLocation());
+		middle.add(0, -.9, 0);
+		Location feet1 = main.getNew(middle, b, -.2, .1);
+		Location feet2 = main.getNew(middle, b, -.2, -1.3);
+		Location feet3 = main.getNew(middle, b, 1.1, .1);
+		Location feet4 = main.getNew(middle, b, 1.1, -1.3);
+		
+		double hight = .68;
+		
+		Location t1 = new Location(middle.getWorld(), this.location.get(3).getX(), this.location.get(3).getY()+hight, this.location.get(3).getZ());
+		Location t2 = new Location(middle.getWorld(), this.location.get(7).getX(), this.location.get(7).getY()+hight, this.location.get(7).getZ());
+		Location t3 = new Location(middle.getWorld(), this.location.get(5).getX(), this.location.get(5).getY()+hight, this.location.get(5).getZ());
+		Location t4 = new Location(middle.getWorld(), this.location.get(1).getX(), this.location.get(1).getY()+hight, this.location.get(1).getZ());
+		
+		t1 =main.getNew(t1, b, -.05D, .37D);
+		t2 =main.getNew(t2, b, -.13D, -.32D);
+		t3 =main.getNew(t3, b, .55D, -.38D);
+		t4 =main.getNew(t4, b, .62D, .30D);
+		
+		float yaw1 = yaw;
+		float yaw2 = yaw1-90;
+		float yaw3 = yaw2-90;
+		float yaw4 = yaw3-90;
+		
+		t1.setYaw(yaw1);
+		t2.setYaw(yaw2);
+		t3.setYaw(yaw3);
+		t4.setYaw(yaw4);
+		
+		feet1.setYaw(yaw);
+		feet2.setYaw(yaw);
+		feet3.setYaw(yaw);
+		feet4.setYaw(yaw);
+		
+		
+		ArmorStand as = (ArmorStand) feet1.getWorld().spawnEntity(feet1, EntityType.ARMOR_STAND);
 		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
 		as.setItemInHand(new ItemStack(Material.BONE));
-		as.setGravity(false);
-		as.setVisible(false);
 		this.armorList.add(as);
 		
-		middle = Utils.getCenter(armorList.get(4).getLocation()).add(1.5, -.88, 1.45);
-		middle.setYaw(180);
-		as = (ArmorStand) middle.getWorld().spawnEntity(middle, EntityType.ARMOR_STAND);
+		as = (ArmorStand) feet2.getWorld().spawnEntity(feet2, EntityType.ARMOR_STAND);
 		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
 		as.setItemInHand(new ItemStack(Material.BONE));
-		as.setGravity(false);
-		as.setVisible(false);
 		this.armorList.add(as);
 		
-		middle = Utils.getCenter(armorList.get(4).getLocation()).add(1.5, -.88, 0);
-		middle.setYaw(180);
-		as = (ArmorStand) middle.getWorld().spawnEntity(middle, EntityType.ARMOR_STAND);
+		as = (ArmorStand) feet3.getWorld().spawnEntity(feet3, EntityType.ARMOR_STAND);
 		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
 		as.setItemInHand(new ItemStack(Material.BONE));
-		as.setGravity(false);
-		as.setVisible(false);
 		this.armorList.add(as);
 		
-		middle = Utils.getCenter(armorList.get(4).getLocation()).add(1, -.88, .45);
-		middle.setYaw(0);
-		as = (ArmorStand) middle.getWorld().spawnEntity(middle, EntityType.ARMOR_STAND);
+		as = (ArmorStand) feet4.getWorld().spawnEntity(feet4, EntityType.ARMOR_STAND);
 		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
 		as.setItemInHand(new ItemStack(Material.BONE));
-		as.setGravity(false);
-		as.setVisible(false);
 		this.armorList.add(as);
+		
+		as = (ArmorStand) t1.getWorld().spawnEntity(t1, EntityType.ARMOR_STAND);
+		as.setRightArmPose(new EulerAngle(0,.0,.0));
+		this.armorList.add(as);
+		
+		as = (ArmorStand) t2.getWorld().spawnEntity(t2, EntityType.ARMOR_STAND);
+		as.setRightArmPose(new EulerAngle(0,.0,.0));
+		this.armorList.add(as);
+		
+		as = (ArmorStand) t3.getWorld().spawnEntity(t3, EntityType.ARMOR_STAND);
+		as.setRightArmPose(new EulerAngle(0,.0,.0));
+		this.armorList.add(as);
+		
+		as = (ArmorStand) t4.getWorld().spawnEntity(t4, EntityType.ARMOR_STAND);
+		as.setRightArmPose(new EulerAngle(0,.0,.0));
+		this.armorList.add(as);
+		
+		for(Entity e : armorList){
+			ArmorStand armor = (ArmorStand) e;
+			armor.setVisible(false);
+			armor.setGravity(false);
+		}
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		main.getInstance().tische2.add(this);
@@ -159,6 +205,32 @@ public class largeTable implements Listener {
 							player.getInventory().setItem(player.getInventory().getHeldItemSlot(), is);
 							player.updateInventory();
 						}
+					}else{
+						Integer i = armorList.size();
+						if(armorList.get(3).equals(e.getRightClicked())){
+							i-=4;
+							ArmorStand as = (ArmorStand) armorList.get(i);
+							if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
+							as.setItemInHand(is);
+						}
+						if(armorList.get(7).equals(e.getRightClicked())){
+							i-=3;
+							ArmorStand as = (ArmorStand) armorList.get(i);
+							if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
+							as.setItemInHand(is);
+						}
+						if(armorList.get(5).equals(e.getRightClicked())){
+							i-=2;
+							ArmorStand as = (ArmorStand) armorList.get(i);
+							if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
+							as.setItemInHand(is);
+						}
+						if(armorList.get(1).equals(e.getRightClicked())){
+							i-=1;
+							ArmorStand as = (ArmorStand) armorList.get(i);
+							if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
+							as.setItemInHand(is);
+						}
 					}
 				}
 			}
@@ -180,12 +252,13 @@ public class largeTable implements Listener {
 	public void onWaterFlow(BlockFromToEvent e){
 		Location locTo = e.getToBlock().getLocation();
 		if(location!=null && !location.isEmpty()){
-			if(location.contains(locTo) || location.contains(locTo.add(0,1,0))){
+			if(location.contains(locTo) || location.contains(locTo.add(0,-0.5,0))){
 				e.setCancelled(true);
 			}
 		}
 	}
 	
+	/*
 	@EventHandler
 	public void onHit(PlayerMoveEvent e){
 		Player p = e.getPlayer();
@@ -195,4 +268,5 @@ public class largeTable implements Listener {
 			}
 		}
 	}
+	*/
 }

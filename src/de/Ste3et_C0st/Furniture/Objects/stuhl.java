@@ -16,9 +16,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
@@ -29,7 +29,6 @@ public class stuhl implements Listener {
 	Location loc = null;
 	public stuhl(Location loc, Plugin plugin){
 		this.loc = loc.getBlock().getLocation();
-		loc.add(1, 0, 0);
 		BlockFace b = Utils.yawToFace(loc.getYaw()).getOppositeFace();
 		Location center = Utils.getCenter(loc);
 		Location sitz = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
@@ -93,13 +92,13 @@ public class stuhl implements Listener {
 		feet1 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 		feet1.add(0,-1.1,0);
 		feet1 = main.getNew(feet1, b, -.25, .0);
-	
+		feet1.setYaw(Utils.FaceToYaw(b));
 		as = (ArmorStand) loc.getWorld().spawnEntity(feet1, EntityType.ARMOR_STAND);
 		as.setBasePlate(false);
 		as.setGravity(false);
 		as.setVisible(false);
 		as.setHelmet(new ItemStack(Material.TRAP_DOOR));
-		as.setHeadPose(main.getNewEuler(b, .0, 1.55, .0));
+		as.setHeadPose(new EulerAngle(1.57, .0, .0));
 		armorList.add(as);
 		main.getInstance().stuehle.add(this);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -117,6 +116,7 @@ public class stuhl implements Listener {
 		}
 	}
 	
+	/*
 	@EventHandler
 	public void onHit(PlayerMoveEvent e){
 		Player p = e.getPlayer();
@@ -126,6 +126,7 @@ public class stuhl implements Listener {
 			}
 		}
 	}
+	*/
 	
 	@EventHandler
 	public void onInteract(PlayerInteractAtEntityEvent e){

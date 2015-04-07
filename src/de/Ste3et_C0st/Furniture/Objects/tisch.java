@@ -12,7 +12,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -32,13 +31,12 @@ public class tisch implements Listener {
 	public tisch(Location loc, Plugin plugin){
 		Location middle1 = Utils.getCenter(loc);
 		Location middle2 = Utils.getCenter(loc);
-		this.loc = middle1.getBlock().getLocation().add(1,0,0);
-			ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(middle1.add(1,-2.1,0), EntityType.ARMOR_STAND);
+			ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(middle1.add(0,-2.1,0), EntityType.ARMOR_STAND);
 			as.setHelmet(new ItemStack(Material.WOOD_PLATE));
 			as.setVisible(false);
 			as.setGravity(false);
 			armorList.add(as);
-			as = (ArmorStand) loc.getWorld().spawnEntity(middle2.add(1,-1.05,0), EntityType.ARMOR_STAND);
+			as = (ArmorStand) loc.getWorld().spawnEntity(middle2.add(0,-1.05,0), EntityType.ARMOR_STAND);
 			as.setHelmet(new ItemStack(Material.TRAP_DOOR));
 			as.setVisible(false);
 			as.setGravity(false);
@@ -66,14 +64,14 @@ public class tisch implements Listener {
 		return this.loc;
 	}
 	
-	
+	/*
 	@EventHandler
 	public void onWaterFlow(BlockFromToEvent e){
 		Location locTo = e.getToBlock().getLocation();
 		if(loc!=null && locTo.equals(loc)){
 			e.setCancelled(true);
 		}
-	}
+	}*/
 	
 	@EventHandler
 	public void onHit(PlayerMoveEvent e){

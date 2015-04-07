@@ -17,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -31,10 +30,10 @@ public class laterne implements Listener {
 	public laterne(Location loc, Plugin plugin){
 			this.loc = loc;
 			Location center = Utils.getCenter(loc);
-			center.add(1,0,0);
 			b = center.getWorld().getBlockAt(center);
 			b.setType(Material.TORCH);
 			Location obsidian = center;
+			Bukkit.getServer().broadcastMessage(obsidian.getX() + ";" + obsidian.getY() + ";" + obsidian.getZ());
 			obsidian.add(0D, -2.2, 0D);
 			ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(obsidian, EntityType.ARMOR_STAND);
 			as.setBasePlate(false);
@@ -110,6 +109,7 @@ public class laterne implements Listener {
 		}
 	}
 	
+	/*
 	@EventHandler
 	public void onHit(PlayerMoveEvent e){
 		Player p = e.getPlayer();
@@ -120,6 +120,7 @@ public class laterne implements Listener {
 			}
 		}
 	}
+	*/
 	
 	public void delete(){
 		armorList.get(0).getLocation().getWorld().dropItem(b.getLocation(), main.getInstance().itemse.Laterne);

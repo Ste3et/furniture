@@ -2,6 +2,7 @@ package de.Ste3et_C0st.Furniture.Main;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.util.EulerAngle;
 
 public class Utils {
 
@@ -11,13 +12,19 @@ public class Utils {
             return axis[Math.round(yaw / 90f) & 0x3];
     }
     
-    public static Float FaceToYaw(BlockFace face) {
-    	Float yaw = 0F;
-        if(face.equals(BlockFace.NORTH)){yaw = 0f;}
-        if(face.equals(BlockFace.WEST)){yaw = 270f;}
-        if(face.equals(BlockFace.SOUTH)){yaw = 180f;}
-        if(face.equals(BlockFace.EAST)){yaw = 90f;}
-        return yaw;
+    public static int FaceToYaw(final BlockFace face) {
+        switch (face) {
+            case NORTH: return 0;
+            case EAST: return 90;
+            case SOUTH: return 180;
+            case WEST: return -90;
+            default: return 0;
+        }
+    }
+    
+    //NORDEN GEHT
+    public static EulerAngle FaceEuler(final BlockFace face, Double x, Double y, Double z) {
+    	return new EulerAngle(x,y,z);
     }
     
     public static Location getCenter(Location loc) {
@@ -29,7 +36,7 @@ public class Utils {
      
     private static double getRelativeCoord(int i) {
         double d = i;
-        d = d < 0 ? d - .5 : d + .5;
+        if(d<0){d+=.5;}else{d+=.5;}
         return d;
     }
 }

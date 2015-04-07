@@ -31,7 +31,7 @@ public class OnInteract implements Listener {
 		if(!is.getItemMeta().hasDisplayName()){return;}
 		if(e.getClickedBlock()==null){return;}
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
-		Location location = e.getClickedBlock().getLocation();
+		Location location = new Location(p.getWorld(), e.getClickedBlock().getLocation().getBlockX(), e.getClickedBlock().getLocation().getBlockY(), e.getClickedBlock().getLocation().getBlockZ());
 		location.setYaw(p.getLocation().getYaw());
 		location.setY(location.getY() + 1);
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("sofa")){
