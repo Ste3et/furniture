@@ -64,6 +64,10 @@ public class main extends JavaPlugin {
 		grinderRecipe = new ShapedRecipe(itemse.tisch).shape("0#0", "0E0", "0+0").setIngredient('#', Material.TRAP_DOOR).
 		setIngredient('E', Material.STICK).setIngredient('+', Material.WOOD_STEP);
 		getServer().addRecipe(grinderRecipe);
+		
+		grinderRecipe = new ShapedRecipe(itemse.tisch2).shape("###", "###", "E0E").setIngredient('#', Material.STAINED_GLASS_PANE).
+		setIngredient('E', Material.BONE);
+		getServer().addRecipe(grinderRecipe);
 	}
 	
 	public static String getCardinalDirection(Player player) {

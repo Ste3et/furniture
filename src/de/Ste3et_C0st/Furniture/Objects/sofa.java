@@ -7,11 +7,9 @@ import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,20 +27,19 @@ public class sofa implements Listener {
 	private List<Entity> armorList = new ArrayList<Entity>();
 	private List<Entity> sitz = new ArrayList<Entity>();
 	private List<Location> location = new ArrayList<Location>();
+	
 	private ItemStack is;
 	private Double place;
 	private short color = 0;
+	
 	public sofa(Location loc, Integer lengt, Plugin plugin){
 		this.place = 0.2;
 		is = new ItemStack(Material.CARPET);
 		is.setDurability(color);
-		BlockFace playerLookingDirection = Utils.yawToFace(loc.getYaw()).getOppositeFace();
-		create(loc, lengt, playerLookingDirection, loc.getYaw(), plugin);
-	}
-	
-	public void create(Location loc, Integer lengt, BlockFace b, Float yaw, Plugin plugin){
+		BlockFace b = Utils.yawToFace(loc.getYaw()).getOppositeFace();
+
 		loc = loc.getBlock().getLocation();
-		loc.setYaw(yaw);
+		loc.setYaw(Utils.FaceToYaw(b));
 		Integer x = (int) loc.getX();
 		Integer y = (int) loc.getY();
 		Integer z = (int) loc.getZ();
@@ -53,20 +50,17 @@ public class sofa implements Listener {
 		if(b.equals(BlockFace.WEST)){loc = main.getNew(loc, b, .0, -1.0);}
 		if(b.equals(BlockFace.SOUTH)){loc = main.getNew(loc, b, -1.0, -1.0);}
 		if(b.equals(BlockFace.EAST)){loc = main.getNew(loc, b, -1.0, .0);}
-			World w = loc.getWorld();
 			Location looking = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() -1.4 , loc.getBlockZ());
 			Location feet1 = main.getNew(looking, b, place, .2D);
 			Location feet2 = main.getNew(looking, b, place, lengt.doubleValue()-.2D);
 			Location feet3 = main.getNew(looking, b, place + .5, .2D);
 			Location feet4 = main.getNew(looking, b, place + .5, lengt.doubleValue()-.2D);
-			ArmorStand armor1 = (ArmorStand) w.spawnEntity(feet1, EntityType.ARMOR_STAND);
-			ArmorStand armor2 = (ArmorStand) w.spawnEntity(feet2, EntityType.ARMOR_STAND);
-			ArmorStand armor3 = (ArmorStand) w.spawnEntity(feet3, EntityType.ARMOR_STAND);
-			ArmorStand armor4 = (ArmorStand) w.spawnEntity(feet4, EntityType.ARMOR_STAND);
-			armor1.setHelmet(new ItemStack(Material.LEVER));
-			armor2.setHelmet(new ItemStack(Material.LEVER));
-			armor3.setHelmet(new ItemStack(Material.LEVER));
-			armor4.setHelmet(new ItemStack(Material.LEVER));
+			
+			Utils.setArmorStand(feet1, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(feet2, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(feet3, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(feet4, null, new ItemStack(Material.LEVER), false, armorList, null);
+
 			Location carpetHight = new Location(looking.getWorld(), loc.getBlockX(), loc.getBlockY() -1 , loc.getBlockZ());
 			carpetHight.setYaw(Utils.FaceToYaw(b));
 			//sitz
@@ -75,29 +69,17 @@ public class sofa implements Listener {
 			float facing = Utils.FaceToYaw(b);
 			for(Double i = .0; i<=lengt; i+=0.65){
 				//SITZ
-				
 				location.add(main.getNew(carpetHight, b, place,(double) d).getBlock().getLocation().add(0, 1, 0));
 				Location carpet = main.getNew(carpetHight, b, place,(double) d);
 				carpet.setYaw(facing);
-				ArmorStand armorcarpet = (ArmorStand) w.spawnEntity(carpet, EntityType.ARMOR_STAND);
-				armorcarpet.setHelmet(is);
-				armorList.add(armorcarpet);
-				sitz.add(armorcarpet);
-				
+				ArmorStand as = Utils.setArmorStand(carpet, null, is, false, armorList, null);
+				sitz.add(as);
 				//OBERER TEIL
-				
-				
 				Location location = main.getNew(carpetHight, b, place-.25,(double) d);
 				location.setYaw(facing);
-				armorcarpet = (ArmorStand) w.spawnEntity(location, EntityType.ARMOR_STAND);
-				armorcarpet.setHeadPose(new EulerAngle(1.57, .0, .0));
-				armorcarpet.setHelmet(is);
-				armorList.add(armorcarpet);
-				
+				Utils.setArmorStand(location, new EulerAngle(1.57, .0, .0), is, false, armorList, null);
 				if(d<=0D){d = 0.00;}
 				d+=.58;
-				
-				
 			}
 			Float yaw1= facing;
 			Float yaw2= facing;
@@ -105,28 +87,11 @@ public class sofa implements Listener {
 			last.setYaw(yaw1+90);
 			Location first = main.getNew(new Location(loc.getWorld(), loc.getX(), last.getY(), loc.getZ()), b, place+.25, 0.07D);
 			first.setYaw(yaw2-90);
-			ArmorStand leftCarpet = (ArmorStand) w.spawnEntity(first.add(0,-.05,0), EntityType.ARMOR_STAND);
-			ArmorStand RightCarpet = (ArmorStand) w.spawnEntity(last.add(0,-.05,0), EntityType.ARMOR_STAND);
-			leftCarpet.setHelmet(is);
-			RightCarpet.setHelmet(is);
-			leftCarpet.setHeadPose(new EulerAngle(1.57, 0.0, 0.0));
-			RightCarpet.setHeadPose(new EulerAngle(1.57, 0.0, 0.0));
 			
-			armorList.add(leftCarpet);
-			armorList.add(RightCarpet);
-			armorList.add(armor1);
-			armorList.add(armor2);
-			armorList.add(armor3);
-			armorList.add(armor4);
-			for(Entity as : armorList){
-				ArmorStand a = (ArmorStand) as;
-				a.setVisible(false);
-				a.setGravity(false);
-				a.setBasePlate(false);
-			}
+			Utils.setArmorStand(first.add(0,-.05,0), new EulerAngle(1.57, .0, .0), is, false, armorList, null);
+			Utils.setArmorStand(last.add(0,-.05,0), new EulerAngle(1.57, .0, .0), is, false, armorList, null);
 			plugin.getServer().getPluginManager().registerEvents(this, plugin);
 			main.getInstance().sofas.add(this);
-		
 	}
 	
 	@EventHandler
@@ -150,12 +115,14 @@ public class sofa implements Listener {
 		}
 	}*/
 	
-	public void delete(){
-		armorList.get(0).getLocation().getWorld().dropItem(armorList.get(0).getLocation().getBlock().getLocation().add(0, 1, 0), main.getInstance().itemse.Sofa);
-		for(Entity entity : armorList){
-			ArmorStand as = (ArmorStand) entity;
-			entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
-			entity.remove();
+	public void delete(Boolean b){
+		if(b){
+			armorList.get(0).getLocation().getWorld().dropItem(armorList.get(0).getLocation().getBlock().getLocation().add(0, 1, 0), main.getInstance().itemse.Sofa);
+			for(Entity entity : armorList){
+				ArmorStand as = (ArmorStand) entity;
+				entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
+				entity.remove();
+			}
 		}
 		location.clear();
 		armorList.clear();
@@ -212,7 +179,7 @@ public class sofa implements Listener {
 		if(e.getDamager() instanceof Player){
 			if(e.getEntity() instanceof ArmorStand){
 				if(armorList.contains(e.getEntity())){
-					delete();
+					delete(true);
 				}
 			}
 		}

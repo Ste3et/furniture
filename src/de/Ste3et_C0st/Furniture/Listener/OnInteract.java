@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Listener;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,37 +32,64 @@ public class OnInteract implements Listener {
 		if(!is.getItemMeta().hasDisplayName()){return;}
 		if(e.getClickedBlock()==null){return;}
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
+		Integer hand = p.getInventory().getHeldItemSlot();
+		Integer amount = is.getAmount();
 		Location location = new Location(p.getWorld(), e.getClickedBlock().getLocation().getBlockX(), e.getClickedBlock().getLocation().getBlockY(), e.getClickedBlock().getLocation().getBlockZ());
 		location.setYaw(p.getLocation().getYaw());
 		location.setY(location.getY() + 1);
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("sofa")){
 			if(main.getInstance().canPlace(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 3)){
 				new sofa(location, 3, main.getInstance());
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					is.setAmount(amount);
+					p.getInventory().setItem(hand, is);
+					p.updateInventory();
+				}
 				return;
 			}
 		}
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("laterne")){
 			if(main.getInstance().canPlace(p, location, null, null)){
-				new laterne(location, main.getInstance());
+				new laterne(location, main.getInstance(), true);
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					is.setAmount(amount);
+					p.getInventory().setItem(hand, is);
+					p.updateInventory();
+				}
 				return;
 			}
 		}
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("stuhl")){
 			if(main.getInstance().canPlace(p, location, null, null)){
 				new stuhl(location, main.getInstance());
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					is.setAmount(amount);
+					p.getInventory().setItem(hand, is);
+					p.updateInventory();
+				}
 				return;
 			}
 		}
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("tisch")){
 			if(main.getInstance().canPlace(p, location, null, null)){
-				new tisch(location, main.getInstance());
+				new tisch(location, main.getInstance(), null);
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					is.setAmount(amount);
+					p.getInventory().setItem(hand, is);
+					p.updateInventory();
+				}
 				return;
 			}
 		}
 		
 		if(ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("tisch2")){
 			if(main.getInstance().canPlace(p, location, null, null)){
-				new largeTable(location, main.getInstance());
+				new largeTable(location, main.getInstance(), null, null);
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					is.setAmount(amount);
+					p.getInventory().setItem(hand, is);
+					p.updateInventory();
+				}
 				return;
 			}
 		}

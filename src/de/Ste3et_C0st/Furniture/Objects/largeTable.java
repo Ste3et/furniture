@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Effect;
@@ -10,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,71 +28,82 @@ public class largeTable implements Listener {
 
 	List<Entity> armorList = new ArrayList<Entity>();
 	List<Location> location = new ArrayList<Location>();
-	public largeTable(Location loc, Plugin plugin){
-		BlockFace b = Utils.yawToFace(loc.getYaw());
-		Location location = Utils.getCenter(loc.getBlock().getLocation());
-		float yaw = Utils.FaceToYaw(b);
-		location = main.getNew(location, b, 0.1, 0.28);
-		location.add(0,.2,0);
-		Double winkel = 1.57;
-		for(int x=1; x<=3;x++){
-			Location l = null;
-			l = main.getNew(location, b, 0.0, x*-.63);
-			l.add(0,-1.2,0);
-			l.setYaw(yaw);
-			ArmorStand as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
-			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			this.location.add(l.add(0,.5,0).getBlock().getLocation());
-			armorList.add(as);
-			
-			l = main.getNew(location, b, 0.63, x*-.63);
-			l.add(0,-1.2,0);
-			l.setYaw(yaw);
-			as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
-			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			this.location.add(l.add(0,.5,0).getBlock().getLocation());
-			armorList.add(as);
-			
-			l = main.getNew(location, b, 1.26, x*-.63);
-			l.add(0,-1.2,0);
-			l.setYaw(yaw);
-			as = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-			as.setHelmet(new ItemStack(Material.STAINED_GLASS_PANE));
-			as.setHeadPose(new EulerAngle(winkel, 0, 0));
-			this.location.add(l.add(0,.5,0).getBlock().getLocation());
-			
-			armorList.add(as);
+	Location loc = null;
+	BlockFace b = null;
+	
+	public Location getLocation(){return this.loc;}
+	public BlockFace getBlockFace(){return this.b;}
+	
+	public largeTable(Location loc, Plugin plugin, List<ItemStack> iL, HashMap<Integer, ItemStack> tellerItems){
+		this.loc = loc;
+		this.b = Utils.yawToFace(loc.getYaw());
+		ItemStack IS1 =null;
+		ItemStack IS2 =null;
+		ItemStack IS3 =null;
+		ItemStack IS4 =null;
+		
+		if(tellerItems != null){
+			if(tellerItems.containsKey(0)){IS1=tellerItems.get(0);}
+			if(tellerItems.containsKey(1)){IS2=tellerItems.get(1);}
+			if(tellerItems.containsKey(2)){IS3=tellerItems.get(2);}
+			if(tellerItems.containsKey(3)){IS4=tellerItems.get(3);}
 		}
 		
-		/*Teller {
-		
-			###
-			###
-			###
+		Location location = Utils.getCenter(loc.getBlock().getLocation());
+		float yaw = Utils.FaceToYaw(this.b);
+		location = main.getNew(location, this.b, 0.1, 0.28);
+		location.add(0,.2,0);
+		Double winkel = 1.57;
+		int iTems = 0;
+		for(int x=1; x<=3;x++){
+			Location l = null;
+			l = main.getNew(location, this.b, 0.0, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			ItemStack iTemStack_1 = new ItemStack(Material.STAINED_GLASS_PANE);
+			ItemStack iTemStack_2 = new ItemStack(Material.STAINED_GLASS_PANE);
+			ItemStack iTemStack_3 = new ItemStack(Material.STAINED_GLASS_PANE);
+			if(iL!=null&&!iL.isEmpty()){
+				if(iL.get(iTems)!=null){
+					iTemStack_1=iL.get(iTems);
+					iTems++;
+				}
+				if(iL.get(iTems)!=null){
+					iTemStack_2=iL.get(iTems);
+					iTems++;
+				}
+				if(iL.get(iTems)!=null){
+					iTemStack_3=iL.get(iTems);
+					iTems++;
+				}
+			}
 			
-			3;7;5;1
-		}*/
-		
+			Utils.setArmorStand(l, new EulerAngle(winkel, 0, 0), iTemStack_1, false, armorList,this.location);
+			l = main.getNew(location, this.b, 0.63, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			Utils.setArmorStand(l, new EulerAngle(winkel, 0, 0), iTemStack_2, false, armorList,this.location);
+			l = main.getNew(location, this.b, 1.26, x*-.63);
+			l.add(0,-1.2,0);
+			l.setYaw(yaw);
+			Utils.setArmorStand(l, new EulerAngle(winkel, 0, 0), iTemStack_3, false, armorList,this.location);
+		}
+
 		Location middle = Utils.getCenter(armorList.get(0).getLocation());
+		Location mitteTisch = Utils.getCenter(armorList.get(4).getLocation().getBlock().getLocation());
 		middle.add(0, -.9, 0);
-		Location feet1 = main.getNew(middle, b, -.2, .1);
-		Location feet2 = main.getNew(middle, b, -.2, -1.3);
-		Location feet3 = main.getNew(middle, b, 1.1, .1);
-		Location feet4 = main.getNew(middle, b, 1.1, -1.3);
+		Location feet1 = main.getNew(middle, this.b, -.2, .1);
+		Location feet2 = main.getNew(middle, this.b, -.2, -1.3);
+		Location feet3 = main.getNew(middle, this.b, 1.1, .1);
+		Location feet4 = main.getNew(middle, this.b, 1.1, -1.3);
 		
-		double hight = .68;
 		
-		Location t1 = new Location(middle.getWorld(), this.location.get(3).getX(), this.location.get(3).getY()+hight, this.location.get(3).getZ());
-		Location t2 = new Location(middle.getWorld(), this.location.get(7).getX(), this.location.get(7).getY()+hight, this.location.get(7).getZ());
-		Location t3 = new Location(middle.getWorld(), this.location.get(5).getX(), this.location.get(5).getY()+hight, this.location.get(5).getZ());
-		Location t4 = new Location(middle.getWorld(), this.location.get(1).getX(), this.location.get(1).getY()+hight, this.location.get(1).getZ());
+		double hight = .67;
 		
-		t1 =main.getNew(t1, b, -.05D, .37D);
-		t2 =main.getNew(t2, b, -.13D, -.32D);
-		t3 =main.getNew(t3, b, .55D, -.38D);
-		t4 =main.getNew(t4, b, .62D, .30D);
+		Location t1 = main.getNew(mitteTisch, this.b, -.95, .4).add(0,hight,0);
+		Location t2 = main.getNew(mitteTisch, this.b, -.4, -.92).add(0,hight,0);
+		Location t3 = main.getNew(mitteTisch, this.b, .92, -.36).add(0,hight,0);
+		Location t4 = main.getNew(mitteTisch, this.b, .4, .92).add(0,hight,0);
 		
 		float yaw1 = yaw;
 		float yaw2 = yaw1-90;
@@ -108,43 +119,15 @@ public class largeTable implements Listener {
 		feet2.setYaw(yaw);
 		feet3.setYaw(yaw);
 		feet4.setYaw(yaw);
-		
-		
-		ArmorStand as = (ArmorStand) feet1.getWorld().spawnEntity(feet1, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
-		as.setItemInHand(new ItemStack(Material.BONE));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) feet2.getWorld().spawnEntity(feet2, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
-		as.setItemInHand(new ItemStack(Material.BONE));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) feet3.getWorld().spawnEntity(feet3, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
-		as.setItemInHand(new ItemStack(Material.BONE));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) feet4.getWorld().spawnEntity(feet4, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(-1.75, 0, 0));
-		as.setItemInHand(new ItemStack(Material.BONE));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) t1.getWorld().spawnEntity(t1, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(0,.0,.0));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) t2.getWorld().spawnEntity(t2, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(0,.0,.0));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) t3.getWorld().spawnEntity(t3, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(0,.0,.0));
-		this.armorList.add(as);
-		
-		as = (ArmorStand) t4.getWorld().spawnEntity(t4, EntityType.ARMOR_STAND);
-		as.setRightArmPose(new EulerAngle(0,.0,.0));
-		this.armorList.add(as);
+
+		Utils.setArmorStand(feet1, new EulerAngle(-1.75, 0, 0), new ItemStack(Material.BONE), true, armorList,null);
+		Utils.setArmorStand(feet2, new EulerAngle(-1.75, 0, 0), new ItemStack(Material.BONE), true, armorList,null);
+		Utils.setArmorStand(feet3, new EulerAngle(-1.75, 0, 0), new ItemStack(Material.BONE), true, armorList,null);
+		Utils.setArmorStand(feet4, new EulerAngle(-1.75, 0, 0), new ItemStack(Material.BONE), true, armorList,null);
+		Utils.setArmorStand(t1, new EulerAngle(0,0,0), IS1, true, armorList,null);
+		Utils.setArmorStand(t2, new EulerAngle(0,0,0), IS2, true, armorList,null);
+		Utils.setArmorStand(t3, new EulerAngle(0,0,0), IS3, true, armorList,null);
+		Utils.setArmorStand(t4, new EulerAngle(0,0,0), IS4, true, armorList,null);
 		
 		for(Entity e : armorList){
 			ArmorStand armor = (ArmorStand) e;
@@ -156,12 +139,14 @@ public class largeTable implements Listener {
 		main.getInstance().tische2.add(this);
 	}
 	
-	public void delete(){
-		armorList.get(0).getLocation().getWorld().dropItem(armorList.get(0).getLocation().getBlock().getLocation().add(0, 1, 0), main.getInstance().itemse.tisch2);
-		for(Entity entity : armorList){
-			ArmorStand as = (ArmorStand) entity;
-			entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
-			entity.remove();
+	public void delete(boolean b){
+		if(b){
+			armorList.get(0).getLocation().getWorld().dropItem(armorList.get(0).getLocation().getBlock().getLocation().add(0, 1, 0), main.getInstance().itemse.tisch2);
+			for(Entity entity : armorList){
+				ArmorStand as = (ArmorStand) entity;
+				entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
+				entity.remove();
+			}
 		}
 		location.clear();
 		armorList.clear();
@@ -205,7 +190,7 @@ public class largeTable implements Listener {
 							player.getInventory().setItem(player.getInventory().getHeldItemSlot(), is);
 							player.updateInventory();
 						}
-					}else{
+					}else if(!is.getType().isBlock()){
 						Integer i = armorList.size();
 						if(armorList.get(3).equals(e.getRightClicked())){
 							i-=4;
@@ -242,7 +227,7 @@ public class largeTable implements Listener {
 		if(e.getDamager() instanceof Player){
 			if(e.getEntity() instanceof ArmorStand){
 				if(armorList.contains(e.getEntity())){
-					delete();
+					delete(true);
 				}
 			}
 		}
@@ -256,6 +241,26 @@ public class largeTable implements Listener {
 				e.setCancelled(true);
 			}
 		}
+	}
+	
+	public List<ItemStack> getItemListTisch(){
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for(int i = 0; i<=8;i++){
+			items.add((((ArmorStand)armorList.get(i)).getHelmet()));
+		}
+		return items;
+	}
+	
+	public HashMap<Integer, ItemStack> getTeller(){
+		HashMap<Integer, ItemStack> teller = new HashMap<Integer, ItemStack>();
+		for(int i = 0;i<=3;i++){
+			try{
+				teller.put(i, ((ArmorStand) armorList.get(armorList.size()-1-i)).getItemInHand());
+			}catch(NullPointerException e){
+				teller.put(i, new ItemStack(Material.AIR));
+			}
+		}
+		return teller;
 	}
 	
 	/*

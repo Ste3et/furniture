@@ -8,9 +8,9 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,69 +27,40 @@ public class laterne implements Listener {
 	List<Entity> armorList = new ArrayList<Entity>();
 	Block b;
 	Location loc = null;
-	public laterne(Location loc, Plugin plugin){
+	Boolean bool = true;
+	
+	BlockFace bFace = null;
+	
+	public Location getLocation(){return this.loc;}
+	public BlockFace getBlockFace(){return this.bFace;}
+	public Boolean getBlockState(){return this.bool;}
+	
+	public laterne(Location loc, Plugin plugin, Boolean bool){
 			this.loc = loc;
+			this.bool = bool;
 			Location center = Utils.getCenter(loc);
 			b = center.getWorld().getBlockAt(center);
-			b.setType(Material.TORCH);
+			if(bool){
+				b.setType(Material.TORCH);
+			}else{
+				b.setType(Material.REDSTONE_TORCH_OFF);
+			}
+			
 			Location obsidian = center;
-			Bukkit.getServer().broadcastMessage(obsidian.getX() + ";" + obsidian.getY() + ";" + obsidian.getZ());
+			Location location = new Location(center.getWorld(), center.getX(), center.getY() -1.43, center.getZ());
 			obsidian.add(0D, -2.2, 0D);
-			ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(obsidian, EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.OBSIDIAN));
+			Location left_down = new Location(obsidian.getWorld(), obsidian.getX()+0.22, obsidian.getY() + .62, obsidian.getZ()+0.22);
+			Location left_upper = new Location(obsidian.getWorld(), obsidian.getX() -0.21, obsidian.getY() + .62, obsidian.getZ() +0.22);
+			Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-0.21, obsidian.getY()+.62, obsidian.getZ()-0.21);
+			Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+0.21, obsidian.getY() + .62, obsidian.getZ() -0.21);
 			
-			armorList.add(as);
+			Utils.setArmorStand(obsidian, null, new ItemStack(Material.OBSIDIAN), false, armorList, null);
+			Utils.setArmorStand(location.add(0,0,0), null, new ItemStack(Material.WOOD_PLATE), false, armorList, null);
 			
-			Location location = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-			as = (ArmorStand) loc.getWorld().spawnEntity(location.add(0,.75,0), EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.WOOD_PLATE));
-			
-			armorList.add(as);
-			
-			//Links u
-			location = new Location(obsidian.getWorld(), obsidian.getX(), obsidian.getY(), obsidian.getZ());
-			as = (ArmorStand) loc.getWorld().spawnEntity(location.add(0.22,.62,0.22), EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.LEVER));
-			
-			armorList.add(as);
-			//Rechts o
-			location = new Location(obsidian.getWorld(), obsidian.getX(), obsidian.getY(), obsidian.getZ());
-			as = (ArmorStand) loc.getWorld().spawnEntity(location.add(-0.21,.62,-0.21), EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.LEVER));
-			
-			armorList.add(as);
-			
-			//Rechts U
-			location = new Location(obsidian.getWorld(), obsidian.getX(), obsidian.getY(), obsidian.getZ());
-			as = (ArmorStand) loc.getWorld().spawnEntity(location.add(0.21,.62,-0.21), EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.LEVER));
-			
-			armorList.add(as);
-			
-			//Links O
-			location = new Location(obsidian.getWorld(), obsidian.getX(), obsidian.getY(), obsidian.getZ());
-			as = (ArmorStand) loc.getWorld().spawnEntity(location.add(-0.21,.62,0.22), EntityType.ARMOR_STAND);
-			as.setBasePlate(false);
-			as.setGravity(false);
-			as.setVisible(false);
-			as.setHelmet(new ItemStack(Material.LEVER));
-			
-			armorList.add(as);
+			Utils.setArmorStand(left_down, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(left_upper, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(right_upper, null, new ItemStack(Material.LEVER), false, armorList, null);
+			Utils.setArmorStand(right_down, null, new ItemStack(Material.LEVER), false, armorList, null);
 			Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 			main.getInstance().laternen.add(this);
 	}
@@ -122,14 +93,18 @@ public class laterne implements Listener {
 	}
 	*/
 	
-	public void delete(){
-		armorList.get(0).getLocation().getWorld().dropItem(b.getLocation(), main.getInstance().itemse.Laterne);
-		for(Entity entity : armorList){
-			ArmorStand as = (ArmorStand) entity;
-			entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
-			entity.remove();
+	public void delete(Boolean b){
+		
+		if(b){
+			armorList.get(0).getLocation().getWorld().dropItem(this.b.getLocation(), main.getInstance().itemse.Laterne);
+			for(Entity entity : armorList){
+				ArmorStand as = (ArmorStand) entity;
+				entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
+				entity.remove();
+			}
 		}
-		if(b!=null&&!b.getType().equals(Material.AIR)){b.setType(Material.AIR);}
+		if(this.b!=null&&!this.b.getType().equals(Material.AIR)){this.b.setType(Material.AIR);}
+		this.bool = null;
 		this.loc = null;
 		armorList.clear();
 		main.getInstance().laternen.remove(this);
@@ -152,17 +127,13 @@ public class laterne implements Listener {
 			}
 		}
 	}
-	
-	public Location getLocation(){
-		return this.loc;
-	}
 
 	@EventHandler
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.getDamager() instanceof Player){
 			if(e.getEntity() instanceof ArmorStand){
 				if(armorList.contains(e.getEntity())){
-					delete();
+					delete(true);
 				}
 			}
 		}
