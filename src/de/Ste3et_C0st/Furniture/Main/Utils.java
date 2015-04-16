@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Main;
 
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,7 +30,22 @@ public class Utils {
         }
     }
     
-    //NORDEN GEHT
+    public static BlockFace StringToFace(final String face) {
+        switch (face) {
+            case "NORTH": return BlockFace.NORTH;
+            case "EAST": return BlockFace.EAST;
+            case "SOUTH": return BlockFace.SOUTH;
+            case "WEST": return BlockFace.WEST;
+            default: return BlockFace.NORTH;
+        }
+    }
+    
+    public static int randInt(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
+
     public static EulerAngle FaceEuler(final BlockFace face, Double x, Double y, Double z) {
     	return new EulerAngle(x,y,z);
     }
@@ -46,15 +62,14 @@ public class Utils {
         if(d<0){d+=.5;}else{d+=.5;}
         return d;
     }
-    
-	public static ArmorStand setArmorStand(Location location, EulerAngle angle, ItemStack is, Boolean Arm, List<Entity> entityList, List<Location> locationList){
+	
+	public static ArmorStand setArmorStand(Location location, EulerAngle angle, ItemStack is, Boolean Arm, String ID, List<String> idList){
 		World w = location.getWorld();
-		
+		String id = ID+"-"+idList.size();
 		for(Entity entity : w.getEntities()){
 			if(entity instanceof ArmorStand){
-				if(location.equals(entity.getLocation())){
-					entityList.add(entity);
-					if(locationList!=null){locationList.add(location);}
+				if(entity.getCustomName().equals(id)){
+					idList.add(id);
 					return (ArmorStand) entity;
 				}
 			}
@@ -71,8 +86,19 @@ public class Utils {
 		as.setVisible(false);
 		as.setGravity(false);
 		as.setBasePlate(false);
-		entityList.add(as);
-		if(locationList!=null){locationList.add(location);}
+		as.setCustomName(id);
+		idList.add(id);
 		return as;
+	}
+
+	public static ArmorStand getArmorStandAtID(World w, String string){
+		for(Entity e : w.getEntities()){
+			if(e instanceof ArmorStand){
+				if(e.getCustomName().equalsIgnoreCase(string)){
+					return (ArmorStand) e;
+				}
+			}
+		}
+		return null;
 	}
 }

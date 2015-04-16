@@ -1,12 +1,12 @@
 name: Furniture
-version: 0.1
+version: 1.5
 description: DiceEquipment
 author: Ste3et_C0st
 website: http://dicecraft.de
-
+softdepend: [Vault]
 main: de.Ste3et_C0st.Furniture.Main.main
 
 commands: 
-  Furniture:
-    description:  test
+  furniture:
+    description:  DiceEaster Egg Command
     usage:  /<command>

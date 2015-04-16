@@ -1,4 +1,4 @@
-package de.Ste3et_C0st.Furniture.Objects;
+package de.Ste3et_C0st.Furniture.Objects.indoor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,12 @@ import java.util.List;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -22,17 +23,22 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 
-public class stuhl implements Listener {
+public class chair implements Listener {
 
-	List<Entity> armorList = new ArrayList<Entity>();
+	List<String> IDList = new ArrayList<String>();
 	Location loc = null;
 	BlockFace b = null;
-	
+	World w = null;
+	private String id;
+	public String getID(){return this.id;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public stuhl(Location loc, Plugin plugin){
+	public chair(Location loc, Plugin plugin, String id){
 		this.loc = loc.getBlock().getLocation();
+		this.id = id;
+		this.b = Utils.yawToFace(loc.getYaw());
+		this.w = this.loc.getWorld();
 		BlockFace b = Utils.yawToFace(loc.getYaw()).getOppositeFace();
 		Location center = Utils.getCenter(loc);
 		Location sitz = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
@@ -50,12 +56,12 @@ public class stuhl implements Listener {
 		sitz.setYaw(Utils.FaceToYaw(b));
 		lehne.setYaw(Utils.FaceToYaw(b));
 		
-		Utils.setArmorStand(sitz, null, new ItemStack(Material.TRAP_DOOR), false, armorList, null);
-		Utils.setArmorStand(lehne, new EulerAngle(1.57, .0, .0), new ItemStack(Material.TRAP_DOOR), false, armorList, null);
-		Utils.setArmorStand(feet1, null, new ItemStack(Material.LEVER), false, armorList, null);
-		Utils.setArmorStand(feet2, null, new ItemStack(Material.LEVER), false, armorList, null);
-		Utils.setArmorStand(feet3, null, new ItemStack(Material.LEVER), false, armorList, null);
-		Utils.setArmorStand(feet4, null, new ItemStack(Material.LEVER), false, armorList, null);
+		Utils.setArmorStand(sitz, null, new ItemStack(Material.TRAP_DOOR), false,getID(),IDList);
+		Utils.setArmorStand(lehne, new EulerAngle(1.57, .0, .0), new ItemStack(Material.TRAP_DOOR), false,getID(),IDList);
+		Utils.setArmorStand(feet1, null, new ItemStack(Material.LEVER), false,getID(),IDList);
+		Utils.setArmorStand(feet2, null, new ItemStack(Material.LEVER), false,getID(),IDList);
+		Utils.setArmorStand(feet3, null, new ItemStack(Material.LEVER), false,getID(),IDList);
+		Utils.setArmorStand(feet4, null, new ItemStack(Material.LEVER), false,getID(),IDList);
 		main.getInstance().stuehle.add(this);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -80,41 +86,39 @@ public class stuhl implements Listener {
 	}
 	*/
 	
-	@EventHandler
-	public void onInteract(PlayerInteractAtEntityEvent e){
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onInteract(PlayerInteractAtEntityEvent e){
+		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
 		if(e.getRightClicked() instanceof ArmorStand){
-			if(armorList.contains(e.getRightClicked())){
+			if(IDList.contains(e.getRightClicked().getCustomName())){
 				e.setCancelled(true);
-				ItemStack is = player.getItemInHand();
-				if(is!=null){
-					if(armorList.contains(e.getRightClicked())){
-						armorList.get(0).setPassenger(player);
-					}
-				}
+				Utils.getArmorStandAtID(w, IDList.get(0)).setPassenger(player);
 			}
 		}
 	}
 
 	public void delete(Boolean b){
 		if(b){
-			armorList.get(0).getLocation().getWorld().dropItem(armorList.get(0).getLocation().getBlock().getLocation().add(0, 1, 0), main.getInstance().itemse.stuhl);
-			for(Entity entity : armorList){
-				ArmorStand as = (ArmorStand) entity;
-				entity.getWorld().playEffect(entity.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
-				entity.remove();
+			getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("chair"));
+			for(String ids : IDList){
+				ArmorStand as = Utils.getArmorStandAtID(w, ids);
+				getLocation().getWorld().playEffect(as.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
+				as.remove();
+				main.getInstance().mgr.deleteFromConfig(getID(), "chair");
 			}
 		}
 		this.loc = null;
-		armorList.clear();
+		IDList.clear();
 		main.getInstance().stuehle.remove(this);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void damage(EntityDamageByEntityEvent e){
+		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player){
 			if(e.getEntity() instanceof ArmorStand){
-				if(armorList.contains(e.getEntity())){
+				if(IDList.contains(e.getEntity().getCustomName())){
 					delete(true);
 				}
 			}

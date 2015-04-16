@@ -1,73 +1,89 @@
 package de.Ste3et_C0st.Furniture.Main;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+
+import net.milkbowl.vault.Metrics;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.DiceEaster.DiceEaster;
+import de.Ste3et_C0st.Furniture.Main.Manager;
 import de.Ste3et_C0st.Furniture.Listener.OnInteract;
-import de.Ste3et_C0st.Furniture.Objects.largeTable;
-import de.Ste3et_C0st.Furniture.Objects.laterne;
-import de.Ste3et_C0st.Furniture.Objects.sofa;
-import de.Ste3et_C0st.Furniture.Objects.stuhl;
-import de.Ste3et_C0st.Furniture.Objects.tisch;
+import de.Ste3et_C0st.Furniture.Objects.indoor.chair;
+import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
+import de.Ste3et_C0st.Furniture.Objects.indoor.latern;
+import de.Ste3et_C0st.Furniture.Objects.indoor.sofa;
+import de.Ste3et_C0st.Furniture.Objects.indoor.table;
+import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_1;
 
 public class main extends JavaPlugin {
 	private static main Main;
 	public List<sofa> sofas = new ArrayList<sofa>();
-	public List<laterne> laternen = new ArrayList<laterne>();
-	public List<stuhl> stuehle = new ArrayList<stuhl>();
-	public List<tisch> tische = new ArrayList<tisch>();
+	public List<latern> laternen = new ArrayList<latern>();
+	public List<chair> stuehle = new ArrayList<chair>();
+	public List<table> tische = new ArrayList<table>();
 	public List<largeTable> tische2 = new ArrayList<largeTable>();
-	public ItemsEquipment itemse;
-	public DiceEaster dice;
-	
+	public HashMap<String, ItemStack> crafting = new HashMap<String, ItemStack>();
+	public Manager mgr;
+	public List<tent_1> tents1 = new ArrayList<tent_1>();
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable(){
-		getCommand("Furniture").setExecutor(new command());
 		Main = this;
-		this.itemse = new ItemsEquipment();
 		getServer().getPluginManager().registerEvents(new OnInteract(), this);
-		dice = (DiceEaster) getServer().getPluginManager().getPlugin("DiceEaster");
+		getCommand("furniture").setExecutor(new command());
+		getConfig().addDefaults(YamlConfiguration.loadConfiguration(getResource("config.yml")));
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+		
+		if(getServer().getPluginManager().isPluginEnabled("Vault") && getConfig().getBoolean("config.UseMetrics")){
+		    try
+		    {
+		      Metrics metrics = new Metrics(this);
+		      metrics.start();
+		    }
+		    catch (IOException localIOException) {}
+		}
+		
+		this.mgr = new Manager();
+		mgr.loadLargeTisch();
+		mgr.loadLatern();
+		mgr.loadSofa();
+		mgr.loadStuhl();
+		mgr.loadTisch();
+		mgr.loadtent1();
+		mgr.defaultCrafting();
 		addCrafting();
 	}
 	
 	@Override
 	public void onDisable(){
-		
+		mgr.saveLargeTable();
+		mgr.saveLatern();
+		mgr.saveSofa();
+		mgr.saveStuhl();
+		mgr.saveTable();
+		mgr.saveTent1();
+		getServer().resetRecipes();
 	}
 	
 	public void addCrafting(){
-		ShapedRecipe grinderRecipe = new ShapedRecipe(itemse.Sofa).shape("#0#", "###", "+0+").setIngredient('+', Material.FENCE).
-		setIngredient('#', Material.WOOL);
-		getServer().addRecipe(grinderRecipe);
-		
-		grinderRecipe = new ShapedRecipe(itemse.Laterne).shape("0#0", "-+-", "0E0").setIngredient('+', Material.TORCH).
-		setIngredient('#', Material.WOOD_PLATE).setIngredient('-', Material.STICK).setIngredient('E', Material.OBSIDIAN);
-		getServer().addRecipe(grinderRecipe);
-		
-		grinderRecipe = new ShapedRecipe(itemse.Laterne).shape("0#0", "-+-", "0E0").setIngredient('+', Material.TORCH).
-		setIngredient('#', Material.WOOD_PLATE).setIngredient('-', Material.STICK).setIngredient('E', Material.OBSIDIAN);
-		getServer().addRecipe(grinderRecipe);
-		
-		grinderRecipe = new ShapedRecipe(itemse.stuhl).shape("0#0", "0#0", "E0E").setIngredient('#', Material.TRAP_DOOR).
-		setIngredient('E', Material.STICK);
-		getServer().addRecipe(grinderRecipe);
-		
-		grinderRecipe = new ShapedRecipe(itemse.tisch).shape("0#0", "0E0", "0+0").setIngredient('#', Material.TRAP_DOOR).
-		setIngredient('E', Material.STICK).setIngredient('+', Material.WOOD_STEP);
-		getServer().addRecipe(grinderRecipe);
-		
-		grinderRecipe = new ShapedRecipe(itemse.tisch2).shape("###", "###", "E0E").setIngredient('#', Material.STAINED_GLASS_PANE).
-		setIngredient('E', Material.BONE);
-		getServer().addRecipe(grinderRecipe);
+		mgr.loadCrafting("largeTable");
+		mgr.loadCrafting("table");
+		mgr.loadCrafting("lantern");
+		mgr.loadCrafting("sofa");
+		mgr.loadCrafting("chair");
+		mgr.loadCrafting("tent1");
 	}
 	
 	public static String getCardinalDirection(Player player) {
@@ -153,6 +169,99 @@ public class main extends JavaPlugin {
 		}
 		return true;
 	}
+	
+	public boolean canPlaceLarge(Player p, Location location, BlockFace b, Integer length, Integer width){
+		if(b==null&&length==null&&width==null){
+			if(!location.getBlock().getType().equals(Material.AIR)){
+				return false;
+			}
+		}
+		location = main.getNew(location, b.getOppositeFace(), 2D, 0D);
+		if(b!=null&&length!=null&&width!=null){
+			for(int i = 0; i<= length-1; i++){
+				for(int l = 0; l<= width-1; l++){
+					if(!getNew(location, b,(double) l,(double) i).getBlock().getType().equals(Material.AIR)){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	public List<Location> getFunList(){
+		List<Location> loc = new ArrayList<Location>();
+		if(!this.stuehle.isEmpty()){
+			for(chair s : stuehle){
+				loc.add(s.getLocation());
+			}
+		}
+		if(!this.laternen.isEmpty()){
+			for(latern l : laternen){
+				loc.add(l.getLocation());
+			}
+		}
+		if(!this.tische2.isEmpty()){
+			for(largeTable l : tische2){
+				loc.add(l.getLocation());
+			}
+		}
+		if(!this.sofas.isEmpty()){
+			for(sofa s : sofas){
+				loc.add(s.getLocation());
+			}
+		}
+		if(!this.tische.isEmpty()){
+			for(table t : tische){
+				loc.add(t.getLocation());
+			}
+		}
+		return loc;
+	}
 
+	public static String createRandomRegistryId()
+	{  
+	    String val = "";      
+	    int ranChar = 65 + (new Random()).nextInt(90-65);
+	    char ch = (char)ranChar;        
+	    val += ch;      
+	    Random r = new Random();
+	    int numbers = 100000 + (int)(r.nextFloat() * 899900);
+	    val += String.valueOf(numbers);
+	    val += "-";
+	    for(int i = 0; i<6;){
+	        int ranAny = 48 + (new Random()).nextInt(90-65);
+	        if(!(57 < ranAny && ranAny<= 65)){
+	        char c = (char)ranAny;      
+	        val += c;
+	        i++;
+	        }
+	    }
+
+	    return val;
+	}
+	
 	 public static main getInstance() {return Main;}
+	
+	public boolean canPlaceTent(Player p, Location location, BlockFace b, Integer length, Integer width, Integer height){
+		if(b==null&&length==null&&width==null){
+			if(!location.getBlock().getType().equals(Material.AIR)){
+				return false;
+			}
+		}
+		location = main.getNew(location, b.getOppositeFace(), 3D, 0D);
+		if(b!=null&&length!=null&&width!=null){
+			for(int i = 0; i<= length-1; i++){
+				for(int l = 0; l<= width-1; l++){
+					for(int y=0;y<=height-1;y++){
+						if(!getNew(location, b,(double) l,(double) i).add(0,y,0).getBlock().getType().equals(Material.AIR)){
+							return false;
+						}
+					}
+					
+				}
+			}
+		}
+		return true;
+	}
 }

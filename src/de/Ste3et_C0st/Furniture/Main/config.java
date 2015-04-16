@@ -15,7 +15,7 @@ public class config
   
   public config()
   {
-    this.path = "plugins/DiceEaster";
+    this.path = "plugins/Furniture/";
   }
   
   public FileConfiguration createConfig(String name, String Folder)
@@ -75,7 +75,6 @@ public class config
   }
   
   public boolean ExistConfig(String folder, String name){
-	  System.out.print(path + folder + "," + name);
 	  if(new File(path + folder, name).exists()){
 		  return true; 
 	  }
