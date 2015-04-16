@@ -1,0 +1,65 @@
+Items:
+  chair:
+    name: '&cChair'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0+0,0+0,E0E
+      index:
+        '0': 0
+        +: 96
+        E: 280
+  sofa:
+    name: '&cSofa'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: +0+,+++,X0X
+      index:
+        '0': 0
+        +: 171
+        X: 69
+  lantern:
+    name: '&cLantern'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0+0,XEX,0A0
+      index:
+        '0': 0
+        X: 280
+        E: 50
+        A: 49
+        +: 126
+  largeTable:
+    name: '&cLarge Table'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: XXX,XXX,A0A
+      index:
+        '0': 0
+        X: 160
+        A: 352
+  table:
+    name: '&cTable'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0X0,0E0,0A0
+      index:
+        '0': 0
+        E: 280
+        A: 72
+        X: 96
+  tent1:
+    name: '&cTent #1'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0X0,XEX,EAE
+      index:
+        '0': 0
+        E: 35
+        A: 58
+        X: 280

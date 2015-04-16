@@ -1,0 +1,7 @@
+config:
+   # Needs Vualt (optional)
+   UseMetrics: true
+   Messages:
+     NoPermissions: "&cYou don't have permission to do that"
+     notFound: "&cFurniture not found"
+     PlayerNotFound: "&cPlayer not found"
