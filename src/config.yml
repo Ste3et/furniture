@@ -1,7 +1,14 @@
 config:
    # Needs Vualt (optional)
    UseMetrics: true
+   CraftingPermissions: true
    Messages:
      NoPermissions: "&cYou don't have permission to do that"
      notFound: "&cFurniture not found"
      PlayerNotFound: "&cPlayer not found"
+     ArmorStandsKills: "&6@ARMORSTANDS ArmorStands removed from @WOLRDS worlds"
+     ArmorStandsRemoveFromDistance: "@ARMORSTANDS &2Furniture removed"
+     ArmorStandsRemoveFromID: "&9Furniture [&cnot#&2successful] &9removed"
+     ArmorStandsRemoveFromType: "&9Furniture [&cnot#&2successful] &9removed"
+     CommandBadArguments: "&cBadArguments"
+     Space: "&aNot Enough Space"

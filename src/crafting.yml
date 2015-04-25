@@ -63,3 +63,54 @@ Items:
         E: 35
         A: 58
         X: 280
+  tent2:
+    name: '&cTent #2'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0X0,XEX,OAO
+      index:
+        '0': 0
+        E: 58
+        A: 355
+        X: 35
+        O: 17
+  tent3:
+    name: '&cTent #3'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 000,0E0,EAE
+      index:
+        '0': 0
+        E: 35
+        A: 355
+  barrels:
+    name: '&cBarrels #3'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: X0X,X0X,XXX
+      index:
+        '0': 0
+        X: 280
+  campfire1:
+    name: '&cCampfire #1'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: 0X0,XEX,0X0
+      index:
+        '0': 0
+        E: 263
+        X: 280
+  campfire2:
+    name: '&cCampfire #2'
+    material: 383
+    durability: 0
+    crafting:
+      recipe: DXD,XEX,DXD
+      index:
+        D: 4
+        E: 263
+        X: 280

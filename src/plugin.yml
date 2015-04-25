@@ -1,12 +1,11 @@
 name: Furniture
-version: 1.5
-description: DiceEquipment
+version: 1.7.3
+description: Add some Furniture to the Server
 author: Ste3et_C0st
 website: http://dicecraft.de
-softdepend: [Vault]
+softdepend: [Vault, WorldGuard, WorldEdit, Towny, Landlord, LightAPI, PlotSquared, PreciousStones, PlotMe]
 main: de.Ste3et_C0st.Furniture.Main.main
-
 commands: 
   furniture:
-    description:  DiceEaster Egg Command
+    description: Dice Furniture Command
     usage:  /<command>
