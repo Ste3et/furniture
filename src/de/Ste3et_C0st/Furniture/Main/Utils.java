@@ -163,6 +163,10 @@ public class Utils {
             getRelativeCoord(loc.getBlockY()),
             getRelativeCoord(loc.getBlockZ()));
     }
+    
+    public static Location getLocationCopy(Location l){
+    	return new Location(l.getWorld(), l.getX(), l.getY(), l.getZ());
+    }
      
     private static double getRelativeCoord(int i) {
         double d = i;

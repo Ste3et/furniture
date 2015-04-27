@@ -7,12 +7,15 @@ import org.bukkit.plugin.PluginManager;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
+import de.Ste3et_C0st.Furniture.Main.main;
+
 public class IResidence {
 	Boolean enabled = false;
 	PluginManager pm = null;
 	Residence wg = null;
 	public IResidence(PluginManager pm){
-		if(!pm.isPluginEnabled("Residence")){return;}
+		if(!main.getInstance().getConfig().getBoolean("config.Protection.Residence.HookIFExist")){return;}
+		main.getInstance().getLogger().info("[Furniture] Hook into Residence");
 		this.pm = pm;
 		this.enabled = true;
 		wg = (Residence) pm.getPlugin("Residence");

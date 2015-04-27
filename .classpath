@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="C:/Plugins/jars/Residence.jar"/>
 	<classpathentry kind="lib" path="C:/Plugins/jars/Towny.jar"/>
 	<classpathentry kind="lib" path="C:/Plugins/jars/PlotMe-Core.jar"/>
+	<classpathentry kind="lib" path="C:/Plugins/jars/GriefPrevention.jar"/>
+	<classpathentry kind="lib" path="C:/Plugins/jars/Plotz.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

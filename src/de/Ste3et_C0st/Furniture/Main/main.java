@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.Metrics;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -40,12 +39,9 @@ public class main extends JavaPlugin {
 	public CheckManager check;
 	public StringPage sp;
 	//public Factions factionsAPI = null;
-	public Boolean light = false;
 	@SuppressWarnings({ "deprecation" })
 	@Override
 	public void onEnable(){
-			PluginDescriptionFile pdfFile = this.getDescription();
-			log.info(pdfFile.getName() + " Version: " + pdfFile.getVersion() + " is now enabled!");
 			Main = this;
 			getServer().getPluginManager().registerEvents(new OnInteract(), this);
 			getServer().getPluginManager().registerEvents(new IPistonExtendEvent(), this);
@@ -67,11 +63,7 @@ public class main extends JavaPlugin {
 			    }
 			    catch (IOException localIOException) {}
 			}
-			
-			if(main.getInstance().getServer().getPluginManager().isPluginEnabled("LightAPI")){
-				this.light = true;
-			}
-			
+			this.check = new CheckManager(this.getServer().getPluginManager());
 			this.sp = new StringPage();
 			this.mgr = new Manager();
 			this.Fmgr = new FurnitureManager();
@@ -86,16 +78,11 @@ public class main extends JavaPlugin {
 			mgr.load("campfire1");
 			mgr.load("barrels");
 			mgr.load("campfire2");
+			mgr.load("camera");
 			mgr.defaultCrafting();
 			addCrafting();
 			
-			isCrafting = getConfig().getBoolean("config.CraftingPermissions");
-			
-			try {
-				this.check = new CheckManager(this.getServer().getPluginManager());
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+			isCrafting = getConfig().getBoolean("config.CraftingPermissions");	
 	}
 
 	public Double distance(Location loc1, Location loc2){
@@ -116,6 +103,7 @@ public class main extends JavaPlugin {
 		Fmgr.RemoveType(FurnitureType.TENT_1, false);
 		Fmgr.RemoveType(FurnitureType.TENT_2, false);
 		Fmgr.RemoveType(FurnitureType.TENT_3, false);
+		Fmgr.RemoveType(FurnitureType.CAMERA, false);
 	}
 	
 	public void reload(){
@@ -143,6 +131,7 @@ public class main extends JavaPlugin {
 			mgr.load("campfire1");
 			mgr.load("barrels");
 			mgr.load("campfire2");
+			mgr.load("camera");
 			mgr.defaultCrafting();
 			addCrafting();
 			isCrafting = getConfig().getBoolean("config.CraftingPermissions");
@@ -153,14 +142,11 @@ public class main extends JavaPlugin {
 	
 	public void shutdown(String s){
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.warning(pdfFile.getName() + " shutdown reason: " + s + "Exception");
-		Bukkit.getPluginManager().disablePlugin(this);
+		log.warning(pdfFile.getName() + s + " Exception");
 	}
 	
 	@Override
 	public void onDisable(){
-		PluginDescriptionFile pdfFile = this.getDescription();
-	    log.info(pdfFile.getName() + " Version: " + pdfFile.getVersion() + " is now disabled!");
 		mgr.saveLargeTable(null);
 		mgr.saveLatern(null);
 		mgr.saveSofa(null);
@@ -168,6 +154,7 @@ public class main extends JavaPlugin {
 		mgr.saveTable(null);
 		mgr.saveTent1(null);
 		mgr.saveTent2(null);
+		mgr.saveCamera(null);
 		getServer().resetRecipes();
 	}
 	
@@ -183,6 +170,7 @@ public class main extends JavaPlugin {
 		mgr.loadCrafting("barrels");
 		mgr.loadCrafting("campfire1");
 		mgr.loadCrafting("campfire2");
+		mgr.loadCrafting("camera");
 	}
 	
 	public static String getCardinalDirection(Player player) {

@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import ru.BeYkeRYkt.LightAPI.LightAPI;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 
@@ -117,8 +116,9 @@ public class campfire_1 implements Listener {
 			}
 		}
 	}
+	@SuppressWarnings("static-access")
 	public void setLight(boolean boolean1, boolean a) {
-		Location light = new Location(getLocation().getWorld(), getLocation().getX(), getLocation().getY(), getLocation().getZ());
+		Location light = new Location(w, getLocation().getX(), getLocation().getY(), getLocation().getZ());
 		for(String s : idList){
 			if(Utils.getArmorStandAtID(w, s) != null){
 				setFire(Utils.getArmorStandAtID(w, s), boolean1);
@@ -126,10 +126,14 @@ public class campfire_1 implements Listener {
 		}
 		
 		if(boolean1){
-			if(main.getInstance().light){LightAPI.createLight(light, 15);}
+			if(main.getInstance().getCheckManager().getLightAPI()!=null){
+				main.getInstance().getCheckManager().getLightAPI().getLightAPI().createLight(light, 15);
+			}
 			light.getWorld().playSound(light, Sound.FIRE_IGNITE, 1, 1);
 		}else{
-			if(main.getInstance().light){LightAPI.deleteLight(light);}
+			if(main.getInstance().getCheckManager().getLightAPI()!=null){
+				main.getInstance().getCheckManager().getLightAPI().getLightAPI().deleteLight(light);
+			}
 			if(a){light.getWorld().playSound(light, Sound.FIZZ, 1, 1);}
 		}
 	}

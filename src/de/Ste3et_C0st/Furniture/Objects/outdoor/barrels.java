@@ -21,9 +21,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import ru.BeYkeRYkt.LightAPI.LightAPI;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Manager.ILightAPI;
 
 public class barrels implements Listener {
 
@@ -82,6 +82,7 @@ public class barrels implements Listener {
 			as.remove();
 			main.getInstance().mgr.deleteFromConfig(getID(), "barrels");
 		}
+		this.block = null;
 		this.loc = null;
 		this.idList.clear();
 		this.id = null;
@@ -112,12 +113,14 @@ public class barrels implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	public void setLight(Boolean b){
-		if(main.getInstance().light){
+		if(main.getInstance().getCheckManager().getLightAPI()!=null){
+			ILightAPI light = main.getInstance().getCheckManager().getLightAPI();
 			if(b){
-				LightAPI.createLight(Utils.getCenter(getLocation()), 10);
+				light.getLightAPI().createLight(Utils.getCenter(getLocation()), 10);
 			}else{
-				LightAPI.deleteLight(Utils.getCenter(getLocation()));
+				light.getLightAPI().deleteLight(Utils.getCenter(getLocation()));
 			}
 		}
 	}

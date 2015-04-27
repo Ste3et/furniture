@@ -10,12 +10,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import de.Ste3et_C0st.Furniture.Main.main;
+
 public class IPreciousStones {
 	Boolean enabled = false;
 	PluginManager pm = null;
 	PreciousStones wg = null;
 	public IPreciousStones(PluginManager pm){
-		if(!pm.isPluginEnabled("PreciousStones")){return;}
+		if(!main.getInstance().getConfig().getBoolean("config.Protection.PreciousStones.HookIFExist")){return;}
+		main.getInstance().getLogger().info("[Furniture] Hook into PreciousStones");
 		this.pm = pm;
 		this.enabled = true;
 		wg = (PreciousStones) pm.getPlugin("PreciousStones");

@@ -11,15 +11,18 @@ import com.worldcretornica.plotme_core.api.IWorld;
 import com.worldcretornica.plotme_core.bukkit.api.BukkitLocation;
 import com.worldcretornica.plotme_core.bukkit.api.BukkitWorld;
 
+import de.Ste3et_C0st.Furniture.Main.main;
+
 public class IPlotMeCheck {
 	Boolean enabled = false;
 	PluginManager pm = null;
 	PlotMeCoreManager wg = null;
 	public IPlotMeCheck(PluginManager pm){
-		if(!pm.isPluginEnabled("PlotMe")){return;}
+		if(!main.getInstance().getConfig().getBoolean("config.Protection.PlotME.HookIFExist")){return;}
+		main.getInstance().getLogger().info("[Furniture] Hook into PlotMe");
 		this.pm = pm;
 		this.enabled = true;
-		wg = (PlotMeCoreManager) pm.getPlugin("PlotMe");
+		wg = PlotMeCoreManager.getInstance();
 	}
 	
 	public boolean check(Player p, Location l){
@@ -29,10 +32,11 @@ public class IPlotMeCheck {
 		try{
 			IWorld iworld = new BukkitWorld(p.getWorld());
 			if(!wg.isPlotWorld(iworld)){return true;}
-			ILocation plotLoc = new BukkitLocation(p.getLocation());
+			ILocation plotLoc = new BukkitLocation(l);
 		    String id = wg.getPlotId(plotLoc);
-		    if (id.isEmpty()){return true;}
+		    if (id.isEmpty()){return false;}
 		    Plot plot = wg.getPlotById(id, iworld);
+		    if(plot == null){return false;}
 		    if(plot.isAllowed(p.getUniqueId())){return true;}else{return false;}
 		}catch(Exception e){
 			return true;

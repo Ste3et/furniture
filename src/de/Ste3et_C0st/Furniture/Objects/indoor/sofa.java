@@ -169,7 +169,7 @@ public class sofa implements Listener {
 		main.getInstance().getManager().sofaList.remove(this);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();

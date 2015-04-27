@@ -19,6 +19,7 @@ import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.config;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.Furniture.Main.option;
+import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.indoor.chair;
 import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
 import de.Ste3et_C0st.Furniture.Objects.indoor.latern;
@@ -57,6 +58,11 @@ public class Manager {
 						
 						if(s.equalsIgnoreCase("chair")){
 							new chair(l, main.getInstance(), str);
+						}
+						
+						if(s.equalsIgnoreCase("camera")){
+							l.setYaw(Utils.FaceToYaw(Utils.StringToFace(face).getOppositeFace()));
+							new camera(l, main.getInstance(), str);
 						}
 						
 						if(s.equalsIgnoreCase("largeTable")){
@@ -113,7 +119,7 @@ public class Manager {
 				}
 			}
 		}catch(Exception e){
-			main.getInstance().shutdown("Config" + s);
+			main.getInstance().shutdown("Config " + s);
 		}
 	}
 	
@@ -130,6 +136,21 @@ public class Manager {
 			}
 		}
 		cc.saveConfig("chair", fc, folder);
+	}
+	
+	public void saveCamera(camera c) {
+		cc = new config();
+		fc = cc.getConfig("camera",folder );
+		if(!main.getInstance().getManager().cameraList.isEmpty()){
+			if(c==null){
+				for(camera s : main.getInstance().getManager().cameraList){
+					save(s.getLocation(), "camera", s.getID());
+				}
+			}else{
+				save(c.getLocation(), "camera", c.getID());
+			}
+		}
+		cc.saveConfig("camera", fc, folder);
 	}
 	
 	public void saveLatern(latern l){
@@ -321,14 +342,17 @@ public class Manager {
 	
 	public void loadCrafting(String s){
 		try{
+			if(!check(s)){
 				ShapedRecipe recipe = new ShapedRecipe(returnResult(s)).shape(returnFragment(s)[0], returnFragment(s)[1], returnFragment(s)[2]);
 				for(Character c : returnMaterial(s).keySet()){
 					if(!returnMaterial(s).get(c).equals(Material.AIR)){
 						recipe.setIngredient(c.charValue(), returnMaterial(s).get(c));
 					}
 				}
-			Bukkit.getServer().addRecipe(recipe);
-			main.getInstance().crafting.put(s, recipe.getResult());
+				Bukkit.getServer().addRecipe(recipe);
+			}
+			
+			main.getInstance().crafting.put(s, returnResult(s));
 		}catch(Exception e){
 			main.getInstance().shutdown("Crafting");
 		}
@@ -338,11 +362,7 @@ public class Manager {
 		cc = new config();
 		fc = cc.getConfig("crafting.yml", "");
 		String path = "Items." + s;
-		if(fc.getString(path + ".crafting") == null){
-			return true;
-		}else{
-			return false;
-		}
+		return fc.getBoolean(path + ".crafting.disable");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -350,13 +370,18 @@ public class Manager {
 		cc = new config();
 		fc = cc.getConfig("crafting.yml", "");
 		String path = "Items." + s;
+		String MaterialSubID = path+".material";
+		short durability = 0;
+		if(MaterialSubID.contains(":")){
+			String[] split = MaterialSubID.split(":");
+			durability = (short) Integer.parseInt(split[1]);
+		}
 		Integer MaterialID = fc.getInt(path+".material");
-		Short shor = (short) fc.getInt(path+".durability");
 		ItemStack is = new ItemStack(Material.getMaterial(MaterialID));
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', fc.getString(path+".name")));
 		is.setItemMeta(im);
-		is.setDurability(shor);
+		is.setDurability(durability);
 		is.setAmount(1);
 		return is;
 	}

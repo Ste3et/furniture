@@ -2,8 +2,8 @@ Items:
   chair:
     name: '&cChair'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0+0,0+0,E0E
       index:
         '0': 0
@@ -12,8 +12,8 @@ Items:
   sofa:
     name: '&cSofa'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: +0+,+++,X0X
       index:
         '0': 0
@@ -22,8 +22,8 @@ Items:
   lantern:
     name: '&cLantern'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0+0,XEX,0A0
       index:
         '0': 0
@@ -34,8 +34,8 @@ Items:
   largeTable:
     name: '&cLarge Table'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: XXX,XXX,A0A
       index:
         '0': 0
@@ -44,8 +44,8 @@ Items:
   table:
     name: '&cTable'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0X0,0E0,0A0
       index:
         '0': 0
@@ -55,8 +55,8 @@ Items:
   tent1:
     name: '&cTent #1'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0X0,XEX,EAE
       index:
         '0': 0
@@ -66,8 +66,8 @@ Items:
   tent2:
     name: '&cTent #2'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0X0,XEX,OAO
       index:
         '0': 0
@@ -78,18 +78,18 @@ Items:
   tent3:
     name: '&cTent #3'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 000,0E0,EAE
       index:
         '0': 0
         E: 35
         A: 355
   barrels:
-    name: '&cBarrels #3'
+    name: '&cBarrels'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: X0X,X0X,XXX
       index:
         '0': 0
@@ -97,8 +97,8 @@ Items:
   campfire1:
     name: '&cCampfire #1'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: 0X0,XEX,0X0
       index:
         '0': 0
@@ -107,10 +107,20 @@ Items:
   campfire2:
     name: '&cCampfire #2'
     material: 383
-    durability: 0
     crafting:
+      disable: false
       recipe: DXD,XEX,DXD
       index:
         D: 4
         E: 263
         X: 280
+  camera:
+    name: '&cCamera'
+    material: 383
+    crafting:
+      disable: false
+      recipe: DXD,AEA,EAE
+      index:
+        D: 331
+        E: 280
+        X: 35

@@ -4,15 +4,16 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.palmergames.bukkit.towny.Towny;
+
+import de.Ste3et_C0st.Furniture.Main.main;
 
 public class ITowny {
 	Boolean enabled = false;
 	PluginManager pm = null;
 	Towny wg = null;
 	public ITowny(PluginManager pm){
+		if(!main.getInstance().getConfig().getBoolean("config.Protection.Towny.HookIFExist")){return;}
 		if(!pm.isPluginEnabled("Towny")){return;}
 		this.pm = pm;
 		this.enabled = true;
@@ -24,9 +25,17 @@ public class ITowny {
 		if(!this.enabled){return true;}
 		if(this.wg == null){return true;}
 		try{
-			ClaimedResidence residence = Residence.getResidenceManager().getByLoc(l);
-			if(residence==null||residence.getOwner().equalsIgnoreCase(p.getName())||residence.getOwner().equalsIgnoreCase(p.getUniqueId().toString())){
-				return true;
+			if (ITownyPermission.has(p, ITownyPermission.PROTECTION_BYPASS)) {
+			      return true;
+			}
+			
+			if(main.getInstance().getConfig().getBoolean("config.Towny.OnlyOwner")){
+				return TownyUtils.isPlotOwner(p, new Location[] { l });
+			}else{
+				if(TownyUtils.isPlotOwner(p, new Location[] { l }) ||
+				   TownyUtils.isResident(p, new Location[] { l })){
+					return true;
+				}
 			}
 			return false;
 			}catch(Exception e){

@@ -8,12 +8,15 @@ import com.jcdesimp.landlord.Landlord;
 import com.jcdesimp.landlord.persistantData.Friend;
 import com.jcdesimp.landlord.persistantData.OwnedLand;
 
+import de.Ste3et_C0st.Furniture.Main.main;
+
 public class ILandLord {
 	Boolean enabled = false;
 	PluginManager pm = null;
 	Landlord wg = null;
 	public ILandLord(PluginManager pm){
-		if(!pm.isPluginEnabled("Landlord")){return;}
+		if(!main.getInstance().getConfig().getBoolean("config.Protection.LandLord.HookIFExist")){return;}
+		main.getInstance().getLogger().info("[Furniture] Hook into LandLord");
 		this.pm = pm;
 		this.enabled = true;
 		wg = (Landlord) pm.getPlugin("Landlord");

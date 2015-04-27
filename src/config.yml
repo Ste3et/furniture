@@ -12,3 +12,23 @@ config:
      ArmorStandsRemoveFromType: "&9Furniture [&cnot#&2successful] &9removed"
      CommandBadArguments: "&cBadArguments"
      Space: "&aNot Enough Space"
+   Protection:
+     Towny:
+       OnlyOwner: false
+       HookIFExist: true
+     WorldGuard:
+       HookIFExist: true
+     LandLord:
+       HookIFExist: true
+     PlotME:
+       HookIFExist: true
+     PlotSquared:
+       HookIFExist: true
+     PreciousStones:
+       HookIFExist: true
+     Residence:
+       HookIFExist: true
+     GriefPrevention:
+       HookIFExist: true
+     Plotz:
+       HookIFExist: true

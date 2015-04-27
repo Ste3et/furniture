@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import de.Ste3et_C0st.Furniture.Main.Type;
 import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
+import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.indoor.chair;
 import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
 import de.Ste3et_C0st.Furniture.Objects.indoor.latern;
@@ -31,6 +31,7 @@ public class FurnitureManager {
 	public List<barrels> barrelList = new ArrayList<barrels>();
 	public List<campfire_1> campfire1List = new ArrayList<campfire_1>();
 	public List<campfire_2> campfire2List = new ArrayList<campfire_2>();
+	public List<camera> cameraList = new ArrayList<camera>();
 	
 	@SuppressWarnings("unchecked")
 	public boolean RemoveType(FurnitureType f, boolean b){
@@ -79,6 +80,10 @@ public class FurnitureManager {
 			if(tent3List.isEmpty()){break;}
 			List<tent_3> tent3L = ((List<tent_3>) ((ArrayList<tent_3>) tent3List).clone());
 			for(tent_3 s : tent3L){s.delete(b,false);return true;}
+		case CAMERA:
+			if(cameraList.isEmpty()){break;}
+			List<camera> cameraL = ((List<camera>) ((ArrayList<camera>) cameraList).clone());
+			for(camera s : cameraL){s.delete(b,false);return true;}
 		default: return false;
 		}
 		return false;
@@ -120,6 +125,9 @@ public class FurnitureManager {
 		if(!campfire2List.isEmpty()){
 			List<campfire_2> sofaL = ((List<campfire_2>) ((ArrayList<campfire_2>) campfire2List).clone());
 			for(campfire_2 s : sofaL){if(s!=null){if(s.getID().equalsIgnoreCase(ID))s.delete(true,false);return true;}}}
+		if(!cameraList.isEmpty()){
+			List<camera> cameraL = ((List<camera>) ((ArrayList<camera>) cameraList).clone());
+			for(camera s : cameraL){if(s!=null){if(s.getID().equalsIgnoreCase(ID))s.delete(true,false);return true;}}}
 		return false;
 	}
 	
@@ -190,6 +198,12 @@ public class FurnitureManager {
 		if(!campfire2List.isEmpty()){
 			List<campfire_2> sofaL = ((List<campfire_2>) ((ArrayList<campfire_2>) campfire2List).clone());
 			for(campfire_2 s : sofaL){
+				if(s!=null){if(s.getLocation().toVector().distance(v)<=distance)return true;}
+			}
+		}
+		if(!cameraList.isEmpty()){
+			List<camera> sofaL = ((List<camera>) ((ArrayList<camera>) cameraList).clone());
+			for(camera s : sofaL){
 				if(s!=null){if(s.getLocation().toVector().distance(v)<=distance)return true;}
 			}
 		}
@@ -264,6 +278,12 @@ public class FurnitureManager {
 		if(!campfire2List.isEmpty()){
 			List<campfire_2> sofaL = ((List<campfire_2>) ((ArrayList<campfire_2>) campfire2List).clone());
 			for(campfire_2 s : sofaL){
+				if(s!=null){if(s.getLocation().toVector().distance(v)<=distance)s.delete(true, false);i++;}
+			}
+		}
+		if(!cameraList.isEmpty()){
+			List<camera> sofaL = ((List<camera>) ((ArrayList<camera>) cameraList).clone());
+			for(camera s : sofaL){
 				if(s!=null){if(s.getLocation().toVector().distance(v)<=distance)s.delete(true, false);i++;}
 			}
 		}

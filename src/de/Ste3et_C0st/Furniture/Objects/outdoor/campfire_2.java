@@ -24,7 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import ru.BeYkeRYkt.LightAPI.LightAPI;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 
@@ -147,6 +146,7 @@ public class campfire_2 implements Listener {
 		return false;
 	}
 	
+	@SuppressWarnings("static-access")
 	public void setLight(Boolean b, Boolean a){
 		if(b){
 			if(fire==null){return;}
@@ -155,7 +155,10 @@ public class campfire_2 implements Listener {
 				if(as==null){return;}
 				as.setFireTicks(Integer.MAX_VALUE);
 			}
-			if(main.getInstance().light){LightAPI.createLight(getLocation(), 15);}
+			if(main.getInstance().getCheckManager().getLightAPI()!=null){
+				main.getInstance().getCheckManager().getLightAPI().getLightAPI().createLight(getLocation().toVector().toLocation(w), 15);
+			}
+			
 			w.playSound(getLocation(), Sound.FIRE_IGNITE, 1, 1);
 		}else{
 			if(fire==null){return;}
@@ -164,7 +167,9 @@ public class campfire_2 implements Listener {
 				if(as==null){return;}
 				as.setFireTicks(0);
 			}
-			if(main.getInstance().light){LightAPI.deleteLight(getLocation());}
+			if(main.getInstance().getCheckManager().getLightAPI()!=null){
+				main.getInstance().getCheckManager().getLightAPI().getLightAPI().deleteLight(getLocation().toVector().toLocation(w));
+			}
 			if(a){
 				w.playSound(getLocation(), Sound.FIZZ, 1, 1);
 			}

@@ -11,7 +11,6 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class command implements CommandExecutor {
