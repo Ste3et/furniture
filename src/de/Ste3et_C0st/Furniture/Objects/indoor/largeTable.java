@@ -3,7 +3,9 @@ package de.Ste3et_C0st.Furniture.Objects.indoor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -22,13 +24,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class largeTable implements Listener {
 
-	private List<String> idList = new ArrayList<String>();
-	private List<String> tellerIDS = new ArrayList<String>();
+	private List<UUID> idList = new ArrayList<UUID>();
+	private List<UUID> tellerIDS = new ArrayList<UUID>();
 	private Location loc = null;
 	private BlockFace b = null;
 	private String id;
@@ -37,13 +42,22 @@ public class largeTable implements Listener {
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public largeTable(Location loc, Plugin plugin, String id){
-		List<ArmorStand> armorlist = new ArrayList<ArmorStand>();
-		this.loc = loc;
-		this.b = Utils.yawToFace(loc.getYaw());
-		this.id = id;
-		this.w = loc.getWorld();
+	public largeTable(Location location, Plugin plugin, String ID, List<UUID> uuids){
+		this.loc = location;
+		this.b = Utils.yawToFace(location.getYaw());
+		this.id = ID;
+		this.w = location.getWorld();
 		
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.LARGE_TABLE, this.id, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public void spawn(List<UUID> uuidList, Location loc, Plugin plugin){
+		List<ArmorStand> armorlist = new ArrayList<ArmorStand>();
 		Location location = Utils.getCenter(loc.getBlock().getLocation());
 		float yaw = Utils.FaceToYaw(this.b);
 		location = main.getNew(location, this.b, 0.1, 0.28);
@@ -111,18 +125,22 @@ public class largeTable implements Listener {
 		ArmorStand as3 = Utils.setArmorStand(t3, new EulerAngle(0, 0, 0), null, true,false,false, getID(), idList);
 		ArmorStand as4 = Utils.setArmorStand(t4, new EulerAngle(0, 0, 0), null, true,false,false, getID(), idList);
 		
-		tellerIDS.add(as1.getCustomName());
-		tellerIDS.add(as2.getCustomName());
-		tellerIDS.add(as3.getCustomName());
-		tellerIDS.add(as4.getCustomName());
+		tellerIDS.add(as1.getUniqueId());
+		tellerIDS.add(as2.getUniqueId());
+		tellerIDS.add(as3.getUniqueId());
+		tellerIDS.add(as4.getUniqueId());
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		main.getInstance().getManager().largeTableList.add(this);
 	}
 	
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
+	}
+	
 	public void setTeller(HashMap<Integer, ItemStack> itemList){
 		int i = 0;
-		for(String id : tellerIDS){
+		for(UUID id : tellerIDS){
 			ArmorStand as = Utils.getArmorStandAtID(w, id);
 			as.setItemInHand(itemList.get(i));
 			i++;
@@ -131,7 +149,7 @@ public class largeTable implements Listener {
 	
 	public void setColor(HashMap<Integer, Short> durabilityList){
 		int i = 0;
-		for(String id: idList){
+		for(UUID id: idList){
 			ArmorStand as = Utils.getArmorStandAtID(w, id);
 			if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)&&as.getHelmet().getType().equals(Material.STAINED_GLASS_PANE)){
 				ItemStack is = as.getHelmet();
@@ -146,7 +164,7 @@ public class largeTable implements Listener {
 		HashMap<Integer, Short> colorList = new HashMap<Integer, Short>();
 		Integer i = 0;
 		
-		for(String id: idList){
+		for(UUID id: idList){
 			try{i=colorList.size();}catch(Exception e){return colorList;}
 			ArmorStand as = Utils.getArmorStandAtID(w, id);
 			if(as!=null){
@@ -162,7 +180,7 @@ public class largeTable implements Listener {
 	public void delete(boolean b, boolean a){
 		if(b){
 			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("largeTable"));}
-			for(String s : tellerIDS){
+			for(UUID s : tellerIDS){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as!=null){
 					if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){
@@ -171,7 +189,7 @@ public class largeTable implements Listener {
 				}
 			}
 			
-			for(String s : this.idList){
+			for(UUID s : this.idList){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as!=null && as.getHelmet()!= null && as.getHelmet().getType()!=null){
 					if(a){loc.getWorld().playEffect(loc, Effect.STEP_SOUND, as.getHelmet().getType());}
@@ -186,14 +204,14 @@ public class largeTable implements Listener {
 		main.getInstance().getManager().largeTableList.remove(this);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
 		if(e.getRightClicked() == null){return;}
 		if(e.getRightClicked() instanceof ArmorStand == false){return;}
 		if(idList==null||idList.isEmpty()){return;}
-		if(!this.idList.contains(e.getRightClicked().getCustomName())){return;}
+		if(!this.idList.contains(e.getRightClicked().getUniqueId())){return;}
 		e.setCancelled(true);
 		if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
 		ItemStack is = player.getItemInHand();
@@ -203,7 +221,7 @@ public class largeTable implements Listener {
 					Integer amount = is.getAmount();
 					if(amount>this.idList.size()-4 || player.getGameMode().equals(GameMode.CREATIVE)){amount=this.idList.size()-4;}
 					List<Entity> list = new ArrayList<Entity>();
-					for(String s : this.idList){
+					for(UUID s : this.idList){
 						ArmorStand as = Utils.getArmorStandAtID(w, s);
 						if(as!=null){
 							ItemStack item = as.getHelmet();
@@ -232,7 +250,7 @@ public class largeTable implements Listener {
 						BlockFace b = Utils.yawToFace(player.getLocation().getYaw());
 						ArmorStand as = null;
 						if(tellerIDS == null || tellerIDS.isEmpty()){return;}
-						for(String s : this.tellerIDS){
+						for(UUID s : this.tellerIDS){
 							if(s!=null){
 								ArmorStand armorStand = Utils.getArmorStandAtID(w, s);
 								if(armorStand!=null){
@@ -244,11 +262,10 @@ public class largeTable implements Listener {
 								}
 							}
 						}
-						
+						if(as!=null&&as.getItemInHand()!= null && as.getItemInHand().equals(is)){return;}
 						if(as.getItemInHand()!=null&&!as.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
 						as.setItemInHand(is);
-						
-						player.getInventory().clear(player.getInventory().getHeldItemSlot());
+						if(!player.getGameMode().equals(GameMode.CREATIVE)){player.getInventory().remove(is);player.updateInventory();}
 						player.updateInventory();
 					}
 					main.getInstance().mgr.saveLargeTable(this);
@@ -259,15 +276,15 @@ public class largeTable implements Listener {
 		main.getInstance().mgr.saveLargeTable(this);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!idList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.LARGE_TABLE, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);
@@ -275,7 +292,7 @@ public class largeTable implements Listener {
 	
 	public HashMap<Integer, ItemStack> getTeller(){
 		HashMap<Integer, ItemStack> teller = new HashMap<Integer, ItemStack>();
-		for(String s : tellerIDS){
+		for(UUID s : tellerIDS){
 			try{
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				teller.put(teller.size(), as.getItemInHand());

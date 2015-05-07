@@ -1,24 +1,33 @@
 package de.Ste3et_C0st.Furniture.Listener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.Furniture.Main.Manager.BlackList;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.indoor.chair;
 import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
@@ -41,14 +50,39 @@ public class OnInteract implements Listener {
 		if(!main.getInstance().isCrafting){return;}
 		if(main.getInstance().crafting.containsValue(e.getRecipe().getResult())){
 			if(getName(e.getRecipe().getResult()) != null){
-				
-				if(!p.hasPermission("furniture.craft." + getName(e.getRecipe().getResult()))){
+				if((!p.hasPermission("furniture.craft." + getName(e.getRecipe().getResult()))) && (!p.hasPermission("furniture.player")) ){
 					inv.setResult(null);
 					return;
 				}
 			}
 		}
 		
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onDeath(EntityDeathEvent e){
+		if(e == null){return;}
+		if(e instanceof ArmorStand){
+			if(((ArmorStand) e).getName()==null){return;}
+			String name = ((ArmorStand) e).getName();
+			if(name != null && name.length()>=13){
+				String[] split = name.split("-");
+				if(split != null && split.length>=1){
+					ArmorStand as = (ArmorStand) e.getEntity();
+					ArmorStand armorStand = (ArmorStand) ((ArmorStand) e).getWorld().spawnEntity(as.getLocation(), EntityType.ARMOR_STAND);
+					if(as.getHelmet()!=null){armorStand.setHelmet(as.getHelmet());}
+					if(as.getItemInHand()!=null){armorStand.setItemInHand(as.getItemInHand());}
+					if(as.getRightArmPose()!=null){armorStand.setRightArmPose(as.getRightArmPose());}
+					if(as.getLeftArmPose()!=null){armorStand.setLeftArmPose(as.getLeftArmPose());}
+					if(as.getBodyPose()!=null){armorStand.setBodyPose(as.getBodyPose());}
+					if(as.getLeftLegPose()!=null){armorStand.setLeftLegPose(as.getLeftLegPose());}
+					if(as.getRightLegPose()!=null){armorStand.setRightArmPose(as.getRightArmPose());}
+					if(as.isSmall()){armorStand.setSmall(true);}
+					if(as.isVisible()){armorStand.setVisible(true);}
+					if(as.getVelocity()!=null){armorStand.setVelocity(as.getVelocity());}
+				}
+			}
+		}
 	}
 
 	public String getName(ItemStack is){
@@ -78,17 +112,13 @@ public class OnInteract implements Listener {
 		String noPermissions = ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.NoPermissions"));
 		if(!main.getInstance().getCheckManager().canBuild(p, location)){return;}
 		if(location.getBlock().getRelative(BlockFace.DOWN).getType() != null && BlackList.materialBlackList.contains(location.getBlock().getRelative(BlockFace.DOWN).getType())){return;}
+		List<UUID> emptyList = new ArrayList<UUID>();
+		if(!main.getInstance().crafting.containsValue(saveIS)){return;}
 		if(saveIS.equals(main.getInstance().crafting.get("sofa"))){
-			if(!p.hasPermission("furniture.sofa")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.SOFA, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 3)){
-				sofa s = new sofa(location, main.getInstance(), main.createRandomRegistryId());
+				sofa s = new sofa(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				s.save();
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -96,16 +126,10 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("lantern"))){
-			if(!p.hasPermission("furniture.lantern")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.LANTERN, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, null, null)){
-				new latern(location, main.getInstance(), main.createRandomRegistryId());
+				new latern(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				p.playEffect(location, Effect.STEP_SOUND, Material.TORCH);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -113,17 +137,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("chair"))){
-			if(!p.hasPermission("furniture.chair")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.CHAIR, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, null, null)){
-				chair c = new chair(location, main.getInstance(), main.createRandomRegistryId());
+				chair c = new chair(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOD);
 				c.save();
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -131,17 +149,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("table"))){
-			if(!p.hasPermission("furniture.table")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.TABLE, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, null, null)){
-				table t = new table(location, main.getInstance(), main.createRandomRegistryId());
+				table t = new table(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOD);
 				t.save();
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -149,17 +161,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("largeTable"))){
-			if(!p.hasPermission("furniture.largetable")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.LARGE_TABLE, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlaceLarge(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 3,3)){
-				largeTable l = new largeTable(location, main.getInstance(), main.createRandomRegistryId());
+				largeTable l = new largeTable(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				p.playEffect(location, Effect.STEP_SOUND, Material.GLASS);
 				l.save();
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -167,17 +173,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("tent1"))){
-			if(!p.hasPermission("furniture.tent1")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.TENT_1, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlaceTent(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 5,4, 3)){
-				tent_1 tent = new tent_1(location, main.getInstance(), main.createRandomRegistryId());
+				tent_1 tent = new tent_1(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOL);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -185,17 +185,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("tent2"))){
-			if(!p.hasPermission("furniture.tent2")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.TENT_2, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlaceTent(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 6,4, 3)){
-				tent_2 tent = new tent_2(location, main.getInstance(), main.createRandomRegistryId());
+				tent_2 tent = new tent_2(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOL);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -203,17 +197,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("campfire1"))){
-			if(!p.hasPermission("furniture.campfire1")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.CAMPFIRE_1, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, null, null)){
-				campfire_1 tent = new campfire_1(location, main.getInstance(), main.createRandomRegistryId());
+				campfire_1 tent = new campfire_1(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOD);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -221,17 +209,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("tent3"))){
-			if(!p.hasPermission("furniture.tent3")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.TENT_3, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlaceTent(p, location, Utils.yawToFace(location.getYaw()).getOppositeFace(), 3,4, 2)){
-				tent_3 tent = new tent_3(location, main.getInstance(), main.createRandomRegistryId());
+				tent_3 tent = new tent_3(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOL);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -239,17 +221,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("barrels"))){
-			if(!p.hasPermission("furniture.barrels")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.BARRELS, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location,null,null)){
-				barrels tent = new barrels(location, main.getInstance(), main.createRandomRegistryId());
+				barrels tent = new barrels(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.CAULDRON);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -257,17 +233,11 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("campfire2"))){
-			if(!p.hasPermission("furniture.campfire2")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.CAMPFIRE_2, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlaceLarge(p, location, Utils.yawToFace(location.getYaw()), 2,2)){
-				campfire_2 tent = new campfire_2(location, main.getInstance(), main.createRandomRegistryId());
+				campfire_2 tent = new campfire_2(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOD);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
@@ -275,22 +245,23 @@ public class OnInteract implements Listener {
 		}
 		
 		if(saveIS.equals(main.getInstance().crafting.get("camera"))){
-			if(!p.hasPermission("furniture.camera")){p.sendMessage(noPermissions);return;}
+			if(!Permissions.check(p, FurnitureType.CAMERA, null)){p.sendMessage(noPermissions);return;}
 			if(main.getInstance().canPlace(p, location, null, null)){
-				camera tent = new camera(location, main.getInstance(), main.createRandomRegistryId());
+				camera tent = new camera(location, main.getInstance(), main.createRandomRegistryId(), emptyList);
 				tent.save();
 				p.playEffect(location, Effect.STEP_SOUND, Material.WOOD);
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					is.setAmount(amount-1);
-					p.getInventory().setItem(hand, is);
-					p.updateInventory();
-				}
-				return;
 			}else{
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("config.Messages.Space")));
 				return;
 			}
 		}
+
+		if(!p.getGameMode().equals(GameMode.CREATIVE)){
+			is.setAmount(amount-1);
+			p.getInventory().setItem(hand, is);
+			p.updateInventory();
+		}
+		return;
 	}
 	
 	public ItemStack getItemStackCopy(ItemStack is){

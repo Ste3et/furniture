@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Objects.electric;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -26,11 +27,14 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class camera implements Listener {
-	List<String> IDList = new ArrayList<String>();
+	List<UUID> idList = new ArrayList<UUID>();
 	Location loc = null;
 	BlockFace b = null;
 	World w = null;
@@ -39,14 +43,23 @@ public class camera implements Listener {
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public camera(Location loc, Plugin plugin, String id){
-		this.b = Utils.yawToFace(loc.getYaw());
-		this.loc = loc.getBlock().getLocation();
-		this.loc.setYaw(loc.getYaw());
-		this.id = id;
-		this.w = this.loc.getWorld();
-		BlockFace b = Utils.yawToFace(loc.getYaw()).getOppositeFace();
-		Location center = Utils.getCenter(loc);
+	public camera(Location location, Plugin plugin, String ID, List<UUID> uuids){
+		this.b = Utils.yawToFace(location.getYaw());
+		this.loc = location.getBlock().getLocation();
+		this.loc.setYaw(location.getYaw());
+		this.id = ID;
+		this.w = location.getWorld();
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.CAMERA, this.id, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
+		BlockFace b = Utils.yawToFace(location.getYaw()).getOppositeFace();
+		Location center = Utils.getCenter(location);
 		Location gehäuse = main.getNew(center, b, 0D, 0D).add(0,-1.0,0);
 		Location gehäuse2 = main.getNew(center, b, 0D, 0D).add(0,-0.4,0);
 		Location fokus = main.getNew(center, b, .15D, 0D).add(0,-.24,0);
@@ -64,27 +77,31 @@ public class camera implements Listener {
 		feet1.setYaw(Utils.FaceToYaw(b));
 		feet2.setYaw(Utils.FaceToYaw(b) + 180 - 45);
 		feet3.setYaw(Utils.FaceToYaw(b) + 180 + 45);
-		Utils.setArmorStand(gehäuse, null, new ItemStack(Material.WOOL, 1, (short) 15), false, false, false, getID(), IDList);
-		Utils.setArmorStand(gehäuse2, null, new ItemStack(Material.WOOL, 1, (short) 15), false, true, false, getID(), IDList);
-		Utils.setArmorStand(fokus, null, new ItemStack(Material.DISPENSER), false, true, false, getID(), IDList);
-		Utils.setArmorStand(search, null, new ItemStack(Material.TRIPWIRE_HOOK, 1, (short) 15), false, false, false, getID(), IDList);
-		Utils.setArmorStand(button, null, new ItemStack(Material.WOOD_BUTTON, 1, (short) 15), false, true, false, getID(), IDList);
-		Utils.setArmorStand(feet1, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), IDList);
-		Utils.setArmorStand(feet2, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), IDList);
-		Utils.setArmorStand(feet3, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), IDList);
+		Utils.setArmorStand(gehäuse, null, new ItemStack(Material.WOOL, 1, (short) 15), false, false, false, getID(), idList);
+		Utils.setArmorStand(gehäuse2, null, new ItemStack(Material.WOOL, 1, (short) 15), false, true, false, getID(), idList);
+		Utils.setArmorStand(fokus, null, new ItemStack(Material.DISPENSER), false, true, false, getID(), idList);
+		Utils.setArmorStand(search, null, new ItemStack(Material.TRIPWIRE_HOOK, 1, (short) 15), false, false, false, getID(), idList);
+		Utils.setArmorStand(button, null, new ItemStack(Material.WOOD_BUTTON, 1, (short) 15), false, true, false, getID(), idList);
+		Utils.setArmorStand(feet1, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), idList);
+		Utils.setArmorStand(feet2, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), idList);
+		Utils.setArmorStand(feet3, new EulerAngle(1.2, 0, 0), new ItemStack(Material.STICK), true, false, false, getID(), idList);
 		main.getInstance().getManager().cameraList.add(this);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!IDList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.CAMERA, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);
@@ -101,9 +118,8 @@ public class camera implements Listener {
 		Player player = e.getPlayer();
 		if(e.getRightClicked() == null){return;}
 		if(e.getRightClicked() instanceof ArmorStand == false){return;}
-		if(e.getRightClicked().getName() == null){return;}
-		if(IDList==null||IDList.isEmpty()){return;}
-		if(!IDList.contains(e.getRightClicked().getCustomName())){return;}
+		if(idList==null||idList.isEmpty()){return;}
+		if(!idList.contains(e.getRightClicked().getUniqueId())){return;}
 		e.setCancelled(true);
 		Location playerLocation = Utils.getLocationCopy(main.getNew(player.getLocation().getBlock().getLocation(), b, -1D, 0D));
 		Location location = Utils.getLocationCopy(getLocation());
@@ -126,8 +142,8 @@ public class camera implements Listener {
 	public void delete(Boolean b, Boolean a){
 		if(b){
 			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("camera"));}
-			if(IDList!=null&&!IDList.isEmpty()){
-				for(String ids : IDList){
+			if(idList!=null&&!idList.isEmpty()){
+				for(UUID ids : idList){
 					if(ids==null){continue;}
 					ArmorStand as = Utils.getArmorStandAtID(w, ids);
 					if(as!=null){
@@ -139,7 +155,7 @@ public class camera implements Listener {
 			}
 		}
 		this.loc = null;
-		IDList.clear();
+		idList.clear();
 		main.getInstance().getManager().cameraList.remove(this);
 	}
 	

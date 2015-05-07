@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Main.Manager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -53,66 +56,81 @@ public class Manager {
 						World w = Bukkit.getWorld(fc.getString(path+".Location.w"));
 						String face = fc.getString(path+".Location.face");
 						Location l = new Location(w, x, y, z);
+						List<UUID> uuidList = Utils.StringListToUUIDList(fc.getStringList(path+".UUUIDs"));
+						if(uuidList==null){
+							main.getInstance().getLogger().warning("Unknow data found pls remove ["+ s +".yml]");
+							main.getInstance().getLogger().warning("If you use a HealthBar plugin pls use the command");
+							main.getInstance().getLogger().warning("/kill @e[type=ArmorStand] {Invisible:1b,NoBasePlate:1b,NoGravity:1b}");
+							main.getInstance().getLogger().warning("Then you dont use a healthbar plugin run /furniture killall");
+						}else{
+							for(Entity e : w.getEntities()){
+								if(e!=null && e instanceof ArmorStand && uuidList.contains(e.getUniqueId())){
+									e.remove();
+								}
+							}
+							uuidList.clear();
+						}
+						
 						float yaw = Utils.FaceToYaw(Utils.StringToFace(face));
 						l.setYaw(yaw);
 						
 						if(s.equalsIgnoreCase("chair")){
-							new chair(l, main.getInstance(), str);
+							new chair(l, main.getInstance(), str, uuidList);
 						}
 						
 						if(s.equalsIgnoreCase("camera")){
 							l.setYaw(Utils.FaceToYaw(Utils.StringToFace(face).getOppositeFace()));
-							new camera(l, main.getInstance(), str);
+							new camera(l, main.getInstance(), str, uuidList);
 						}
 						
 						if(s.equalsIgnoreCase("largeTable")){
-							largeTable large = new largeTable(l, main.getInstance(), str);
+							largeTable large = new largeTable(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, large);
 						}
 						
 						if(s.equalsIgnoreCase("lantern")){
-							latern later = new latern(l, main.getInstance(), str);
+							latern later = new latern(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, later);
 						}
 						
 						if(s.equalsIgnoreCase("sofa")){
-							sofa sof = new sofa(l, main.getInstance(), str);
+							sofa sof = new sofa(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, sof);
 						}
 						
 						
 						if(s.equalsIgnoreCase("table")){
-							table tabl = new table(l, main.getInstance(), str);
+							table tabl = new table(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, tabl);
 						}
 						
 						if(s.equalsIgnoreCase("tent1")){
-							tent_1 tent = new tent_1(l, main.getInstance(), str);
+							tent_1 tent = new tent_1(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, tent);
 						}
 						
 						if(s.equalsIgnoreCase("tent2")){
-							tent_2 tent = new tent_2(l, main.getInstance(), str);
+							tent_2 tent = new tent_2(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, tent);
 						}
 						
 						if(s.equalsIgnoreCase("tent3")){
-							tent_3 tent = new tent_3(l, main.getInstance(), str);
+							tent_3 tent = new tent_3(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, tent);
 						}
 						
 						if(s.equalsIgnoreCase("campfire1")){
-							campfire_1 fire = new campfire_1(l, main.getInstance(), str);
+							campfire_1 fire = new campfire_1(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, fire);
 						}
 						
 						if(s.equalsIgnoreCase("campfire2")){
-							campfire_2 fire = new campfire_2(l, main.getInstance(), str);
+							campfire_2 fire = new campfire_2(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, fire);
 						}
 						
 						if(s.equalsIgnoreCase("barrels")){
-							barrels fire = new barrels(l, main.getInstance(), str);
+							barrels fire = new barrels(l, main.getInstance(), str, uuidList);
 							o.loadOptions(fc, fire);
 						}
 					}
@@ -129,10 +147,10 @@ public class Manager {
 		if(!main.getInstance().getManager().chairList.isEmpty()){
 			if(c==null){
 				for(chair s : main.getInstance().getManager().chairList){
-					save(s.getLocation(), "chair", s.getID());
+					save(s.getLocation(), "chair", s.getID(),s.getList());
 				}
 			}else{
-				save(c.getLocation(), "chair", c.getID());
+				save(c.getLocation(), "chair", c.getID(), c.getList());
 			}
 		}
 		cc.saveConfig("chair", fc, folder);
@@ -144,10 +162,10 @@ public class Manager {
 		if(!main.getInstance().getManager().cameraList.isEmpty()){
 			if(c==null){
 				for(camera s : main.getInstance().getManager().cameraList){
-					save(s.getLocation(), "camera", s.getID());
+					save(s.getLocation(), "camera", s.getID(),s.getList());
 				}
 			}else{
-				save(c.getLocation(), "camera", c.getID());
+				save(c.getLocation(), "camera", c.getID(), c.getList());
 			}
 		}
 		cc.saveConfig("camera", fc, folder);
@@ -160,11 +178,11 @@ public class Manager {
 		if(!main.getInstance().getManager().lanternList.isEmpty()){
 			if(l==null){
 				for(latern s : main.getInstance().getManager().lanternList){
-					save(s.getLocation(), "lantern", s.getID());
+					save(s.getLocation(), "lantern", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(l.getLocation(), "lantern", l.getID());
+				save(l.getLocation(), "lantern", l.getID(), l.getList());
 				o.saveOption(fc, l);
 			}
 		}
@@ -178,11 +196,11 @@ public class Manager {
 		if(!main.getInstance().getManager().campfire1List.isEmpty()){
 			if(l==null){
 				for(campfire_1 s : main.getInstance().getManager().campfire1List){
-					save(s.getLocation(), "campfire1", s.getID());
+					save(s.getLocation(), "campfire1", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(l.getLocation(), "campfire1", l.getID());
+				save(l.getLocation(), "campfire1", l.getID(), l.getList());
 				o.saveOption(fc, l);
 			}
 		}
@@ -196,18 +214,18 @@ public class Manager {
 		if(!main.getInstance().getManager().campfire2List.isEmpty()){
 			if(l==null){
 				for(campfire_2 s : main.getInstance().getManager().campfire2List){
-					save(s.getLocation(), "campfire2", s.getID());
+					save(s.getLocation(), "campfire2", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(l.getLocation(), "campfire2", l.getID());
+				save(l.getLocation(), "campfire2", l.getID(), l.getList());
 				o.saveOption(fc, l);
 			}
 		}
 		cc.saveConfig("campfire2", fc, folder);
 	}
 	
-	public void save(Location l, String file, String ID){
+	public void save(Location l, String file, String ID, List<String> list){
 		String path = "Furniture." + file;
 		path = "Furniture."+file+"."+ID;
 		fc.set(path+".Location.x",round(l.getX(), 2));
@@ -215,6 +233,7 @@ public class Manager {
 		fc.set(path+".Location.z",round(l.getZ(), 2));
 		fc.set(path+".Location.w", l.getWorld().getName());
 		fc.set(path+".Location.face", Utils.yawToFace(l.getYaw()).name());
+		fc.set(path+".UUUIDs", list);
 	}
 	
 
@@ -227,11 +246,11 @@ public class Manager {
 		if(!main.getInstance().getManager().sofaList.isEmpty()){
 			if(sof==null){
 				for(sofa s : main.getInstance().getManager().sofaList){
-					save(s.getLocation(), "sofa", s.getID());
+					save(s.getLocation(), "sofa", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(sof.getLocation(), "sofa", sof.getID());
+				save(sof.getLocation(), "sofa", sof.getID(), sof.getList());
 				o.saveOption(fc, sof);
 			}
 		}
@@ -245,11 +264,11 @@ public class Manager {
 		if(!main.getInstance().getManager().tableList.isEmpty()){
 			if(t==null){
 				for(table s : main.getInstance().getManager().tableList){
-					save(s.getLocation(), "table", s.getID());
+					save(s.getLocation(), "table", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(t.getLocation(), "table", t.getID());
+				save(t.getLocation(), "table", t.getID(), t.getList());
 				o.saveOption(fc, t);
 			}
 		}
@@ -263,11 +282,11 @@ public class Manager {
 		if(!main.getInstance().getManager().barrelList.isEmpty()){
 			if(barrel==null){
 				for(barrels s : main.getInstance().getManager().barrelList){
-					save(s.getLocation(), "barrels", s.getID());
+					save(s.getLocation(), "barrels", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(barrel.getLocation(), "barrels", barrel.getID());
+				save(barrel.getLocation(), "barrels", barrel.getID(), barrel.getList());
 				o.saveOption(fc, barrel);
 			}
 		}
@@ -281,11 +300,11 @@ public class Manager {
 		if(!main.getInstance().getManager().tent1List.isEmpty()){
 			if(tent == null){
 				for(tent_1 s : main.getInstance().getManager().tent1List){
-					save(s.getLocation(), "tent1", s.getID());
+					save(s.getLocation(), "tent1", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(tent.getLocation(), "tent1", tent.getID());
+				save(tent.getLocation(), "tent1", tent.getID(),tent.getList());
 				o.saveOption(fc, tent);
 			}
 			
@@ -300,11 +319,11 @@ public class Manager {
 		if(!main.getInstance().getManager().largeTableList.isEmpty()){
 			if(table == null){
 				for(largeTable s : main.getInstance().getManager().largeTableList){
-					save(s.getLocation(), "largeTable", s.getID());
+					save(s.getLocation(), "largeTable", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(table.getLocation(), "largeTable", table.getID());
+				save(table.getLocation(), "largeTable", table.getID(),table.getList());
 				o.saveOption(fc, table);
 			}
 		}
@@ -446,11 +465,11 @@ public class Manager {
 		if(!main.getInstance().getManager().tent2List.isEmpty()){
 			if(tent == null){
 				for(tent_2 s : main.getInstance().getManager().tent2List){
-					save(s.getLocation(), "tent2", s.getID());
+					save(s.getLocation(), "tent2", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(tent.getLocation(), "tent2", tent.getID());
+				save(tent.getLocation(), "tent2", tent.getID(),tent.getList());
 				o.saveOption(fc, tent);
 			}
 			
@@ -465,11 +484,11 @@ public class Manager {
 		if(!main.getInstance().getManager().tent3List.isEmpty()){
 			if(tent == null){
 				for(tent_3 s : main.getInstance().getManager().tent3List){
-					save(s.getLocation(), "tent3", s.getID());
+					save(s.getLocation(), "tent3", s.getID(),s.getList());
 					o.saveOption(fc, s);
 				}
 			}else{
-				save(tent.getLocation(), "tent3", tent.getID());
+				save(tent.getLocation(), "tent3", tent.getID(),tent.getList());
 				o.saveOption(fc, tent);
 			}
 			

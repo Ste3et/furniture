@@ -44,7 +44,7 @@ public class FurnitureManager {
 			if(largeTableList.isEmpty()){break;}
 			List<largeTable> LLT = ((List<largeTable>) ((ArrayList<largeTable>) largeTableList).clone());
 			for(largeTable s : LLT){s.delete(b,false);return true;}
-		case LATERN:
+		case LANTERN:
 			if(lanternList.isEmpty()){break;}
 			List<latern> latetnL = ((List<latern>) ((ArrayList<latern>) lanternList).clone());
 			for(latern s : latetnL){s.delete(b,false);return true;}

@@ -3,7 +3,9 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -23,8 +25,12 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
+
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class tent_1 implements Listener {
 
@@ -32,16 +38,16 @@ public class tent_1 implements Listener {
 	private String ID;
 	private BlockFace b;
 	private Block block;
-	private List<String> idList = new ArrayList<String>();
+	private List<UUID> idList = new ArrayList<UUID>();
 	private World w;
 	public String getID(){return this.ID;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public tent_1(Location location, Plugin plugin, String ID) {
+	public tent_1(Location location, Plugin plugin, String ID, List<UUID> uuids) {
 		this.loc = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		this.loc.setYaw(location.getYaw());
-		this.w = loc.getWorld();
+		this.w = location.getWorld();
 		BlockFace b = Utils.yawToFace(location.getYaw());
 		
 		if(b.equals(BlockFace.WEST)){location=main.getNew(location, b, 1D, 0D);}
@@ -52,6 +58,19 @@ public class tent_1 implements Listener {
 		this.ID = ID;
 		this.b = b;
 		
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.TENT_1, this.ID, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
+	}
+	
+	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
 		Location blockLocation = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		Location loc_1 = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		Location loc_2 = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -178,6 +197,7 @@ public class tent_1 implements Listener {
 	public void onBlockBreak(BlockBreakEvent e){
 		if(e.getBlock()!=null&&block!=null&&e.getBlock().equals(block)){
 			e.setCancelled(true);
+			if(!Permissions.check(e.getPlayer(), FurnitureType.TENT_1, "destroy.")){return;}
 			delete(true, true);
 		}
 	}
@@ -192,7 +212,7 @@ public class tent_1 implements Listener {
 			if(a){
 				getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("tent1"));
 			}
-			for(String s : idList){
+			for(UUID s : idList){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as!=null){
 					if(a){
@@ -207,27 +227,26 @@ public class tent_1 implements Listener {
 		main.getInstance().getManager().tent1List.remove(this);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!idList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.TENT_1, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
-		if(e.getRightClicked().getName()==null){return;}
 		if(e.getRightClicked() instanceof ArmorStand == false){return;}
-		if(!idList.contains(e.getRightClicked().getCustomName())){return;}
+		if(!idList.contains(e.getRightClicked().getUniqueId())){return;}
 		e.setCancelled(true);
 		ItemStack is = player.getItemInHand();
 		if(is==null){return;}
@@ -240,7 +259,7 @@ public class tent_1 implements Listener {
 				List<Entity> list = new ArrayList<Entity>();
 				
 				
-				for(String s : this.idList){
+				for(UUID s : this.idList){
 						ArmorStand as = Utils.getArmorStandAtID(w, s);
 						if(as!=null){
 							ItemStack item = as.getHelmet();
@@ -277,7 +296,7 @@ public class tent_1 implements Listener {
 	
 	public void setColor(HashMap<Integer, Short> durabilityList){
 		int i = 0;
-		for(String id: idList){
+		for(UUID id: idList){
 			ArmorStand as = Utils.getArmorStandAtID(w, id);
 			if(as!=null){
 				if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)&&as.getHelmet().getType().equals(Material.CARPET)){
@@ -294,7 +313,7 @@ public class tent_1 implements Listener {
 		HashMap<Integer, Short> colorList = new HashMap<Integer, Short>();
 		Integer i = 0;
 		
-		for(String id: idList){
+		for(UUID id: idList){
 			try{i=colorList.size();}catch(Exception e){return colorList;}
 			ArmorStand as = Utils.getArmorStandAtID(w, id);
 			if(as!=null){

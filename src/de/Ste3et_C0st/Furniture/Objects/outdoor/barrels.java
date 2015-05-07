@@ -2,7 +2,9 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,9 +23,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.Furniture.Main.Manager.ILightAPI;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class barrels implements Listener {
 
@@ -32,21 +37,30 @@ public class barrels implements Listener {
 	private ArmorStand as;
 	private Block block;
 	private String id;
-	private List<String> idList = new ArrayList<String>();
+	private List<UUID> idList = new ArrayList<UUID>();
 	public String getID(){return this.id;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public barrels(Location loc, Plugin plugin, String ID){
+	public barrels(Location location, Plugin plugin, String ID, List<UUID> uuids){
 		this.id = ID;
-		this.loc = loc.getBlock().getLocation();
-		this.loc.setYaw(loc.getYaw());
-		this.b = Utils.yawToFace(loc.getYaw());
+		this.loc = location.getBlock().getLocation();
+		this.loc.setYaw(location.getYaw());
+		this.b = Utils.yawToFace(location.getYaw());
 		
-		this.block = loc.getBlock();
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.BARRELS, this.id, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
+		this.block = location.getBlock();
 		this.block.setType(Material.CAULDRON);
 
-		this.as = Utils.setArmorStand(Utils.getCenter(loc).add(0,-1.5,0), null, null, false, false, false, ID, idList);
+		this.as = Utils.setArmorStand(Utils.getCenter(loc).add(0,-1.5,0), null, null, false, false, false, this.id, idList);
 		
 		main.getInstance().getManager().barrelList.add(this);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -62,6 +76,10 @@ public class barrels implements Listener {
 			return this.as.getHelmet();
 		}
 		return null;
+	}
+	
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
 	}
 	
 	public void setItemstack(ItemStack is){
@@ -90,25 +108,26 @@ public class barrels implements Listener {
 		main.getInstance().getManager().barrelList.remove(this);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!idList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.BARRELS, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onBreak(BlockBreakEvent e){
 		if(block!=null&&e.getBlock().equals(block)){
 			e.setCancelled(true);
 			if(((Player) e.getPlayer()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
+			if(!Permissions.check(e.getPlayer(), FurnitureType.BARRELS, "destroy.")){return;}
 			delete(true, true);
 		}
 	}
@@ -125,19 +144,20 @@ public class barrels implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
 		if(e.getRightClicked()==null){return;}
 		if(e.getRightClicked() instanceof ArmorStand == false){return;}
 		if(idList==null||idList.isEmpty()){return;}
-		if(!idList.contains(e.getRightClicked().getCustomName())){return;}
+		if(!idList.contains(e.getRightClicked().getUniqueId())){return;}
 			e.setCancelled(true);
 			if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
 			ItemStack is = player.getItemInHand();
 			if(is!=null&&is.getType().isBlock()||is.getType().equals(Material.AIR)){
 				if(as!=null){
+					if(as.getHelmet()!=null&&as.getHelmet().equals(is)){return;}
 					if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getHelmet());}
 					setItemstack(is);
 					if(is.getType().equals(Material.GLOWSTONE) || is.getType().equals(Material.BEACON) || is.getType().equals(Material.SEA_LANTERN) ){setLight(true);}else{setLight(false);}
@@ -147,7 +167,7 @@ public class barrels implements Listener {
 			}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractEvent e){
 		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			if(block!=null&&e.getClickedBlock()!=null&&e.getClickedBlock().equals(block)){
@@ -157,6 +177,7 @@ public class barrels implements Listener {
 				ItemStack is = player.getItemInHand();
 				if(is!=null&&is.getType().isBlock()||is.getType().equals(Material.AIR)){
 					if(as!=null){
+						if(as.getHelmet()!=null&&as.getHelmet().equals(is)){return;}
 						if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getHelmet());}
 						setItemstack(is);
 						if(is.getType().equals(Material.GLOWSTONE) || is.getType().equals(Material.BEACON) || is.getType().equals(Material.SEA_LANTERN) ){setLight(true);}else{setLight(false);}

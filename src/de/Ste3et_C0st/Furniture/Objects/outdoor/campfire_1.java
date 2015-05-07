@@ -2,7 +2,9 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,27 +23,39 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class campfire_1 implements Listener {
 
 	private Location loc;
 	private String ID;
 	private BlockFace b;
-	private List<String> idList = new ArrayList<String>();
+	private List<UUID> idList = new ArrayList<UUID>();
 	private World w;
 	public String getID(){return this.ID;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public campfire_1(Location location, Plugin plugin, String ID) {
+	public campfire_1(Location location, Plugin plugin, String ID, List<UUID> uuids){
 		this.loc = location.getBlock().getLocation();
 		this.loc.setYaw(location.getYaw());
 		this.ID = ID;
 		this.w = location.getWorld();
 		this.b = Utils.yawToFace(location.getYaw());
-		
+
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.CAMPFIRE_1, this.ID, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
 		for(int i = 0;i<=3;i++){
 			Location loc = Utils.getCenter(getLocation());
 			loc.add(0,-1.9,0);
@@ -52,25 +66,29 @@ public class campfire_1 implements Listener {
 		main.getInstance().getManager().campfire1List.add(this);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!idList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.CAMPFIRE_1, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);
+	}
+	
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
 	}
 	
 	public void delete(boolean b, boolean a){
 		setLight(false, false);
 		if(b){
 			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("campfire1"));}
-			for(String s : idList){
+			for(UUID s : idList){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as!=null){
 					if(a){as.getWorld().playEffect(as.getLocation(), Effect.STEP_SOUND, Material.LOG);}
@@ -87,12 +105,12 @@ public class campfire_1 implements Listener {
 		main.getInstance().mgr.saveCampFire1(this);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
 		if(e.getRightClicked() instanceof ArmorStand){
-			if(this.idList.contains(e.getRightClicked().getName())){
+			if(this.idList.contains(e.getRightClicked().getUniqueId())){
 				e.setCancelled(true);
 				if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
 				ItemStack is = player.getItemInHand();
@@ -111,7 +129,7 @@ public class campfire_1 implements Listener {
 	@EventHandler
 	public void onBurn(EntityDamageEvent e){
 		if(e.getEntity() instanceof ArmorStand && (e.getCause().name().equalsIgnoreCase("FIRE") || e.getCause().name().equalsIgnoreCase("FIRE_TICK"))){
-			if(idList.contains(e.getEntity().getCustomName())){
+			if(idList.contains(e.getEntity().getUniqueId())){
 				e.setCancelled(true);
 			}
 		}
@@ -119,7 +137,7 @@ public class campfire_1 implements Listener {
 	@SuppressWarnings("static-access")
 	public void setLight(boolean boolean1, boolean a) {
 		Location light = new Location(w, getLocation().getX(), getLocation().getY(), getLocation().getZ());
-		for(String s : idList){
+		for(UUID s : idList){
 			if(Utils.getArmorStandAtID(w, s) != null){
 				setFire(Utils.getArmorStandAtID(w, s), boolean1);
 			}
@@ -139,7 +157,7 @@ public class campfire_1 implements Listener {
 	}
 	
 	public boolean getFire(){
-		for(String s : idList){
+		for(UUID s : idList){
 			if(Utils.getArmorStandAtID(w, s) != null){
 				if(Utils.getArmorStandAtID(w, s).getFireTicks()>=1){
 					return true;

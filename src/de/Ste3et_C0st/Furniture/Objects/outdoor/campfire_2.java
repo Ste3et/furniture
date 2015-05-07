@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -24,8 +25,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
+import de.Ste3et_C0st.Furniture.Main.Permissions;
 import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
 
 public class campfire_2 implements Listener {
 
@@ -33,8 +37,8 @@ public class campfire_2 implements Listener {
 	private Location l;
 	private String ID;
 	private BlockFace b;
-	private List<String> idList = new ArrayList<String>();
-	private List<String> fire = new ArrayList<String>();
+	private List<UUID> idList = new ArrayList<UUID>();
+	private List<UUID> fire = new ArrayList<UUID>();
 	private List<Material> items = new ArrayList<Material>(
 			Arrays.asList(
 					Material.RAW_BEEF,
@@ -71,13 +75,26 @@ public class campfire_2 implements Listener {
 			
 	};
 	
-	public campfire_2(Location location, Plugin plugin, String ID) {
+	public campfire_2(Location location, Plugin plugin, String ID, List<UUID> uuids) {
 		this.loc = location.getBlock().getLocation();
 		this.ID = ID;
 		this.b = Utils.yawToFace(location.getYaw());
-		this.w = loc.getWorld();
+		this.w = location.getWorld();
 		this.loc.setYaw(location.getYaw());
 		
+		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.CAMPFIRE_2, this.ID, location);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			if(uuids==null){uuids = idList;}
+			spawn(uuids, location, plugin);
+		}
+	}
+	
+	public List<String> getList(){
+		return Utils.UUIDListToStringList(idList);
+	}
+	
+	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
 		Location middle = Utils.getCenter(getLocation());
 		middle = main.getNew(middle, b, .5D, -.5D);
 		middle.add(0,-1.2,0);
@@ -121,16 +138,16 @@ public class campfire_2 implements Listener {
 		this.l = grill;
 		
 		ArmorStand as = Utils.setArmorStand(middle.add(0,-1.3,0), null, null, false, true, false, ID, idList);
-		fire.add(as.getName());
+		fire.add(as.getUniqueId());
 		
 		main.getInstance().getManager().campfire2List.add(this);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBurn(EntityDamageEvent e){
 		if(e.getEntity() instanceof ArmorStand && (e.getCause().name().equalsIgnoreCase("FIRE") || e.getCause().name().equalsIgnoreCase("FIRE_TICK"))){
-				if(fire!=null&&e.getEntity().getName()!=null&&fire.contains(e.getEntity().getName())){
+				if(fire!=null&&fire.contains(e.getEntity().getUniqueId())){
 					e.setCancelled(true);
 				}
 		}
@@ -138,7 +155,7 @@ public class campfire_2 implements Listener {
 	
 	public boolean isFire(){
 		if(fire==null){return false;}
-		for(String s : fire){
+		for(UUID s : fire){
 			ArmorStand as = Utils.getArmorStandAtID(w, s);
 			if(as==null){return false;}
 			if(as.getFireTicks()>0){return true;}
@@ -150,7 +167,7 @@ public class campfire_2 implements Listener {
 	public void setLight(Boolean b, Boolean a){
 		if(b){
 			if(fire==null){return;}
-			for(String s : fire){
+			for(UUID s : fire){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as==null){return;}
 				as.setFireTicks(Integer.MAX_VALUE);
@@ -162,7 +179,7 @@ public class campfire_2 implements Listener {
 			w.playSound(getLocation(), Sound.FIRE_IGNITE, 1, 1);
 		}else{
 			if(fire==null){return;}
-			for(String s : fire){
+			for(UUID s : fire){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as==null){return;}
 				as.setFireTicks(0);
@@ -186,7 +203,7 @@ public class campfire_2 implements Listener {
 			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("campfire2"));}
 			
 			main.getInstance().mgr.deleteFromConfig(getID(), "campfire2");
-			for(String s : idList){
+			for(UUID s : idList){
 				ArmorStand as = Utils.getArmorStandAtID(w, s);
 				if(as!=null){
 					if(a){as.getWorld().playEffect(as.getLocation(), Effect.STEP_SOUND, Material.LOG);}
@@ -201,12 +218,12 @@ public class campfire_2 implements Listener {
 		main.getInstance().getManager().campfire2List.remove(this);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onInteract(PlayerInteractAtEntityEvent e){
 		if(e.isCancelled()){return;}
 		Player player = e.getPlayer();
 		if(e.getRightClicked() instanceof ArmorStand){
-			if(idList.contains(e.getRightClicked().getCustomName())){
+			if(idList.contains(e.getRightClicked().getUniqueId())){
 				e.setCancelled(true);
 				if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
 				ItemStack is = player.getItemInHand();
@@ -230,15 +247,15 @@ public class campfire_2 implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damage(EntityDamageByEntityEvent e){
 		if(e.isCancelled()){return;}
 		if(e.getDamager() instanceof Player == false){return;}
 		if(e.getEntity() instanceof ArmorStand == false){return;}
 		if(e.getEntity() == null){return;}
-		if(e.getEntity().getName() == null){return;}
-		if(!idList.contains(e.getEntity().getCustomName())){return;}
+		if(!idList.contains(e.getEntity().getUniqueId())){return;}
 		e.setCancelled(true);
+		if(!Permissions.check((Player) e.getDamager(), FurnitureType.CAMPFIRE_2, "destroy.")){return;}
 		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
 		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
 		delete(true, true);

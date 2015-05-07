@@ -2,6 +2,7 @@ config:
    # Needs Vualt (optional)
    UseMetrics: true
    CraftingPermissions: true
+   BreakPermissions: true
    Messages:
      NoPermissions: "&cYou don't have permission to do that"
      notFound: "&cFurniture not found"

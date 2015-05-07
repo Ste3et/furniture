@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.Metrics;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -17,6 +18,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -25,17 +27,20 @@ import de.Ste3et_C0st.Furniture.Main.Manager.CheckManager;
 import de.Ste3et_C0st.Furniture.Main.Manager.FurnitureManager;
 import de.Ste3et_C0st.Furniture.Main.Manager.Manager;
 import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
+import de.Ste3et_C0st.Furniture.Model.ModelCommand;
+import de.Ste3et_C0st.Furniture.Model.ModelListener;
+import de.Ste3et_C0st.Furniture.Model.ModelManager;
 import de.Ste3et_C0st.Furniture.Listener.IPistonExtendEvent;
 import de.Ste3et_C0st.Furniture.Listener.OnInteract;
 
 public class main extends JavaPlugin {
 	private static main Main;
 	private Logger log = Logger.getLogger("Minecraft");
-
 	public HashMap<String, ItemStack> crafting = new HashMap<String, ItemStack>();
 	public Manager mgr;
 	public FurnitureManager Fmgr;
 	public Boolean isCrafting = true;
+	public Boolean isDestroyable = true;
 	public CheckManager check;
 	public StringPage sp;
 	//public Factions factionsAPI = null;
@@ -43,10 +48,12 @@ public class main extends JavaPlugin {
 	@Override
 	public void onEnable(){
 			Main = this;
+			new ModelManager();
 			getServer().getPluginManager().registerEvents(new OnInteract(), this);
 			getServer().getPluginManager().registerEvents(new IPistonExtendEvent(), this);
+			getServer().getPluginManager().registerEvents(new ModelListener(), this);
 			getCommand("furniture").setExecutor(new command());
-			
+			getCommand("model").setExecutor(new ModelCommand());
 			try{
 				getConfig().addDefaults(YamlConfiguration.loadConfiguration(getResource("config.yml")));
 				getConfig().options().copyDefaults(true);
@@ -82,7 +89,22 @@ public class main extends JavaPlugin {
 			mgr.defaultCrafting();
 			addCrafting();
 			
-			isCrafting = getConfig().getBoolean("config.CraftingPermissions");	
+			isCrafting = getConfig().getBoolean("config.CraftingPermissions");
+			isDestroyable = getConfig().getBoolean("config.BreakPermissions");
+			
+			check(Bukkit.getPluginManager());
+	}
+	
+	public void check(PluginManager pm){
+		String plugins = "";
+		if(pm.isPluginEnabled("WorldGuard")){plugins +="Worldguard;";}
+		if(pm.isPluginEnabled("ClearLagg")){plugins +="ClearLagg;";}
+		if(pm.isPluginEnabled("NoLagg")){plugins +="NoLagg;";}
+		if(pm.isPluginEnabled("pTweaks")){plugins +="pTweaks;";}
+		if(plugins!=""){
+			getLogger().warning("[Furniture] your Plugins " + plugins);
+			getLogger().warning("[Furniture] have a stoplag features this can remove the Armor Stands");
+		}
 	}
 
 	public Double distance(Location loc1, Location loc2){
@@ -94,7 +116,7 @@ public class main extends JavaPlugin {
 	public void removeAll(){
 		Fmgr.RemoveType(FurnitureType.CHAIR, false);
 		Fmgr.RemoveType(FurnitureType.LARGE_TABLE, false);
-		Fmgr.RemoveType(FurnitureType.LATERN, false);
+		Fmgr.RemoveType(FurnitureType.LANTERN, false);
 		Fmgr.RemoveType(FurnitureType.SOFA, false);
 		Fmgr.RemoveType(FurnitureType.TABLE, false);
 		Fmgr.RemoveType(FurnitureType.BARRELS, false);

@@ -179,6 +179,8 @@ public class command implements CommandExecutor {
 						sender.sendMessage(noPermissions);
 						return true;
 					}
+				}else if(args[0].equalsIgnoreCase("fixall")){
+					
 				}else{
 					sender.sendMessage(help);
 					return true;
@@ -284,7 +286,7 @@ public class command implements CommandExecutor {
 	public FurnitureType getType(String s){
 		if(s.equalsIgnoreCase("chair")){return FurnitureType.CHAIR;}
 		if(s.equalsIgnoreCase("largetable")){return FurnitureType.LARGE_TABLE;}
-		if(s.equalsIgnoreCase("lantern")){return FurnitureType.LATERN;}
+		if(s.equalsIgnoreCase("lantern")){return FurnitureType.LANTERN;}
 		if(s.equalsIgnoreCase("sofa")){return FurnitureType.SOFA;}
 		if(s.equalsIgnoreCase("table")){return FurnitureType.TABLE;}
 		if(s.equalsIgnoreCase("barrels")){return FurnitureType.BARRELS;}
