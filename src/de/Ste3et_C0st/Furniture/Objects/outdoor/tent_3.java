@@ -1,14 +1,10 @@
 package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.DyeColor;
-import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,90 +13,109 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
-import de.Ste3et_C0st.Furniture.Main.Permissions;
-import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
+import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
+import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class tent_3 implements Listener {
+public class tent_3 implements Listener{
 
-	private Location loc;
-	private String ID;
-	private BlockFace b;
-	private Block block;
-	private List<UUID> idList = new ArrayList<UUID>();
-	private World w;
-	public String getID(){return this.ID;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	public ArmorStand armorstand;
+	Location loc;
+	BlockFace b;
+	World w;
+	ObjectID obj;
+	FurnitureManager manager;
+	FurnitureLib lib;
+	LocationUtil lutil;
+	Integer id;
+	Plugin plugin;
 	
-	public tent_3(Location location, Plugin plugin, String ID, List<UUID> uuids) {
-		this.b = Utils.yawToFace(location.getYaw());
+	public tent_3(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+		this.lutil = main.getLocationUtil();
+		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
-		this.ID = ID;
+		this.loc.setYaw(location.getYaw());
 		this.w = location.getWorld();
-		if(b.equals(BlockFace.WEST)){location=main.getNew(location, b, 1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){location=main.getNew(location, b, 1D, 1D);}
-		if(b.equals(BlockFace.EAST)){location=main.getNew(location, b, 0D, 1D);}
-		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.TENT_3, this.ID, location);
-		Bukkit.getPluginManager().callEvent(event);
-		if(!event.isCancelled()){
-			if(uuids==null){uuids = idList;}
-			spawn(uuids, location, plugin);
+		this.manager = lib.getFurnitureManager();
+		this.lib = lib;
+		this.plugin = plugin;
+		if(id!=null){
+			this.obj = id;
+			this.manager.send(obj);
+			Bukkit.getPluginManager().registerEvents(this, plugin);
+			return;
+		}else{
+			this.obj = new ObjectID(name, plugin.getName(), location);
 		}
+		if(b.equals(BlockFace.WEST)){location=lutil.getRelativ(location, b, 1D, 0D);}
+		if(b.equals(BlockFace.NORTH)){location=lutil.getRelativ(location, b, 1D, 1D);}
+		if(b.equals(BlockFace.EAST)){location=lutil.getRelativ(location, b, 0D, 1D);}
+		
+		spawn(location);
 	}
 	
-	public List<String> getList(){
-		return Utils.UUIDListToStringList(idList);
-	}
+	Block bed;
 	
-	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
+	public void spawn(Location loc){
+		List<ArmorStandPacket> aspL = new ArrayList<ArmorStandPacket>();
 		ItemStack banner = new ItemStack(Material.BANNER);
 		BannerMeta meta = (BannerMeta) banner.getItemMeta();
 		meta.setBaseColor(DyeColor.WHITE);
 		banner.setItemMeta(meta);
 		
-		Location locstart = main.getNew(location, b, .2D, -.17D);
+		Location locstart = lutil.getRelativ(loc, b, .2D, -.17D);
 		locstart.add(0,.65,0);
 		
-		Location locstart2 = main.getNew(location, b, .2D, -.8D);
+		Location locstart2 = lutil.getRelativ(loc, b, .2D, -.8D);
 		locstart2.add(0,.65,0);
 		
 		for(int i = 0; i<=2;i++){
-			Location loc = main.getNew(locstart, b, .74*i, 0D);
-			loc.setYaw(Utils.FaceToYaw(b)+90);
-			Utils.setArmorStand(loc, new EulerAngle(3.5, 0, 0), banner, false, false, false, getID(), idList);
+			Location location = lutil.getRelativ(locstart, b, .74*i, 0D);
+			location.setYaw(lutil.FaceToYaw(b)+90);
+			ArmorStandPacket as = manager.createArmorStand(obj, location);
+			as.getInventory().setHelmet(banner);
+			as.setPose(new EulerAngle(3.5, 0, 0), BodyPart.HEAD);
+			aspL.add(as);
+
+			location = lutil.getRelativ(locstart, b, .74*i, -.3D);
+			location.add(0,.9,0);
+			location.setYaw(lutil.FaceToYaw(b)+90);
 			
-			loc = main.getNew(locstart, b, .74*i, -.3D);
-			loc.add(0,.9,0);
-			loc.setYaw(Utils.FaceToYaw(b)+90);
-			Utils.setArmorStand(loc, new EulerAngle(3.5, 0, 0), banner, false, false, false, getID(), idList);
+			as = manager.createArmorStand(obj, location);
+			as.getInventory().setHelmet(banner);
+			as.setPose(new EulerAngle(3.5, 0, 0), BodyPart.HEAD);
+			aspL.add(as);
 		}
 		
 		for(int i = 0; i<=2;i++){
-			Location loc = main.getNew(locstart2, b, .74*i, 0D);
-			loc.setYaw(Utils.FaceToYaw(b)-90);
-			Utils.setArmorStand(loc, new EulerAngle(3.5, 0, 0), banner, false, false, false, getID(), idList);
+			Location location = lutil.getRelativ(locstart2, b, .74*i, 0D);
+			location.setYaw(lutil.FaceToYaw(b)-90);
 			
-			loc = main.getNew(locstart2, b, .74*i, .32D);
-			loc.add(0,.9,0);
-			loc.setYaw(Utils.FaceToYaw(b)-90);
-			Utils.setArmorStand(loc, new EulerAngle(3.5, 0, 0), banner, false, false, false, getID(), idList);
+			ArmorStandPacket as = manager.createArmorStand(obj, location);
+			as.getInventory().setHelmet(banner);
+			as.setPose(new EulerAngle(3.5, 0, 0), BodyPart.HEAD);
+			aspL.add(as);
+			
+			location = lutil.getRelativ(locstart2, b, .74*i, .32D);
+			location.add(0,.9,0);
+			location.setYaw(lutil.FaceToYaw(b)-90);
+			as = manager.createArmorStand(obj, location);
+			as.getInventory().setHelmet(banner);
+			as.setPose(new EulerAngle(3.5, 0, 0), BodyPart.HEAD);
+			aspL.add(as);
 		}
 		
 		banner = new ItemStack(Material.BANNER);
@@ -109,164 +124,109 @@ public class tent_3 implements Listener {
 		meta.addPattern(new Pattern(DyeColor.RED, PatternType.STRIPE_SMALL));
 		banner.setItemMeta(meta);
 		
-		Location banner1 = main.getNew(location, b, 1.7D, -.1D);
+		Location banner1 = lutil.getRelativ(loc, b, 1.7D, -.1D);
 		banner1.add(0,-1.2,0);
-		Location banner2 = main.getNew(banner1, b, 0D, -.75);
-		banner1.setYaw(Utils.FaceToYaw(b));
-		banner2.setYaw(Utils.FaceToYaw(b));
-		Utils.setArmorStand(banner1, new EulerAngle(-1.568, 0, 0), banner, false, false, false, getID(), idList);
-		Utils.setArmorStand(banner2, new EulerAngle(-1.568, 0, 0), banner, false, false, false, getID(), idList);
+		Location banner2 = lutil.getRelativ(banner1, b, 0D, -.75);
+		banner1.setYaw(lutil.FaceToYaw(b));
+		banner2.setYaw(lutil.FaceToYaw(b));
 		
-		Location sit = Utils.getCenter(location);
+		ArmorStandPacket as = manager.createArmorStand(obj, banner1);
+		as.getInventory().setHelmet(banner);
+		as.setPose(new EulerAngle(-1.568, 0, 0), BodyPart.HEAD);
+		aspL.add(as);
 		
-		if(b.equals(BlockFace.WEST)){sit=main.getNew(sit, b, -1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){sit=main.getNew(sit, b, -1D, -1D);}
-		if(b.equals(BlockFace.EAST)){sit=main.getNew(sit, b, 0D, -1D);}
+		as = manager.createArmorStand(obj, banner2);
+		as.getInventory().setHelmet(banner);
+		as.setPose(new EulerAngle(-1.568, 0, 0), BodyPart.HEAD);
+		aspL.add(as);
 		
-		sit.setYaw(Utils.FaceToYaw(this.b.getOppositeFace()));
-		Location locationsit = main.getNew(sit, b, 1D, 0D);
-		locationsit.setYaw(Utils.FaceToYaw(this.b.getOppositeFace()));
-		armorstand = Utils.setArmorStand(locationsit.add(0,-2,0), null, null, false, false, false, getID(), idList);
+		Location sit = lutil.getCenter(loc);
 		
-		block = Utils.setHalfBed(b, main.getNew(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), b, 2D, 0D));
+		if(b.equals(BlockFace.WEST)){sit=lutil.getRelativ(sit, b, -1D, 0D);}
+		if(b.equals(BlockFace.NORTH)){sit=lutil.getRelativ(sit, b, -1D, -1D);}
+		if(b.equals(BlockFace.EAST)){sit=lutil.getRelativ(sit, b, 0D, -1D);}
 		
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		main.getInstance().getManager().tent3List.add(this);
-		this.loc.setYaw(Utils.FaceToYaw(b));
-	}
-	
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void damage(EntityDamageByEntityEvent e){
-		if(e.isCancelled()){return;}
-		if(e.getDamager() instanceof Player == false){return;}
-		if(e.getEntity() instanceof ArmorStand == false){return;}
-		if(e.getEntity() == null){return;}
-		if(!idList.contains(e.getEntity().getUniqueId())){return;}
-		e.setCancelled(true);
-		if(!Permissions.check((Player) e.getDamager(), FurnitureType.TENT_3, null)){return;}
-		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
-		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
-		delete(true, true);
-	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	private void onInteract(PlayerInteractAtEntityEvent e){
-		if(e.isCancelled()){return;}
-		Player player = e.getPlayer();
-		if(e.getRightClicked() instanceof ArmorStand == false){return;}
-		if(!idList.contains(e.getRightClicked().getUniqueId())){return;}
-		e.setCancelled(true);
-		ItemStack is = player.getItemInHand();
-		if(is==null){return;}
-		if(is.getType().equals(Material.INK_SACK)){
-			if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
-			Short druability = is.getDurability();
-			Integer amount = is.getAmount();
-			Integer neAmound = amount;
-			if(amount>idList.size() || player.getGameMode().equals(GameMode.CREATIVE)){amount=idList.size();}
-			List<Entity> list = new ArrayList<Entity>();
-			for(UUID s : this.idList){
-				ArmorStand as = Utils.getArmorStandAtID(w, s);
-				if(as!=null){
-					ItemStack item = as.getHelmet();
-					if(!as.getHelmet().getType().equals(Material.BANNER)){continue;}
-					BannerMeta im = (BannerMeta) item.getItemMeta();
-					if(im.getBaseColor().getColor() != main.getDyeFromDurability(druability)){list.add(as);}
-				}
-			}
-			for(Entity entity : list){
-				if(list.indexOf(entity)>amount-1){break;}
-				if(entity instanceof ArmorStand == false){break;}
-				ArmorStand as = (ArmorStand) entity;
-				if(as==null||as.getHelmet()==null){break;}
-				if(!as.getHelmet().getType().equals(Material.BANNER)){neAmound-=1;continue;}
-				ItemStack item = as.getHelmet();
-				BannerMeta banner = (BannerMeta) item.getItemMeta();
-				banner.setBaseColor(DyeColor.getByColor(main.getDyeFromDurability(druability)));
-				item.setItemMeta(banner);
-				as.setHelmet(item);	
-			}
-			if(!player.getGameMode().equals(GameMode.CREATIVE)){
-			is.setAmount(is.getAmount()-neAmound);
-			player.getInventory().setItem(player.getInventory().getHeldItemSlot(), is);
-			player.updateInventory();
+		sit.setYaw(lutil.FaceToYaw(this.b.getOppositeFace()));
+		Location locationsit = lutil.getRelativ(sit, b, 1D, 0D);
+		locationsit.setYaw(lutil.FaceToYaw(this.b.getOppositeFace()));
+		
+		as = manager.createArmorStand(obj, locationsit.add(0,-2,0));
+		as.setName("#SITZ#");
+		aspL.add(as);
+		
+		bed = lutil.setHalfBed(b, lutil.getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), b, 2D, 0D));
+		
+		for(ArmorStandPacket packet : aspL){
+			packet.setInvisible(true);
+			packet.setGravity(false);
 		}
-		main.getInstance().mgr.saveTent3(this);
-		return;
+		
+		manager.send(obj);
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	private void onBreak(FurnitureBreakEvent e){
+		if(e.isCancelled()){return;}
+		if(!e.canBuild(null)){return;}
+		if(!e.getID().equals(obj)){return;}
+		e.setCancelled(true);
+		bed.setType(Material.AIR);
+		manager.remove(obj);
+		obj=null;
+	}
+	
+	@EventHandler
+	private void onClick(FurnitureClickEvent e){
+		if(e.isCancelled()){return;}
+		if(!e.getID().equals(obj)){return;}
+		e.setCancelled(true);
+		Player p = e.getPlayer();
+		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
+			Boolean canBuild = lib.canBuild(p, e.getLocation(), Material.CARPET);
+			Material m = Material.BANNER;
+			color(p, canBuild, m);
 		}else{
-			if(checkIfSitting()){
-				armorstand.setPassenger(player);
-			}
-		}
-	}
-	
-	public boolean checkIfSitting(){
-		if(armorstand != null){
-			if(armorstand.getPassenger()!= null){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public void delete(boolean b, boolean a){
-		if(b){
-			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("tent3"));}
-			for(UUID s : idList){
-				ArmorStand as = Utils.getArmorStandAtID(w, s);
-				if(as!=null){
-					if(a){as.getWorld().playEffect(as.getLocation(), Effect.STEP_SOUND, Material.LOG);}
-					as.remove();
-				}
-			}
-			if(this.block != null){
-				block.setType(Material.AIR);
-			}
-			main.getInstance().mgr.deleteFromConfig(getID(), "tent3");
-		}
-		block = null;
-		armorstand = null;
-		idList.clear();
-		main.getInstance().getManager().tent3List.remove(this);
-	}
-	
-	public void save(){
-		main.getInstance().mgr.saveTent3(this);
-	}
-	
-	public HashMap<Integer, Integer> getColor(){
-		HashMap<Integer, Integer> colorList = new HashMap<Integer, Integer>();
-		Integer i = 0;
-		
-		for(UUID id: idList){
-			try{i=colorList.size();}catch(Exception e){return colorList;}
-			ArmorStand as = Utils.getArmorStandAtID(w, id);
-			if(as!=null){
-				if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)&&as.getHelmet().getType().equals(Material.BANNER)){
-					ItemStack is = as.getHelmet();
-					BannerMeta im = (BannerMeta) is.getItemMeta();
-					colorList.put(i, im.getBaseColor().getColor().asRGB());
+			for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+				if(packet.getName().equalsIgnoreCase("#SITZ#")){
+					if(packet.getPessanger()==null){
+						packet.setPessanger(p);
+						packet.update();
+					}
 				}
 			}
 		}
-		return colorList;
 	}
 	
-	public void setColor(HashMap<Integer, Integer> durabilityList){
-		int i = 0;
-		for(UUID id: idList){
-			ArmorStand as = Utils.getArmorStandAtID(w, id);
-			if(as!=null){
-				if(as.getHelmet()!=null&&!as.getHelmet().getType().equals(Material.AIR)&&as.getHelmet().getType().equals(Material.BANNER)){
-					ItemStack is = as.getHelmet();
-					BannerMeta im = (BannerMeta) is.getItemMeta();
-					im.setBaseColor(DyeColor.getByColor(Color.fromRGB(durabilityList.get(i))));
-					is.setItemMeta(im);
-					as.setHelmet(is);
-					i++;
+	private void color(Player p, boolean canBuild, Material m){
+		if(!canBuild){return;}
+		ItemStack is = p.getItemInHand();
+		Integer Amount = is.getAmount();
+		List<ArmorStandPacket> asp = manager.getArmorStandPacketByObjectID(obj);
+		p.sendMessage(asp.size() + ":" + Amount);
+		DyeColor change = DyeColor.getByColor(lutil.getDyeFromDurability(is.getDurability()));
+		for(ArmorStandPacket packet : asp){
+			if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(m)){
+				if(Amount>0||p.getGameMode().equals(GameMode.CREATIVE)){
+					ItemStack is2 = packet.getInventory().getHelmet();
+					BannerMeta banner = (BannerMeta) is2.getItemMeta();
+					DyeColor change2 = banner.getBaseColor();
+					if(change2 != change){
+						banner.setBaseColor(change);
+						is2.setItemMeta(banner);
+						packet.getInventory().setHelmet(is2);
+						if(!p.getGameMode().equals(GameMode.CREATIVE)){Amount--;}
+					}
 				}
 			}
 		}
+		if(!p.getGameMode().equals(GameMode.CREATIVE)){
+			Integer i = p.getInventory().getHeldItemSlot();
+			ItemStack item = p.getItemInHand();
+			item.setAmount(Amount);
+			p.getInventory().setItem(i, item);
+			p.updateInventory();
+		}
+		manager.updateFurniture(obj);
 	}
 }

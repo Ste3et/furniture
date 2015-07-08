@@ -1,14 +1,7 @@
-name: Furniture
-version: 1.8.3
-description: Add some Furniture to the Server
+name: DefaultFurniture
+version: 0.1
+description: Furniture
 author: Ste3et_C0st
 website: http://dicecraft.de
-softdepend: [Vault, WorldGuard, WorldEdit, Towny, Landlord, LightAPI, PlotSquared, PreciousStones, PlotMe, PlotMe, Plotz, GriefPrevention, Multiverse-Core, Multiworld]
+depend: [FurnitureLib]
 main: de.Ste3et_C0st.Furniture.Main.main
-commands: 
-  furniture:
-    description: Dice Furniture Command
-    usage:  /<command>
-  model:
-    description: Dice Furniture Command
-    usage:  /<command>

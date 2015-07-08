@@ -1,0 +1,10 @@
+Tent3:
+    name: '&cTent #3'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 000,0E0,EAE
+      index:
+        '0': 0
+        E: 35
+        A: 355

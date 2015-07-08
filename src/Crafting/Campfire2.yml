@@ -1,0 +1,10 @@
+Campfire2:
+    name: '&cCampfire #2'
+    material: 383
+    crafting:
+      disable: false
+      recipe: DXD,XEX,DXD
+      index:
+        D: 4
+        E: 263
+        X: 280

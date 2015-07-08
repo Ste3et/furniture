@@ -7,16 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
 
 public class GetBlocks {	
 	public HashMap<Integer, HashMap<Integer, Byte>> returnBlocks(Location location, int höhe, int links){
 		HashMap<Integer, HashMap<Integer, Byte>> blockList = new HashMap<Integer, HashMap<Integer, Byte>>();
-		BlockFace b = Utils.yawToFace(location.getYaw());
+		BlockFace b = main.getLocationUtil().yawToFace(location.getYaw());
 		höhe = höhe/2;
 		//links = links/2;
-		location = main.getNew(location, b, 0D,- (double) (links/2));
+		location = main.getLocationUtil().getRelativ(location, b, 0D,- (double) (links/2));
 		Integer tiefe = 24;
 		int layer = 0;
 		for(int x = 0;x<=tiefe;x++){
@@ -24,7 +23,7 @@ public class GetBlocks {
 			Integer blockindex = 0;
 			for(int y = 0;y<=links;y++){
 				for(int z = 0;z<=höhe;z++){
-					Block b1 = main.getNew(location, b,(double) x, (double) y).add(0,z,0).getBlock();
+					Block b1 = main.getLocationUtil().getRelativ(location, b,(double) x, (double) y).add(0,z,0).getBlock();
 					byte byte1 = getByteFromBlock(b1);
 					layerlist.put(blockindex, byte1);
 					blockindex++;

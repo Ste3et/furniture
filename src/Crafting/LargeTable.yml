@@ -1,0 +1,10 @@
+LargeTable:
+    name: '&cLarge Table'
+    material: 383
+    crafting:
+      disable: false
+      recipe: XXX,XXX,A0A
+      index:
+        '0': 0
+        X: 160
+        A: 352

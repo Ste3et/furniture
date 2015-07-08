@@ -1,0 +1,12 @@
+Lantern:
+    name: '&cLantern'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 0+0,XEX,0A0
+      index:
+        '0': 0
+        X: 280
+        E: 50
+        A: 49
+        +: 126

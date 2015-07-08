@@ -2,149 +2,143 @@ package de.Ste3et_C0st.Furniture.Objects.indoor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
-import de.Ste3et_C0st.Furniture.Main.Permissions;
-import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
+import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
+import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
 public class table implements Listener {
 
-	private List<UUID> idList = new ArrayList<UUID>();
-	private ArmorStand armor;
-	private ItemStack is = null;
-	private Location loc = null;
-	private BlockFace b = null;
-	private String id;
-	private World w;
-	public String getID(){return this.id;}
-	public Location getLocation(){return this.loc;}
-	public ItemStack getItemStack(){return this.is;}
-	public BlockFace getBlockFace(){return this.b;}
+	Location loc;
+	BlockFace b;
+	World w;
+	ObjectID obj;
+	FurnitureManager manager;
+	FurnitureLib lib;
+	LocationUtil lutil;
+	Integer id;
+	Plugin plugin;
 	
-	public table(Location location, Plugin plugin, String ID, List<UUID> uuids){
+	public table(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+		this.lutil = main.getLocationUtil();
+		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
 		this.loc.setYaw(location.getYaw());
-		this.id = ID;
-		this.b = Utils.yawToFace(location.getYaw());
 		this.w = location.getWorld();
-		
-		FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.TABLE, this.id, location);
-		Bukkit.getPluginManager().callEvent(event);
-		if(!event.isCancelled()){
-			if(uuids==null){uuids = idList;}
-			spawn(uuids, location, plugin);
+		this.manager = lib.getFurnitureManager();
+		this.lib = lib;
+		this.plugin = plugin;
+		if(id!=null){
+			this.obj = id;
+			this.manager.send(obj);
+			Bukkit.getPluginManager().registerEvents(this, plugin);
+			return;
+		}else{
+			this.obj = new ObjectID(name, plugin.getName(), location);
 		}
+		spawn(location);
 	}
 	
-	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
-		Location middle1 = Utils.getCenter(getLocation());
-		Location middle2 = Utils.getCenter(getLocation());
-		Utils.setArmorStand(middle1.add(0,-2.1,0),new EulerAngle(0, 0, 0) , new ItemStack(Material.WOOD_PLATE), false,false,false,getID(),idList);
-		Utils.setArmorStand(middle2.add(0,-1.05,0),new EulerAngle(0, 0, 0) , new ItemStack(Material.TRAP_DOOR), false,false,false,getID(),idList);	
-		Location l = getLocation();
+	public void spawn(Location loc){
+		List<ArmorStandPacket> packetL = new ArrayList<ArmorStandPacket>();
+		Location middle1 = lutil.getCenter(loc);
+		Location middle2 = lutil.getCenter(loc);
+		Location l = loc;
 		l.setYaw(0);
-		ArmorStand as = Utils.setArmorStand(l.add(.9,0.15,0.3),new EulerAngle(0,.0,.0), is, true,false,false,getID(),idList);	
-		Utils.setArmorStand(l.add(0,-.65,.68),new EulerAngle(1.38,.0,.0), new ItemStack(Material.STICK), true,false,false,getID(),idList);	
-		this.armor = as;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		main.getInstance().getManager().tableList.add(this);
+		
+		ArmorStandPacket asp = manager.createArmorStand(obj, middle1.add(0, -2.1, 0));
+		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
+		packetL.add(asp);
+		asp = manager.createArmorStand(obj, middle2.add(0,-1.05,0));
+		asp.getInventory().setHelmet(new ItemStack(Material.TRAP_DOOR));
+		packetL.add(asp);
+		asp = manager.createArmorStand(obj, l.add(.9,0.15,0.3));
+		asp.setName("#ITEM#");
+		asp.setPose(new EulerAngle(.0,.0,.0), BodyPart.RIGHT_ARM);
+		packetL.add(asp);
+		asp = manager.createArmorStand(obj, l.add(0,-.65,.68));
+		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
+		packetL.add(asp);
+		
+		for(ArmorStandPacket packet : packetL){
+			packet.setInvisible(true);
+			packet.setGravity(false);
+		}
+		
+		manager.send(obj);
+		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	private void onInteract(PlayerInteractAtEntityEvent e){
+	@EventHandler
+	private void onBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()){return;}
-		Player player = e.getPlayer();
-		if(e.getRightClicked() instanceof ArmorStand == false){return;}
-		if(idList==null||idList.isEmpty()){return;}
-		if(!idList.contains(e.getRightClicked().getUniqueId())){return;}
+		if(!e.canBuild(null)){return;}
+		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
-		ItemStack is = player.getItemInHand();
-		if(is!=null&&!is.getType().isBlock()||is.getType().equals(Material.AIR)){
-				if(armor!=null){
-					ArmorStand as = Utils.getArmorStandAtID(w,idList.get(2));
-					if(as!=null&&as.getItemInHand()!= null && as.getItemInHand().equals(is)){return;}
-					if(as!=null&&armor.getItemInHand()!=null&&!armor.getItemInHand().getType().equals(Material.AIR)){as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());}
-					as.setItemInHand(is);
-					this.is = is;
-					if(!player.getGameMode().equals(GameMode.CREATIVE)){player.getInventory().remove(is);player.updateInventory();}
-					main.getInstance().mgr.saveTable(this);
+		
+		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+			if(packet.getName().equalsIgnoreCase("#ITEM#")){
+				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInHand();
+					w.dropItem(loc, is);
+				}
 			}
 		}
+		
+		manager.remove(obj);
+		obj=null;
 	}
 	
-	public List<String> getList(){
-		return Utils.UUIDListToStringList(idList);
-	}
-	
-	public void delete(Boolean b, boolean a){
-		if(b){
-			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("table"));}
-			if(is!=null && !is.getType().equals(Material.AIR)){
-				ArmorStand as = Utils.getArmorStandAtID(w,idList.get(2));
-				if(as!=null){
-					as.getLocation().getWorld().dropItem(as.getLocation(), as.getItemInHand());
-					this.is = null;
-				}
-				
-			}
-			for(UUID s : idList){
-				ArmorStand as = Utils.getArmorStandAtID(w,s);
-				if(as!=null){
-					if(a){loc.getWorld().playEffect(loc, Effect.STEP_SOUND, as.getHelmet().getType());}
-					as.remove();
-				}
-				
-			}
-			main.getInstance().mgr.deleteFromConfig(getID(), "table");
-		}
-
-		this.loc = null;
-		this.idList.clear();
-		main.getInstance().getManager().tableList.remove(this);
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void damage(EntityDamageByEntityEvent e){
+	@EventHandler
+	private void onClick(FurnitureClickEvent e){
 		if(e.isCancelled()){return;}
-		if(e.getDamager() instanceof Player == false){return;}
-		if(e.getEntity() instanceof ArmorStand == false){return;}
-		if(e.getEntity() == null){return;}
-		if(!idList.contains(e.getEntity().getUniqueId())){return;}
+		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild(null)){return;}
 		e.setCancelled(true);
-		if(!Permissions.check((Player) e.getDamager(), FurnitureType.TABLE, "destroy.")){return;}
-		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
-		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
-		delete(true, true);
-	}
-	
-	public void setItem(ItemStack itemS) {
-		is = itemS;
-		ArmorStand as = Utils.getArmorStandAtID(w,idList.get(2));
-		as.setItemInHand(itemS);
-	}
-	public void save() {
-		main.getInstance().mgr.saveTable(this);
+		Player p = e.getPlayer();
+		if(p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
+		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+			if(packet.getName().equalsIgnoreCase("#ITEM#")){
+				ItemStack Itemstack = p.getItemInHand().clone();
+				Itemstack.setAmount(1);
+				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInHand();
+					w.dropItem(loc, is);
+				}
+				
+				if(!p.getGameMode().equals(GameMode.CREATIVE)){
+					Integer i = p.getInventory().getHeldItemSlot();
+					ItemStack is = p.getItemInHand();
+					is.setAmount(is.getAmount()-1);
+					p.getInventory().setItem(i, is);
+					p.updateInventory();
+				}
+
+				packet.getInventory().setItemInHand(Itemstack);
+				
+				packet.update();
+				return;
+			}
+		}
 	}
 }

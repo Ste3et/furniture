@@ -3,6 +3,8 @@ config:
    UseMetrics: true
    CraftingPermissions: true
    BreakPermissions: true
+   CreativeItems: true
+   CreativeStorage: true
    Messages:
      NoPermissions: "&cYou don't have permission to do that"
      notFound: "&cFurniture not found"

@@ -1,0 +1,9 @@
+Barrels:
+    name: '&cBarrels'
+    material: 383
+    crafting:
+      disable: false
+      recipe: X0X,X0X,XXX
+      index:
+        '0': 0
+        X: 280

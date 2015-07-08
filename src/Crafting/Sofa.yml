@@ -1,0 +1,10 @@
+Sofa:
+    name: '&cSofa'
+    material: 383
+    crafting:
+      disable: false
+      recipe: +0+,+++,X0X
+      index:
+        '0': 0
+        +: 171
+        X: 69

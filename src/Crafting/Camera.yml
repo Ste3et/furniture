@@ -1,0 +1,11 @@
+Camera:
+    name: '&cCamera'
+    material: 383
+    crafting:
+      disable: false
+      recipe: DXD,AEA,EAE
+      index:
+        D: 331
+        E: 280
+        X: 35
+        A:

@@ -1,0 +1,11 @@
+TV:
+    name: '&cTV'
+    material: 383
+    crafting:
+      disable: false
+      recipe: XXX,XEX,0A0
+      index:
+        X: 171
+        E: 69
+        A: 148
+        0: 0

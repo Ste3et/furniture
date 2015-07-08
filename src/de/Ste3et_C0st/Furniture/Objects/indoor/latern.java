@@ -2,64 +2,75 @@ package de.Ste3et_C0st.Furniture.Objects.indoor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import de.Ste3et_C0st.Furniture.Main.FurnitureCreateEvent;
-import de.Ste3et_C0st.Furniture.Main.Permissions;
-import de.Ste3et_C0st.Furniture.Main.Utils;
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.Furniture.Main.Type.FurnitureType;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
+import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
+import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 
-public class latern implements Listener {
-	private List<UUID> idList = new ArrayList<UUID>();
-	private Block b;
-	private Location loc = null;
-	private BlockFace bFace = null;
-	private String id;
-	private World w;
-	public String getID(){return this.id;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.bFace;}
+public class latern implements Listener{
+
+	Location loc;
+	BlockFace b;
+	World w;
+	ObjectID obj;
+	FurnitureManager manager;
+	FurnitureLib lib;
+	LocationUtil lutil;
+	Integer id;
+	Plugin plugin;
 	
-	public latern(Location location, Plugin plugin, String ID, List<UUID> uuids){
-			this.loc = location;
-			this.id = ID;
-			this.bFace = Utils.yawToFace(location.getYaw());
-			this.w = location.getWorld();
-			
-			FurnitureCreateEvent event = new FurnitureCreateEvent(FurnitureType.LANTERN, this.id, location);
-			Bukkit.getPluginManager().callEvent(event);
-			if(!event.isCancelled()){
-				if(uuids==null){uuids = idList;}
-				spawn(uuids, location, plugin);
-			}
+	public latern(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+		this.lutil = main.getLocationUtil();
+		this.b = lutil.yawToFace(location.getYaw());
+		this.loc = location.getBlock().getLocation();
+		this.loc.setYaw(location.getYaw());
+		this.w = location.getWorld();
+		this.manager = lib.getFurnitureManager();
+		this.lib = lib;
+		this.plugin = plugin;
+		if(id!=null){
+			this.obj = id;
+			setBlock();
+			this.manager.send(obj);
+			Bukkit.getPluginManager().registerEvents(this, plugin);
+			return;
+		}else{
+			this.obj = new ObjectID(name, plugin.getName(), location);
+		}
+		spawn(location);
 	}
 	
-	public void spawn(List<UUID> uuidList, Location location, Plugin plugin){
-		Location center = Utils.getCenter(getLocation());
-		b = center.getWorld().getBlockAt(center);
-		b.setType(Material.TORCH);
-		
+	Block block;
+	
+	private void setBlock(){
+		Location center = lutil.getCenter(loc);
+		block = center.getWorld().getBlockAt(center);
+		if(!block.getType().equals(Material.AIR)){return;}
+		block.setType(Material.TORCH);
+	}
+	
+	public void spawn(Location loc){
+		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
+		Location center = lutil.getCenter(loc);
+		setBlock();
 		Location obsidian = center;
 		Location l = new Location(center.getWorld(), center.getX(), center.getY() -1.43, center.getZ());
 		obsidian.add(0D, -2.2, 0D);
@@ -68,20 +79,41 @@ public class latern implements Listener {
 		Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-0.21, obsidian.getY()+.62, obsidian.getZ()-0.21);
 		Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+0.21, obsidian.getY() + .62, obsidian.getZ() -0.21);
 		
-		Utils.setArmorStand(obsidian, null, new ItemStack(Material.OBSIDIAN), false,false,false,getID(),idList);
-		Utils.setArmorStand(l.add(0,0,0), null, new ItemStack(Material.WOOD_PLATE), false,false,false,getID(), idList);
+		ArmorStandPacket asp = manager.createArmorStand(obj, obsidian);
+		asp.getInventory().setHelmet(new ItemStack(Material.OBSIDIAN));
+		aspList.add(asp);
 		
-		Utils.setArmorStand(left_down, null, new ItemStack(Material.LEVER), false,false,false,getID(), idList);
-		Utils.setArmorStand(left_upper, null, new ItemStack(Material.LEVER), false,false,false,getID(), idList);
-		Utils.setArmorStand(right_upper, null, new ItemStack(Material.LEVER), false,false,false,getID(), idList);
-		Utils.setArmorStand(right_down, null, new ItemStack(Material.LEVER), false,false,false,getID(), idList);
-		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-		main.getInstance().getManager().lanternList.add(this);
+		asp = manager.createArmorStand(obj, l.add(0,0,0));
+		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
+		aspList.add(asp);
+		
+		asp = manager.createArmorStand(obj, left_down);
+		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
+		aspList.add(asp);
+		
+		asp = manager.createArmorStand(obj, left_upper);
+		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
+		aspList.add(asp);
+		
+		asp = manager.createArmorStand(obj, right_upper);
+		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
+		aspList.add(asp);
+		
+		asp = manager.createArmorStand(obj, right_down);
+		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
+		aspList.add(asp);
+		
+		for(ArmorStandPacket packet : aspList){
+			packet.setBasePlate(false);
+			packet.setGravity(false);
+			packet.setInvisible(true);
+		}
+		
+		manager.send(obj);
+		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
-	public List<String> getList(){
-		return Utils.UUIDListToStringList(idList);
-	}
+	
 	
 	@EventHandler
 	public void onWaterFlow(BlockFromToEvent e){
@@ -91,80 +123,40 @@ public class latern implements Listener {
 		}
 	}
 	
-	public void delete(Boolean b, boolean a){
-		if(b){
-			if(a){getLocation().getWorld().dropItem(getLocation(), main.getInstance().crafting.get("lantern"));}
-			for(UUID s : idList){
-				ArmorStand as = Utils.getArmorStandAtID(w,s);
-				if(as!=null){
-					as.getWorld().playEffect(as.getLocation(), Effect.STEP_SOUND, as.getHelmet().getType());
-					as.remove();
-				}
-			}
-			main.getInstance().mgr.deleteFromConfig(getID(), "lantern");
-		}
-		if(this.b!=null&&!this.b.getType().equals(Material.AIR)){this.b.setType(Material.AIR);}
-		this.loc = null;
-		this.b = null;
-		this.idList.clear();
-		main.getInstance().getManager().lanternList.remove(this);
+	@EventHandler
+	private void onBreak(FurnitureBreakEvent e){
+		if(e.isCancelled()) return;
+		if(block==null) return;
+		if(!e.getID().equals(obj)) return;
+		if(!e.canBuild(null)) return;
+		block.setType(Material.AIR);
+		manager.remove(obj);
 	}
 	
 	@EventHandler
-	public void onBlockBreak(BlockBreakEvent e){
-		if(e.getBlock()!=null&&b!=null&&e.getBlock().equals(b)){
-			e.setCancelled(true);
-			delete(true, true);
+	private void onInteract(FurnitureClickEvent e){
+		if(e.isCancelled()) return;
+		if(block==null) return;
+		if(!e.getID().equals(obj)) return;
+		if(!e.canBuild(null)) return;
+		Player p = e.getPlayer();
+		ItemStack is = p.getItemInHand();
+		if(is.getType().equals(Material.FLINT_AND_STEEL)){
+			setLight(true);
+		}else if(is.getType().equals(Material.WATER_BUCKET)){
+			setLight(false);
 		}
+		
+		
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	private void onInteract(PlayerInteractAtEntityEvent e){
-		if(e.isCancelled()){return;}
-		Player player = e.getPlayer();
-		if(e.getRightClicked() == null){return;}
-		if(e.getRightClicked() instanceof ArmorStand == false){ return;}
-		if(idList==null||idList.isEmpty()){return;}
-		if(!this.idList.contains(e.getRightClicked().getUniqueId())){return;}
-		e.setCancelled(true);
-		if(!main.getInstance().getCheckManager().canBuild(player, getLocation())){return;}
-			ItemStack is = player.getItemInHand();
-			if(is!=null){
-				if(is.getType().equals(Material.FLINT_AND_STEEL)){
-					setLight(true);
-				}else if(is.getType().equals(Material.WATER_BUCKET)){
-					setLight(false);
-				}
-				main.getInstance().mgr.saveLatern(this);
-			}
-	}
-
-	public void save(){
-		main.getInstance().mgr.saveLatern(this);
-	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void damage(EntityDamageByEntityEvent e){
-		if(e.isCancelled()){return;}
-		if(e.getDamager() instanceof Player == false){return;}
-		if(e.getEntity() instanceof ArmorStand == false){return;}
-		if(e.getEntity() == null){return;}
-		if(e.getEntity().getUniqueId() == null){return;}
-		if(!idList.contains(e.getEntity().getUniqueId())){return;}
-		e.setCancelled(true);
-		if(!Permissions.check((Player) e.getDamager(), FurnitureType.LANTERN, "destroy.")){return;}
-		if(!main.getInstance().getCheckManager().canBuild((Player) e.getDamager(), getLocation())){return;}
-		if(((Player) e.getDamager()).getGameMode().equals(GameMode.CREATIVE)){delete(true, false);return;}
-		delete(true, true);
-	}
-	
-	public void setLight(boolean bool){
-		if(bool){b.setType(Material.TORCH);}
-		else{b.setType(Material.REDSTONE_TORCH_OFF);}
+	public void setLight(final boolean bool){
+		if(bool){block.setType(Material.TORCH);}
+		else{block.setType(Material.REDSTONE_TORCH_OFF);}
 	}
 	
 	public boolean getLight(){
-		if(b==null||b.getType().equals(Material.AIR)||b.getType().equals(Material.TORCH)){
+		if(block==null||block.getType().equals(Material.AIR)||block.getType().equals(Material.TORCH)){
 			return true;
 		}
 		return false;

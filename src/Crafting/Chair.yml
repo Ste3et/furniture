@@ -1,0 +1,10 @@
+Chair:
+    name: '&cChair'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 0+0,0+0,E0E
+      index:
+        '0': 0
+        +: 96
+        E: 280

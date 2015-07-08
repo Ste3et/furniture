@@ -1,0 +1,11 @@
+Table:
+    name: '&cTable'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 0X0,0E0,0A0
+      index:
+        '0': 0
+        E: 280
+        A: 72
+        X: 96
