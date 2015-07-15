@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -50,7 +51,6 @@ public class tv implements Listener{
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -68,8 +68,8 @@ public class tv implements Listener{
 		Location center = lutil.getCenter(getLocation());
 		center.add(0, -1.38, 0);
 		center.setYaw(lutil.FaceToYaw(b));
-		
-		ArmorStandPacket as = manager.createArmorStand(obj, center);
+		Location iron = center.clone();
+		ArmorStandPacket as = manager.createArmorStand(obj, iron);
 		as.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
 		as.setSmall(true);
 		aspList.add(as);
@@ -121,6 +121,12 @@ public class tv implements Listener{
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(obj==null){return;}
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		e.remove();
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		manager.remove(obj);
 		obj=null;
 	}

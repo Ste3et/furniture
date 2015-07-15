@@ -54,7 +54,7 @@ public class tent_3 implements Listener{
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
+			setBlock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -154,7 +154,7 @@ public class tent_3 implements Listener{
 		as.setName("#SITZ#");
 		aspL.add(as);
 		
-		bed = lutil.setHalfBed(b, lutil.getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), b, 2D, 0D));
+		setBlock();
 		
 		for(ArmorStandPacket packet : aspL){
 			packet.setInvisible(true);
@@ -165,19 +165,32 @@ public class tent_3 implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
+	private void setBlock(){
+		Location sit = lutil.getCenter(loc);
+		sit.setYaw(lutil.FaceToYaw(this.b.getOppositeFace()));
+		bed = lutil.setHalfBed(b, lutil.getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), b, 2D, 0D));
+	}
+	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(obj==null){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		bed.setType(Material.AIR);
 		manager.remove(obj);
 		obj=null;
+		e.remove();
 	}
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);

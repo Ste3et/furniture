@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -90,7 +91,6 @@ public class campfire_2 implements Listener{
 		
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -175,6 +175,7 @@ public class campfire_2 implements Listener{
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
@@ -210,16 +211,22 @@ public class campfire_2 implements Listener{
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
 			w.dropItem(middle.clone().add(0, .5, 0), is);
 		}
 		manager.remove(obj);
+		e.remove();
 		obj=null;
 	}
 	

@@ -49,7 +49,6 @@ public class sofa implements Listener {
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -102,12 +101,19 @@ public class sofa implements Listener {
 			carpetHight = lutil.getRelativ(carpetHight, b, .25,.3);
 			Double d = .02;
 			float facing = lutil.FaceToYaw(b);
+			Integer j = 0;
 			for(Double i = .0; i<=lengt; i+=0.65){
 				Location carpet = lutil.getRelativ(carpetHight, b, place,(double) d);
 				carpet.setYaw(facing);
 				
+				String s = "";
+				if(j==0||j==1){s="#SITZPOS:1#";}
+				if(j==2){s="#SITZPOS:2#";}
+				if(j==3||j==4){s="#SITZPOS:3#";}
+				
 				asp = manager.createArmorStand(obj, carpet);
 				asp.getInventory().setHelmet(is);
+				asp.setName(s);
 				aspList.add(asp);
 				sitz.add(asp);
 				Location location = lutil.getRelativ(carpetHight, b, place-.25,(double) d);
@@ -116,9 +122,11 @@ public class sofa implements Listener {
 				asp = manager.createArmorStand(obj, location);
 				asp.setPose(new EulerAngle(1.57, .0, .0), BodyPart.HEAD);
 				asp.getInventory().setHelmet(is);
+				asp.setName(s);
 				aspList.add(asp);
 				if(d<=0D){d = 0.00;}
 				d+=.58;
+				j++;
 			}
 			
 			Float yaw1= facing;
@@ -131,11 +139,13 @@ public class sofa implements Listener {
 			asp = manager.createArmorStand(obj, first.add(0,-.05,0));
 			asp.getInventory().setHelmet(is);
 			asp.setPose(new EulerAngle(1.57, .0, .0), BodyPart.HEAD);
+			asp.setName("#SITZPOS:1#");
 			aspList.add(asp);
 			
 			asp = manager.createArmorStand(obj, last.add(0,-.05,0));
 			asp.getInventory().setHelmet(is);
 			asp.setPose(new EulerAngle(1.57, .0, .0), BodyPart.HEAD);
+			asp.setName("#SITZPOS:3#");
 			aspList.add(asp);
 			
 			Location start = lutil.getRelativ(looking, b, .45, .55);
@@ -145,7 +155,7 @@ public class sofa implements Listener {
 				location.setYaw(lutil.FaceToYaw(b));
 				location.add(0,.2,0);
 				asp = manager.createArmorStand(obj, location);
-				asp.setName("#SITZ#");
+				asp.setName("#SITZ" + i + "#");
 				aspList.add(asp);
 			}
 			
@@ -161,6 +171,7 @@ public class sofa implements Listener {
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
@@ -170,12 +181,26 @@ public class sofa implements Listener {
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}else{
-			for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
-				if(packet.getName().equalsIgnoreCase("#SITZ#") && packet.getPessanger() == null){
-					packet.setPessanger(p);
-					packet.update();
-					return;
-				}
+			ArmorStandPacket packet = e.getArmorStandPacket();
+			switch (packet.getName()) {
+			case "#SITZPOS:1#": sit("#SITZ0#", p);break;
+			case "#SITZPOS:2#": sit("#SITZ1#", p);break;
+			case "#SITZPOS:3#": sit("#SITZ2#", p);break;
+			case "#SITZ0#" : sit("#SITZ0#", p);break;
+			case "#SITZ1#" : sit("#SITZ1#", p);break;
+			case "#SITZ2#" : sit("#SITZ2#", p);break;
+			default: sit("#SITZ0#", p);break;
+			}
+			
+		}
+	}
+	
+	private void sit(String s, Player p){
+		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+			if(packet.getName().equalsIgnoreCase(s) && packet.getPessanger() == null){
+				packet.setPessanger(p);
+				packet.update();
+				return;
 			}
 		}
 	}
@@ -210,16 +235,22 @@ public class sofa implements Listener {
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getPessanger()!=null){
 				packet.unleash();
 				packet.update();
 			}
 		}
+		e.remove();
 		manager.remove(obj);
 		obj=null;
 	}

@@ -51,7 +51,6 @@ public class barrels implements Listener {
 			this.obj = id;
 			this.block = loc.getBlock();
 			this.block.setType(Material.CAULDRON);
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -73,6 +72,7 @@ public class barrels implements Listener {
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild(null)){return;}
@@ -87,12 +87,14 @@ public class barrels implements Listener {
 		
 		packet.getInventory().setHelmet(p.getItemInHand());
 		
-		packet.update();
+		manager.updateFurniture(obj);
 	}
 	
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){
-		if(block==null){return;}
+		if(obj==null){return;}
+		if(block==null || obj==null){return;}
+		if(e.getClickedBlock()==null){return;}
 		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
 		if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), Material.CAULDRON)){return;}
@@ -117,15 +119,20 @@ public class barrels implements Listener {
 		
 		packet.getInventory().setHelmet(Itemstack);
 		
-		packet.update();
+		manager.updateFurniture(obj);
 	}
 	
 	@EventHandler
 	private void onBlockBreak(BlockBreakEvent e){
+		if(obj==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
 		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation(), Material.CAULDRON)){return;}
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
 		ArmorStandPacket packet = manager.getArmorStandPacketByObjectID(obj).get(0);
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();
 			w.dropItem(loc, is);
@@ -139,10 +146,16 @@ public class barrels implements Listener {
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		e.remove();
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		manager.remove(obj);
 		obj=null;
 		block.setType(Material.AIR);

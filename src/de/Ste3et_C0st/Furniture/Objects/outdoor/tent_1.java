@@ -57,7 +57,6 @@ public class tent_1 implements Listener{
 		if(id!=null){
 			this.obj = id;
 			setblock();
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -259,17 +258,24 @@ public class tent_1 implements Listener{
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		block.setType(Material.AIR);
 		manager.remove(obj);
 		obj=null;
+		e.remove();
 	}
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
@@ -285,9 +291,13 @@ public class tent_1 implements Listener{
 	
 	@EventHandler
 	private void onBlockBreak(BlockBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!lib.canBuild(e.getPlayer(), loc, null)){return;}
+		if(obj==null){return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
+		w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		manager.remove(obj);
 		obj=null;
 	}

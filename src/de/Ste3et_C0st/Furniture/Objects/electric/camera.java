@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -55,7 +56,6 @@ public class camera implements Listener{
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -130,7 +130,6 @@ public class camera implements Listener{
 		}
 		
 		manager.send(obj);
-		//lib.saveObjToDB(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
@@ -139,6 +138,7 @@ public class camera implements Listener{
 	private void onClick(FurnitureClickEvent e){
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(obj==null){return;}
 		Player p = e.getPlayer();
 		Location pLocation = lutil.getLocationCopy(lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D));
 		Location locCopy = lutil.getLocationCopy(getLocation());
@@ -163,6 +163,12 @@ public class camera implements Listener{
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(obj==null){return;}
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		e.remove();
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		manager.remove(obj);
 		obj=null;
 	}

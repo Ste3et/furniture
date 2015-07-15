@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -45,6 +46,7 @@ public class graveStone implements Listener{
 	
 	private String id;
 	public String getID(){return this.id;}
+	public ObjectID getObjectID(){return this.obj;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
@@ -60,7 +62,6 @@ public class graveStone implements Listener{
 		if(id!=null){
 			this.obj = id;
 			setBlock();
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -84,7 +85,13 @@ public class graveStone implements Listener{
 		Location kreutz2 = lutil.getRelativ(center, getBlockFace(), -.23, -1.27);
 		Location sign = lutil.getRelativ(kreutz2.getBlock().getLocation(), b, 0D, 1D);
 		this.signLoc = sign;
-		this.sign = lutil.setSign(b, sign);
+		
+		if(!sign.getBlock().getType().equals(Material.WALL_SIGN)){
+			this.sign = lutil.setSign(b, sign);
+		}else{
+			this.sign = sign.getBlock();
+		}
+		
 		this.lines = getText();
 	}
 	
@@ -152,15 +159,22 @@ public class graveStone implements Listener{
 		if(e.isCancelled()) return;
 		if(!e.canBuild(null)) return;
 		if(!e.getID().equals(obj)) return;
+		if(obj==null){return;}
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		sign.setType(Material.AIR);
 		sign = null;
 		manager.remove(obj);
 		obj=null;
+		e.remove();
 	}
 	
 	@EventHandler
 	private void onBlockRemove(BlockBreakEvent e)
 	{
+	  if(obj==null){return;}
 	  if (sign==null) return;
 	  if (e.getBlock() == null) return;
 	  if (e.getBlock().getLocation() == null) return;
@@ -170,6 +184,7 @@ public class graveStone implements Listener{
 	
 	@EventHandler
 	private void onBlockPlaceEvent(BlockPlaceEvent e){
+		  if(obj==null){return;}
 		  if (sign==null) return;
 		  if (e.getBlock() == null) return;
 		  if (e.getBlock().getLocation() == null) return;
@@ -179,6 +194,7 @@ public class graveStone implements Listener{
 	
 	  @EventHandler
 	  private void onDrop(ItemSpawnEvent e){
+		  if(obj==null){return;}
 		  if (sign==null) return;
 		  if (e.getLocation() == null) return;
 		  ItemStack is = e.getEntity().getItemStack();
@@ -209,6 +225,15 @@ public class graveStone implements Listener{
 				placetext();
 			}
 		});
+	}
+	
+	public void removeSign(){
+		if(sign!=null){
+			sign.setType(Material.AIR);
+			sign = null;
+			manager.remove(obj);
+			obj=null;
+		}
 	}
 	
 	public void readFromBook(ItemStack is){

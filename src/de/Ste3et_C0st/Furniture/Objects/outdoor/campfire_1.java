@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -44,7 +45,6 @@ public class campfire_1 implements Listener{
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -55,15 +55,22 @@ public class campfire_1 implements Listener{
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		manager.remove(obj);
+		e.remove();
 		obj=null;
 	}
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
@@ -73,7 +80,7 @@ public class campfire_1 implements Listener{
 		if(is.getType().equals(Material.WATER_BUCKET)){
 			for(ArmorStandPacket packet : aspList){
 				packet.setFire(false);
-				Location location = this.loc;
+				Location location = this.loc.clone();
 				location.add(0, 1.2, 0);
 				lib.getLightManager().removeLight(location);
 			}
@@ -81,7 +88,7 @@ public class campfire_1 implements Listener{
 		}else if(is.getType().equals(Material.FLINT_AND_STEEL)){
 			for(ArmorStandPacket packet : aspList){
 				packet.setFire(true);
-				Location location = this.loc;
+				Location location = this.loc.clone();
 				location.add(0, 1.2, 0);
 				lib.getLightManager().addLight(location,15);
 			}

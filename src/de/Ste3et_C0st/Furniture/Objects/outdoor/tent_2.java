@@ -59,8 +59,19 @@ public class tent_2 implements Listener{
 		
 		if(id!=null){
 			this.obj = id;
-			setBlock();
-			this.manager.send(obj);
+			
+			Bukkit.broadcastMessage(b.name());
+			
+			Location loca = loc.clone();
+			
+			switch (b) {
+			case NORTH: loca=lutil.getRelativ(loca, b, -1D, -1D); break;
+			case EAST: loca=lutil.getRelativ(loca, b, 0D, -1D); break;
+			case WEST: loca=lutil.getRelativ(loca, b, -1D, 0D); break;
+			default:break;
+			}
+			
+			setBlock(loca);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -130,36 +141,40 @@ public class tent_2 implements Listener{
 			packet.setInvisible(true);
 			packet.setGravity(false);
 		}
-		setBlock();
+		setBlock(this.loc);
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void setBlock(){
-		Location loc = this.loc.clone();
+	public void setBlock(Location loc){
 		Location b1 = lutil.getRelativ(loc, b, 1D, -2D).add(0, 0, 0);
 		Location b2 = lutil.getRelativ(loc, b, 2D, -3D).add(0, 0, 0);
-		b2.setYaw(lutil.FaceToYaw(b));
-		b2.getBlock().setType(Material.CHEST);
-		BlockState chest = b2.getBlock().getState(); 
-		 switch (b){
-		 
-		 case SOUTH:
-		 chest.setRawData((byte) 0x3);break;
-		  
-		 case NORTH:
-		 chest.setRawData((byte) 0x2);break;
-		  
-		 case EAST:
-		 chest.setRawData((byte) 0x5);break;
-		  
-		 case WEST:
-		 chest.setRawData((byte) 0x4);break;
-		 default: chest.setRawData((byte) 0x3);break;
-		  
-		 }
-		chest.update(true, true);
+		if(!b2.getBlock().getType().equals(Material.CHEST)){
+			b2.setYaw(lutil.FaceToYaw(b));
+			b2.getBlock().setType(Material.CHEST);
+			BlockState chest = b2.getBlock().getState(); 
+			 switch (b){
+			 
+			 case SOUTH:
+			 chest.setRawData((byte) 0x3);break;
+			  
+			 case NORTH:
+			 chest.setRawData((byte) 0x2);break;
+			  
+			 case EAST:
+			 chest.setRawData((byte) 0x5);break;
+			  
+			 case WEST:
+			 chest.setRawData((byte) 0x4);break;
+			 default: chest.setRawData((byte) 0x3);break;
+			  
+			 }
+			chest.update(true, true);
+		}
+
+		
+		
 		bedLoc = lutil.setBed(this.b, b1);
 		
 		block.add(b1.getWorld().getBlockAt(b1));
@@ -182,19 +197,26 @@ public class tent_2 implements Listener{
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(Block bl : block){
 			bl.setType(Material.AIR);
 		}
 		manager.remove(obj);
 		obj=null;
+		e.remove();
 	}
 	
 	@EventHandler
 	private void onClick(final FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);

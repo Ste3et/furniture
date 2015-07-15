@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -25,7 +26,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 
-public class latern implements Listener{
+public class lantern implements Listener{
 
 	Location loc;
 	BlockFace b;
@@ -37,7 +38,7 @@ public class latern implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public latern(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public lantern(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -49,7 +50,6 @@ public class latern implements Listener{
 		if(id!=null){
 			this.obj = id;
 			setBlock();
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -117,6 +117,7 @@ public class latern implements Listener{
 	
 	@EventHandler
 	public void onWaterFlow(BlockFromToEvent e){
+		if(obj==null){return;}
 		Location locTo = e.getToBlock().getLocation();
 		if(loc!=null && locTo.equals(loc.getBlock().getLocation())){
 			e.setCancelled(true);
@@ -125,16 +126,23 @@ public class latern implements Listener{
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
 		if(!e.canBuild(null)) return;
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		block.setType(Material.AIR);
 		manager.remove(obj);
+		e.remove();
 	}
 	
 	@EventHandler
 	private void onInteract(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;

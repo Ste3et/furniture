@@ -49,7 +49,6 @@ public class table implements Listener {
 		this.plugin = plugin;
 		if(id!=null){
 			this.obj = id;
-			this.manager.send(obj);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}else{
@@ -71,11 +70,13 @@ public class table implements Listener {
 		asp = manager.createArmorStand(obj, middle2.add(0,-1.05,0));
 		asp.getInventory().setHelmet(new ItemStack(Material.TRAP_DOOR));
 		packetL.add(asp);
-		asp = manager.createArmorStand(obj, l.add(.9,0.15,0.3));
+		Location locatio = l.clone().add(0.9,0.15,0.3);
+		asp = manager.createArmorStand(obj, locatio);
 		asp.setName("#ITEM#");
-		asp.setPose(new EulerAngle(.0,.0,.0), BodyPart.RIGHT_ARM);
+		asp.setPose(new EulerAngle(0.0,0.0,0.0), BodyPart.RIGHT_ARM);
 		packetL.add(asp);
-		asp = manager.createArmorStand(obj, l.add(0,-.65,.68));
+		locatio = locatio.clone().add(0,-0.65,0.68);
+		asp = manager.createArmorStand(obj, locatio);
 		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
 		packetL.add(asp);
@@ -91,11 +92,17 @@ public class table implements Listener {
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild(null)){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
 		
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		}
+		
+		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
@@ -104,13 +111,14 @@ public class table implements Listener {
 				}
 			}
 		}
-		
+		e.remove();
 		manager.remove(obj);
 		obj=null;
 	}
 	
 	@EventHandler
 	private void onClick(FurnitureClickEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild(null)){return;}
@@ -135,10 +143,9 @@ public class table implements Listener {
 				}
 
 				packet.getInventory().setItemInHand(Itemstack);
-				
-				packet.update();
-				return;
+				break;
 			}
 		}
+		manager.updateFurniture(obj);
 	}
 }
