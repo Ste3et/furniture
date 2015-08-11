@@ -20,6 +20,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -39,7 +40,7 @@ public class largeTable implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public largeTable(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public largeTable(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -61,10 +62,13 @@ public class largeTable implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
-	
 	List<Integer> tellerIDs = new ArrayList<Integer>();
 	
 	public void spawn(Location loc){
@@ -200,12 +204,8 @@ public class largeTable implements Listener{
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(Integer id : tellerIDs){
 			ArmorStandPacket asp = manager.getArmorStandPacketByID(id);
 			if(asp!=null&&asp.getInventory().getItemInHand()!=null){
@@ -216,7 +216,6 @@ public class largeTable implements Listener{
 			}
 		}
 		e.remove();
-		manager.remove(obj);
 		obj=null;
 	}
 	
@@ -228,7 +227,7 @@ public class largeTable implements Listener{
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			if(!e.canBuild(null)){return;}
+			if(!e.canBuild()){return;}
 			ItemStack is = p.getItemInHand();
 			Integer Amount = is.getAmount();
 			List<ArmorStandPacket> asp = manager.getArmorStandPacketByObjectID(obj);
@@ -239,7 +238,7 @@ public class largeTable implements Listener{
 						if(Amount>0){
 							ItemStack is2 = packet.getInventory().getHelmet();
 							if(is2.getDurability()!=color){
-								if(p.getGameMode().equals(GameMode.SURVIVAL)){Amount=Amount-1;}
+								if(p.getGameMode().equals(GameMode.SURVIVAL) || !lib.useGamemode()){Amount=Amount-1;}
 								is2.setDurability(color);
 								packet.getInventory().setHelmet(is2);
 							}
@@ -247,19 +246,19 @@ public class largeTable implements Listener{
 					}
 				}
 			}
-			
-			if(!p.getGameMode().equals(GameMode.CREATIVE)){
-				Integer o = Amount;
-				Integer i = p.getInventory().getHeldItemSlot();
-				ItemStack itemStack = p.getItemInHand();
-				itemStack.setAmount(o);
-				p.getInventory().setItem(i, itemStack);
-				p.updateInventory();
-			}
+
 			manager.updateFurniture(obj);
+			if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+			Integer o = Amount;
+			Integer i = p.getInventory().getHeldItemSlot();
+			ItemStack itemStack = p.getItemInHand();
+			itemStack.setAmount(o);
+			p.getInventory().setItem(i, itemStack);
+			p.updateInventory();
+
 			return;
 		}else{
-			if(!e.canBuild(null)) return;
+			if(!e.canBuild()) return;
 			setTeller(e.getPlayer(), e.getPlayer().getInventory().getItemInHand());
 		}
 	}
@@ -292,15 +291,14 @@ public class largeTable implements Listener{
 		IS.setAmount(1);
 		as.getInventory().setItemInHand(IS);
 		
-		if(!player.getGameMode().equals(GameMode.CREATIVE)){
-			Integer i = player.getInventory().getHeldItemSlot();
-			ItemStack itemstack = is.clone();
-			itemstack.setAmount(itemstack.getAmount()-1);
-			player.getInventory().setItem(i, itemstack);
-			player.updateInventory();
-		}
-		
 		manager.updateFurniture(obj);
+		
+		if(player.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = player.getInventory().getHeldItemSlot();
+		ItemStack itemstack = is.clone();
+		itemstack.setAmount(itemstack.getAmount()-1);
+		player.getInventory().setItem(i, itemstack);
+		player.updateInventory();
 	}
 	
 	public HashMap<Integer, ItemStack> getTeller(){

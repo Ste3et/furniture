@@ -1,0 +1,10 @@
+Sunshade:
+    name: '&cSunshade'
+    material: 383
+    crafting:
+      disable: false
+      recipe: AAA,0X0,0X0
+      index:
+        '0': 0
+        X: 280
+        A: 171

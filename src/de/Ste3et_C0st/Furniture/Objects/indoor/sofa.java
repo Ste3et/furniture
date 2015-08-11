@@ -19,6 +19,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -38,7 +39,7 @@ public class sofa implements Listener {
 	Integer id;
 	Plugin plugin;
 	
-	public sofa(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public sofa(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -53,6 +54,10 @@ public class sofa implements Listener {
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		place = .3;
 		spawn(location);
@@ -105,12 +110,10 @@ public class sofa implements Listener {
 			for(Double i = .0; i<=lengt; i+=0.65){
 				Location carpet = lutil.getRelativ(carpetHight, b, place,(double) d);
 				carpet.setYaw(facing);
-				
 				String s = "";
 				if(j==0||j==1){s="#SITZPOS:1#";}
 				if(j==2){s="#SITZPOS:2#";}
 				if(j==3||j==4){s="#SITZPOS:3#";}
-				
 				asp = manager.createArmorStand(obj, carpet);
 				asp.getInventory().setHelmet(is);
 				asp.setName(s);
@@ -177,7 +180,7 @@ public class sofa implements Listener {
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), Material.CARPET);
+			Boolean canBuild = lib.canBuild(p, e.getLocation());
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}else{
@@ -213,37 +216,33 @@ public class sofa implements Listener {
 		short color = lutil.getFromDey(is.getDurability());
 		for(ArmorStandPacket packet : asp){
 			if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(m)){
-				if(Amount>0||p.getGameMode().equals(GameMode.CREATIVE)){
+				if(Amount>0){
 					ItemStack is2 = packet.getInventory().getHelmet();
 					if(is2.getDurability() != color){
 						is2.setDurability(color);
 						packet.getInventory().setHelmet(is2);
-						if(!p.getGameMode().equals(GameMode.CREATIVE)){Amount--;}
+						if(!p.getGameMode().equals(GameMode.CREATIVE) || !lib.useGamemode()){Amount--;}
 					}
 				}
 			}
 		}
-		if(!p.getGameMode().equals(GameMode.CREATIVE)){
-			Integer i = p.getInventory().getHeldItemSlot();
-			ItemStack item = p.getItemInHand();
-			item.setAmount(Amount);
-			p.getInventory().setItem(i, item);
-			p.updateInventory();
-		}
+
 		manager.updateFurniture(obj);
+		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = p.getInventory().getHeldItemSlot();
+		ItemStack item = p.getItemInHand();
+		item.setAmount(Amount);
+		p.getInventory().setItem(i, item);
+		p.updateInventory();
 	}
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getPessanger()!=null){
 				packet.unleash();
@@ -251,7 +250,6 @@ public class sofa implements Listener {
 			}
 		}
 		e.remove();
-		manager.remove(obj);
 		obj=null;
 	}
 }

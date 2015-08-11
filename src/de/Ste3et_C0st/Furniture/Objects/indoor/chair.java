@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +18,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -34,10 +35,9 @@ public class chair implements Listener{
 	FurnitureManager manager;
 	FurnitureLib lib;
 	LocationUtil lutil;
-	Integer id;
 	Plugin plugin;
 	
-	public chair(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public chair(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -52,6 +52,10 @@ public class chair implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -75,33 +79,34 @@ public class chair implements Listener{
 		sitz.setYaw(lutil.FaceToYaw(b));
 		lehne.setYaw(lutil.FaceToYaw(b));
 		
-		ArmorStandPacket as = manager.createArmorStand(obj, sitz);
+		ArmorStandPacket as = manager.createArmorStand(obj, sitz.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.TRAP_DOOR));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, lehne);
+		as = manager.createArmorStand(obj, lehne.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.TRAP_DOOR));
 		as.setPose(new EulerAngle(1.57, .0, .0), BodyPart.HEAD);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet1);
+		as = manager.createArmorStand(obj, feet1.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet2);
+		as = manager.createArmorStand(obj, feet2.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet3);
+		as = manager.createArmorStand(obj, feet3.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet4);
+		as = manager.createArmorStand(obj, feet4.clone());
 		as.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, sitz.add(0,-.2,0));
-		id = as.getEntityId();
+		Location sit = sitz.clone().add(0,-.2,0);
+		as = manager.createArmorStand(obj, sit.clone());
+		as.setName("#SITZ#");
 		aspList.add(as);
 		
 		for(ArmorStandPacket asp : aspList){
@@ -118,15 +123,10 @@ public class chair implements Listener{
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		manager.remove(obj);
-		obj=null;
 		e.remove();
+		obj=null;
 	}
 	
 	@EventHandler
@@ -134,10 +134,18 @@ public class chair implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
-		ArmorStandPacket packet = manager.getArmorStandPacketByID(id);
-		if(packet.getPessanger()==null){
-			packet.setPessanger(e.getPlayer());
-			packet.update();
+		ArmorStandPacket packet = null;
+		for(ArmorStandPacket as : manager.getArmorStandPacketByObjectID(obj)){
+			if(as.getName().equalsIgnoreCase("#SITZ#")){
+				packet=as;
+				break;
+			}
+		}
+		if(packet!=null){
+			if(packet.getPessanger()==null){
+				packet.setPessanger(e.getPlayer());
+				packet.update();
+			}
 		}
 	}
 }

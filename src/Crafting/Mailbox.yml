@@ -1,0 +1,11 @@
+Mailbox:
+    name: '&cMailBox'
+    material: 383
+    crafting:
+      disable: false
+      recipe: ADA,0X0,0X0
+      index:
+        '0': 0
+        X: 280
+        A: 1
+        D: 54

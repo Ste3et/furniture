@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +20,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -73,7 +75,7 @@ public class campfire_2 implements Listener{
 	Integer timer;
 	ArmorStandPacket armorS;
 	ItemStack is;
-	public campfire_2(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public campfire_2(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -95,6 +97,10 @@ public class campfire_2 implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -177,7 +183,7 @@ public class campfire_2 implements Listener{
 	private void onClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
 		List<ArmorStandPacket> aspList = manager.getArmorStandPacketByObjectID(obj);
@@ -190,42 +196,56 @@ public class campfire_2 implements Listener{
 		}
 
 		if(itemStack.getType().equals(Material.WATER_BUCKET) && packet.isFire()){
-			 packet.setFire(false);
-			 manager.updateFurniture(obj);
-			 Location loc = middle.clone();
-			 loc.add(0, 1.3, 0);
-			 lib.getLightManager().removeLight(loc);
+			 setfire(false);
 		}else if(itemStack.getType().equals(Material.FLINT_AND_STEEL) && !packet.isFire()){
-			 packet.setFire(true);
-			 manager.updateFurniture(obj);
-			 Location loc = middle.clone();
-			 loc.add(0, 1.3, 0);
-			 lib.getLightManager().addLight(loc, 15);
+			 setfire(true);
 		}else if(items.contains(itemStack.getType()) && packet.isFire() && armorS==null){
 			is = itemStack.clone();
 			is.setAmount(1);
+			
 			setGrill();
+			
+			if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+			Integer i = e.getPlayer().getInventory().getHeldItemSlot();
+			ItemStack item = e.getPlayer().getItemInHand();
+			item.setAmount(item.getAmount()-1);
+			e.getPlayer().getInventory().setItem(i, item);
+			e.getPlayer().updateInventory();
 		}
 		
+	}
+	
+	private void setfire(boolean b){
+		for(ArmorStandPacket pack : manager.getArmorStandPacketByObjectID(obj)){
+			if(pack.isMini() && pack.isInvisible()){
+				if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
+				   (pack.getInventory().getItemInHand() == null || pack.getInventory().getItemInHand().getType().equals(Material.AIR))){					
+					pack.setFire(b);
+					Location loc = middle.clone();
+					loc.add(0, 1.3, 0);
+					if(b) lib.getLightManager().addLight(loc, 15);
+					if(!b) lib.getLightManager().removeLight(loc);
+					manager.updateFurniture(obj);
+					return;
+				}
+
+			}
+		}
 	}
 	
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
 			w.dropItem(middle.clone().add(0, .5, 0), is);
 		}
-		manager.remove(obj);
+		setfire(false);
 		e.remove();
 		obj=null;
 	}

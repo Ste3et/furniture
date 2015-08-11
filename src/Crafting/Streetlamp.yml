@@ -1,0 +1,10 @@
+Streetlamp:
+    name: '&cStreetlamp'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 0XX,0AX,00X
+      index:
+        '0': 0
+        X: 280
+        A: 123

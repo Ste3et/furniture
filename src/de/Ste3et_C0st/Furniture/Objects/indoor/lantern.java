@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -20,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -38,7 +38,7 @@ public class lantern implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public lantern(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public lantern(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -54,6 +54,10 @@ public class lantern implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -74,16 +78,16 @@ public class lantern implements Listener{
 		Location obsidian = center;
 		Location l = new Location(center.getWorld(), center.getX(), center.getY() -1.43, center.getZ());
 		obsidian.add(0D, -2.2, 0D);
-		Location left_down = new Location(obsidian.getWorld(), obsidian.getX()+0.22, obsidian.getY() + .62, obsidian.getZ()+0.22);
-		Location left_upper = new Location(obsidian.getWorld(), obsidian.getX() -0.21, obsidian.getY() + .62, obsidian.getZ() +0.22);
-		Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-0.21, obsidian.getY()+.62, obsidian.getZ()-0.21);
-		Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+0.21, obsidian.getY() + .62, obsidian.getZ() -0.21);
+		Location left_down = new Location(obsidian.getWorld(), obsidian.getX()+.21, obsidian.getY() + .62, obsidian.getZ()+.21);
+		Location left_upper = new Location(obsidian.getWorld(), obsidian.getX() -.21, obsidian.getY() + .62, obsidian.getZ() +.21);
+		Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-.21, obsidian.getY()+.62, obsidian.getZ()-.21);
+		Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+.21, obsidian.getY() + .62, obsidian.getZ() -.21);
 		
 		ArmorStandPacket asp = manager.createArmorStand(obj, obsidian);
 		asp.getInventory().setHelmet(new ItemStack(Material.OBSIDIAN));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, l.add(0,0,0));
+		asp = manager.createArmorStand(obj, lutil.getRelativ(l.clone(), b, 0D, 0.01D));
 		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
 		aspList.add(asp);
 		
@@ -130,14 +134,9 @@ public class lantern implements Listener{
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
-		if(!e.canBuild(null)) return;
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		block.setType(Material.AIR);
-		manager.remove(obj);
+		if(!e.canBuild()) return;
 		e.remove();
+		block.setType(Material.AIR);
 	}
 	
 	@EventHandler
@@ -146,7 +145,7 @@ public class lantern implements Listener{
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
-		if(!e.canBuild(null)) return;
+		if(!e.canBuild()) return;
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
 		if(is.getType().equals(Material.FLINT_AND_STEEL)){

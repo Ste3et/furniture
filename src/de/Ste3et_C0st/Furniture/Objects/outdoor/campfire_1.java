@@ -3,11 +3,11 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -34,7 +35,7 @@ public class campfire_1 implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public campfire_1(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public campfire_1(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -49,6 +50,10 @@ public class campfire_1 implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -57,13 +62,15 @@ public class campfire_1 implements Listener{
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
+		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+			packet.setFire(false);
+			Location location = this.loc.clone();
+			location.add(0, 1.2, 0);
+			lib.getLightManager().removeLight(location);
 		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		manager.remove(obj);
+		manager.updateFurniture(obj);
 		e.remove();
 		obj=null;
 	}
@@ -72,7 +79,7 @@ public class campfire_1 implements Listener{
 	private void onClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
 		List<ArmorStandPacket> aspList = manager.getArmorStandPacketByObjectID(obj);

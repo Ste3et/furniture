@@ -19,6 +19,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -38,7 +39,7 @@ public class table implements Listener {
 	Integer id;
 	Plugin plugin;
 	
-	public table(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public table(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -53,10 +54,13 @@ public class table implements Listener {
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
-	
 	public void spawn(Location loc){
 		List<ArmorStandPacket> packetL = new ArrayList<ArmorStandPacket>();
 		Location middle1 = lutil.getCenter(loc);
@@ -94,15 +98,9 @@ public class table implements Listener {
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
@@ -112,7 +110,6 @@ public class table implements Listener {
 			}
 		}
 		e.remove();
-		manager.remove(obj);
 		obj=null;
 	}
 	
@@ -121,7 +118,7 @@ public class table implements Listener {
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
@@ -133,16 +130,13 @@ public class table implements Listener {
 					ItemStack is = packet.getInventory().getItemInHand();
 					w.dropItem(loc, is);
 				}
-				
-				if(!p.getGameMode().equals(GameMode.CREATIVE)){
-					Integer i = p.getInventory().getHeldItemSlot();
-					ItemStack is = p.getItemInHand();
-					is.setAmount(is.getAmount()-1);
-					p.getInventory().setItem(i, is);
-					p.updateInventory();
-				}
-
 				packet.getInventory().setItemInHand(Itemstack);
+				if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) break;
+				Integer i = p.getInventory().getHeldItemSlot();
+				ItemStack is = p.getItemInHand();
+				is.setAmount(is.getAmount()-1);
+				p.getInventory().setItem(i, is);
+				p.updateInventory();
 				break;
 			}
 		}

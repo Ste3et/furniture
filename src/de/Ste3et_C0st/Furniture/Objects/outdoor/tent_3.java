@@ -24,6 +24,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -43,7 +44,7 @@ public class tent_3 implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public tent_3(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public tent_3(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -59,6 +60,10 @@ public class tent_3 implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		if(b.equals(BlockFace.WEST)){location=lutil.getRelativ(location, b, 1D, 0D);}
 		if(b.equals(BlockFace.NORTH)){location=lutil.getRelativ(location, b, 1D, 1D);}
@@ -174,18 +179,13 @@ public class tent_3 implements Listener{
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(obj==null){return;}
 		e.setCancelled(true);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		bed.setType(Material.AIR);
-		manager.remove(obj);
-		obj=null;
 		e.remove();
+		obj=null;
 	}
 	
 	@EventHandler
@@ -196,7 +196,7 @@ public class tent_3 implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), Material.CARPET);
+			Boolean canBuild = lib.canBuild(p, e.getLocation());
 			Material m = Material.BANNER;
 			color(p, canBuild, m);
 		}else{
@@ -216,11 +216,10 @@ public class tent_3 implements Listener{
 		ItemStack is = p.getItemInHand();
 		Integer Amount = is.getAmount();
 		List<ArmorStandPacket> asp = manager.getArmorStandPacketByObjectID(obj);
-		p.sendMessage(asp.size() + ":" + Amount);
 		DyeColor change = DyeColor.getByColor(lutil.getDyeFromDurability(is.getDurability()));
 		for(ArmorStandPacket packet : asp){
 			if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(m)){
-				if(Amount>0||p.getGameMode().equals(GameMode.CREATIVE)){
+				if(Amount>0){
 					ItemStack is2 = packet.getInventory().getHelmet();
 					BannerMeta banner = (BannerMeta) is2.getItemMeta();
 					DyeColor change2 = banner.getBaseColor();
@@ -228,18 +227,17 @@ public class tent_3 implements Listener{
 						banner.setBaseColor(change);
 						is2.setItemMeta(banner);
 						packet.getInventory().setHelmet(is2);
-						if(!p.getGameMode().equals(GameMode.CREATIVE)){Amount--;}
+						if(!p.getGameMode().equals(GameMode.CREATIVE) || !lib.useGamemode()){Amount--;}
 					}
 				}
 			}
 		}
-		if(!p.getGameMode().equals(GameMode.CREATIVE)){
-			Integer i = p.getInventory().getHeldItemSlot();
-			ItemStack item = p.getItemInHand();
-			item.setAmount(Amount);
-			p.getInventory().setItem(i, item);
-			p.updateInventory();
-		}
 		manager.updateFurniture(obj);
+		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = p.getInventory().getHeldItemSlot();
+		ItemStack item = p.getItemInHand();
+		item.setAmount(Amount);
+		p.getInventory().setItem(i, item);
+		p.updateInventory();
 	}
 }

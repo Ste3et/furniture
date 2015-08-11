@@ -1,0 +1,8 @@
+Billboard:
+    name: '&cBillboard'
+    material: 383
+    crafting:
+      disable: true
+      recipe: XXX,XXX,XXX
+      index:
+        X: 0

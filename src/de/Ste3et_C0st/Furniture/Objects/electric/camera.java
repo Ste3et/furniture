@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,6 +22,7 @@ import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -45,7 +45,7 @@ public class camera implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public camera(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public camera(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -60,6 +60,10 @@ public class camera implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -131,6 +135,7 @@ public class camera implements Listener{
 		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
+		//lib.saveObjToDB(obj);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -140,8 +145,8 @@ public class camera implements Listener{
 		if(!e.getID().equals(obj)){return;}
 		if(obj==null){return;}
 		Player p = e.getPlayer();
-		Location pLocation = lutil.getLocationCopy(lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D));
-		Location locCopy = lutil.getLocationCopy(getLocation());
+		Location pLocation = lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D).clone();
+		Location locCopy = getLocation().clone();
 		if(pLocation.equals(locCopy) && lutil.yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(b)){
 			if(!p.getInventory().getItemInHand().getType().equals(Material.MAP)){return;}
 			MapView view = Bukkit.getMap(p.getItemInHand().getDurability());
@@ -161,15 +166,10 @@ public class camera implements Listener{
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(obj==null){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
 		e.remove();
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		manager.remove(obj);
 		obj=null;
 	}
 	

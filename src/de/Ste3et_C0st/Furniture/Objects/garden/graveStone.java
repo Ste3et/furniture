@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -26,6 +25,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -50,7 +50,7 @@ public class graveStone implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public graveStone(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public graveStone(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -66,6 +66,10 @@ public class graveStone implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 		setBlock();
@@ -157,18 +161,13 @@ public class graveStone implements Listener{
 	@EventHandler
 	private void onBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()) return;
-		if(!e.canBuild(null)) return;
+		if(!e.canBuild()) return;
 		if(!e.getID().equals(obj)) return;
 		if(obj==null){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
+		e.remove();
 		sign.setType(Material.AIR);
 		sign = null;
-		manager.remove(obj);
 		obj=null;
-		e.remove();
 	}
 	
 	@EventHandler
@@ -209,7 +208,7 @@ public class graveStone implements Listener{
 	private void onClick(FurnitureClickEvent e){
 		Player p = e.getPlayer();
 		if(e.isCancelled()) return;
-		if(!e.canBuild(null)) return;
+		if(!e.canBuild()) return;
 		if(!e.getID().equals(obj)) return;
 		ItemStack is = p.getItemInHand();
 		if (is == null) return;

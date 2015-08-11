@@ -19,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -38,7 +39,7 @@ public class barrels implements Listener {
 	Block block;
 	Plugin plugin;
 	
-	public barrels(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public barrels(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -55,6 +56,10 @@ public class barrels implements Listener {
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(location);
 	}
@@ -75,7 +80,7 @@ public class barrels implements Listener {
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
@@ -88,6 +93,13 @@ public class barrels implements Listener {
 		packet.getInventory().setHelmet(p.getItemInHand());
 		
 		manager.updateFurniture(obj);
+		
+		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
+		ItemStack item = e.getPlayer().getItemInHand();
+		item.setAmount(item.getAmount()-1);
+		e.getPlayer().getInventory().setItem(i, item);
+		e.getPlayer().updateInventory();
 	}
 	
 	@EventHandler
@@ -97,7 +109,7 @@ public class barrels implements Listener {
 		if(e.getClickedBlock()==null){return;}
 		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), Material.CAULDRON)){return;}
+		if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
 		Player p = e.getPlayer();
 		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){e.getPlayer().sendMessage("03");return;}
 		e.setCancelled(true);
@@ -109,17 +121,16 @@ public class barrels implements Listener {
 			w.dropItem(loc, is);
 		}
 		
-		if(!p.getGameMode().equals(GameMode.CREATIVE)){
-			Integer i = p.getInventory().getHeldItemSlot();
-			ItemStack is = p.getItemInHand();
-			is.setAmount(is.getAmount()-1);
-			p.getInventory().setItem(i, is);
-			p.updateInventory();
-		}
-		
 		packet.getInventory().setHelmet(Itemstack);
 		
 		manager.updateFurniture(obj);
+		
+		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
+		ItemStack item = e.getPlayer().getItemInHand();
+		item.setAmount(item.getAmount()-1);
+		e.getPlayer().getInventory().setItem(i, item);
+		e.getPlayer().updateInventory();
 	}
 	
 	@EventHandler
@@ -127,12 +138,8 @@ public class barrels implements Listener {
 		if(obj==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation(), Material.CAULDRON)){return;}
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
+		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation())){return;}
 		ArmorStandPacket packet = manager.getArmorStandPacketByObjectID(obj).get(0);
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();
 			w.dropItem(loc, is);
@@ -140,7 +147,7 @@ public class barrels implements Listener {
 		
 		this.block.setType(Material.AIR);
 		block=null;
-		manager.remove(obj);
+		this.obj.remove(e.getPlayer());
 		obj=null;
 	}
 	
@@ -148,15 +155,10 @@ public class barrels implements Listener {
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
 		e.remove();
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		manager.remove(obj);
 		obj=null;
 		block.setType(Material.AIR);
 		block=null;

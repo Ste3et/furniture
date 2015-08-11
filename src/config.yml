@@ -1,37 +1,75 @@
-config:
-   # Needs Vualt (optional)
-   UseMetrics: true
-   CraftingPermissions: true
-   BreakPermissions: true
-   CreativeItems: true
-   CreativeStorage: true
-   Messages:
-     NoPermissions: "&cYou don't have permission to do that"
-     notFound: "&cFurniture not found"
-     PlayerNotFound: "&cPlayer not found"
-     ArmorStandsKills: "&6@ARMORSTANDS ArmorStands removed from @WOLRDS worlds"
-     ArmorStandsRemoveFromDistance: "@ARMORSTANDS &2Furniture removed"
-     ArmorStandsRemoveFromID: "&9Furniture [&cnot#&2successful] &9removed"
-     ArmorStandsRemoveFromType: "&9Furniture [&cnot#&2successful] &9removed"
-     CommandBadArguments: "&cBadArguments"
-     Space: "&aNot Enough Space"
-   Protection:
-     Towny:
-       OnlyOwner: false
-       HookIFExist: true
-     WorldGuard:
-       HookIFExist: true
-     LandLord:
-       HookIFExist: true
-     PlotME:
-       HookIFExist: true
-     PlotSquared:
-       HookIFExist: true
-     PreciousStones:
-       HookIFExist: true
-     Residence:
-       HookIFExist: true
-     GriefPrevention:
-       HookIFExist: true
-     Plotz:
-       HookIFExist: true
+Material:
+   - 1
+   - 2
+   - 3
+   - 4
+   - 5
+   - 7
+   - 12
+   - 13
+   - 14
+   - 15
+   - 16
+   - 17
+   - 18
+   - 19
+   - 20
+   - 21
+   - 22
+   - 24
+   - 25
+   - 29
+   - 33
+   - 35
+   - 41
+   - 42
+   - 45
+   - 46
+   - 47
+   - 48
+   - 49
+   - 52
+   - 56
+   - 57
+   - 58
+   - 61
+   - 73
+   - 79
+   - 80
+   - 81
+   - 82
+   - 84
+   - 86
+   - 87
+   - 88
+   - 89
+   - 91
+   - 95
+   - 97
+   - 98
+   - 99
+   - 100
+   - 103
+   - 110
+   - 112
+   - 121
+   - 123
+   - 129
+   - 133
+   - 137
+   - 138
+   - 152
+   - 153
+   - 155
+   - 158
+   - 159
+   - 161
+   - 162
+   - 165
+   - 168
+   - 169
+   - 170
+   - 172
+   - 173
+   - 174
+   - 179

@@ -1,0 +1,10 @@
+Fence:
+    name: '&cFence'
+    material: 383
+    crafting:
+      disable: false
+      recipe: 000,XAX,XAX
+      index:
+        '0': 0
+        A: 280
+        X: 1

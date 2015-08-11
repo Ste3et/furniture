@@ -21,6 +21,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -41,7 +42,7 @@ public class tent_1 implements Listener{
 	Block block;
 	Plugin plugin;
 	
-	public tent_1(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id){
+	public tent_1(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -61,6 +62,10 @@ public class tent_1 implements Listener{
 			return;
 		}else{
 			this.obj = new ObjectID(name, plugin.getName(), location);
+			if(player!=null){
+				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
+				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
+			}
 		}
 		spawn(loc);
 	}
@@ -260,17 +265,12 @@ public class tent_1 implements Listener{
 	private void onBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild(null)){return;}
+		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-			w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		}
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
 		block.setType(Material.AIR);
-		manager.remove(obj);
-		obj=null;
 		e.remove();
+		obj=null;
 	}
 	
 	@EventHandler
@@ -283,7 +283,7 @@ public class tent_1 implements Listener{
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			p.openWorkbench(this.block.getLocation(), true);
 		}else{
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), Material.CARPET);
+			Boolean canBuild = lib.canBuild(p, e.getLocation());
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}
@@ -293,12 +293,10 @@ public class tent_1 implements Listener{
 	private void onBlockBreak(BlockBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!lib.canBuild(e.getPlayer(), loc, null)){return;}
+		if(!lib.canBuild(e.getPlayer(), loc)){return;}
 		if(obj==null){return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
-		w.dropItem(loc.add(0,1,0), manager.getProject(obj.getProject()).getCraftingFile().getRecipe().getResult());
-		main.deleteEffect(manager.getArmorStandPacketByObjectID(obj));
-		manager.remove(obj);
+		this.obj.remove(e.getPlayer());
 		obj=null;
 	}
 	
@@ -310,23 +308,22 @@ public class tent_1 implements Listener{
 		short color = lutil.getFromDey(is.getDurability());
 		for(ArmorStandPacket packet : asp){
 			if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(m)){
-				if(Amount>0||p.getGameMode().equals(GameMode.CREATIVE)){
+				if(Amount>0){
 					ItemStack is2 = packet.getInventory().getHelmet();
 					if(is2.getDurability() != color){
 						is2.setDurability(color);
 						packet.getInventory().setHelmet(is2);
-						if(!p.getGameMode().equals(GameMode.CREATIVE)){Amount--;}
+						if(!p.getGameMode().equals(GameMode.CREATIVE) || !lib.useGamemode()){Amount--;}
 					}
 				}
 			}
 		}
-		if(!p.getGameMode().equals(GameMode.CREATIVE)){
-			Integer i = p.getInventory().getHeldItemSlot();
-			ItemStack item = p.getItemInHand();
-			item.setAmount(Amount);
-			p.getInventory().setItem(i, item);
-			p.updateInventory();
-		}
 		manager.updateFurniture(obj);
+		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+		Integer i = p.getInventory().getHeldItemSlot();
+		ItemStack item = p.getItemInHand();
+		item.setAmount(Amount);
+		p.getInventory().setItem(i, item);
+		p.updateInventory();
 	}
 }
