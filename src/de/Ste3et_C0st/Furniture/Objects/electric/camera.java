@@ -22,15 +22,15 @@ import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class camera implements Listener{
+public class camera extends Furniture implements Listener{
 	Location loc;
 	BlockFace b;
 	World w;
@@ -39,13 +39,12 @@ public class camera implements Listener{
 	FurnitureLib lib;
 	LocationUtil lutil;
 	Plugin plugin;
-	
-	private String id;
-	public String getID(){return this.id;}
+
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public camera(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public camera(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -54,16 +53,10 @@ public class camera implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
+		this.obj = id;
+		if(id.isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 	}
@@ -132,15 +125,23 @@ public class camera implements Listener{
 			asp.setInvisible(true);
 			asp.setGravity(false);
 		}
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		//lib.saveObjToDB(obj);
+	}
+	
+	@EventHandler
+	public void onFurnitureBreak(FurnitureBreakEvent e) {
+		if(e.isCancelled()){return;}
+		if(!e.canBuild()){return;}
+		if(!e.getID().equals(obj)){return;}
+		if(obj==null){return;}
+		e.remove();
+		obj=null;
 	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	private void onClick(FurnitureClickEvent e){
+	public void onFurnitureClick(FurnitureClickEvent e) {
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(obj==null){return;}
@@ -149,6 +150,7 @@ public class camera implements Listener{
 		Location locCopy = getLocation().clone();
 		if(pLocation.equals(locCopy) && lutil.yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(b)){
 			if(!p.getInventory().getItemInHand().getType().equals(Material.MAP)){return;}
+			
 			MapView view = Bukkit.getMap(p.getItemInHand().getDurability());
 			Location l = getLocation();
 			l.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
@@ -161,16 +163,6 @@ public class camera implements Listener{
                 view.addRenderer(renderer);
             }catch (Exception ex){}
 		}
-	}
-	
-	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
-		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
-		if(!e.getID().equals(obj)){return;}
-		if(obj==null){return;}
-		e.remove();
-		obj=null;
 	}
 	
 }

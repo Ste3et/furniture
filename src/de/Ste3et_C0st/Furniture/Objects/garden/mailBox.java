@@ -2,13 +2,14 @@ package de.Ste3et_C0st.Furniture.Objects.garden;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -19,15 +20,16 @@ import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class mailBox implements Listener {
+public class mailBox extends Furniture implements Listener {
 
 	Location loc;
 	BlockFace b;
@@ -38,15 +40,15 @@ public class mailBox implements Listener {
 	LocationUtil lutil;
 	Plugin plugin;
 	List<Block> blockList = new ArrayList<Block>();
-	
-	private String id;
-	public String getID(){return this.id;}
+
 	public ObjectID getObjectID(){return this.obj;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
+	UUID uuid;
 	
-	public mailBox(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public mailBox(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -55,16 +57,10 @@ public class mailBox implements Listener {
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
+		this.obj = id;
+		if(id.isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 	}
@@ -138,6 +134,7 @@ public class mailBox implements Listener {
 		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.5, 0), face, -.21, -.32D));
 		as.getInventory().setHelmet(new ItemStack(Material.REDSTONE_TORCH_ON, 1, (short) 0));
 		as.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
+		as.setName("#ELEMENT#");
 		as.setSmall(true);
 		aspList.add(as);
 		
@@ -171,19 +168,47 @@ public class mailBox implements Listener {
 			b.setType(Material.BARRIER);
 			blockList.add(b);
 		}
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
-	/*public void addMailbox(Player p) throws MailboxException{
+	/*public void addMailbox(Player p){
 		if(Bukkit.getPluginManager().isPluginEnabled("PostalService")){
-			PostalService.getMailboxManager().addMailboxAtLoc(blockList.get(1).getLocation(), p);
+			try {
+				PostalService.getMailboxManager().addMailboxAtLoc(blockList.get(1).getLocation(), p);
+				this.uuid = p.getUniqueId();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+	}
+	
+	public void setSendet(Boolean b){
+		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+			if(packet!=null&&packet.getName().equalsIgnoreCase("#ELEMENT#")){
+				if(b){
+					packet.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 0)), BodyPart.HEAD);
+					manager.updateFurniture(obj);
+					return;
+				}
+				packet.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
+				manager.updateFurniture(obj);
+				return;
+			}
+		}
+	}
+	
+	@EventHandler
+	private void onMove(PlayerSendMailEvent e){
+		if(!Bukkit.getPluginManager().isPluginEnabled("PostalService")){return;}
+		UUID p1 = this.uuid;
+		UUID p2 = e.getRecipient().getUUID();
+		if(!p1.equals(p2)){return;}
+		setSendet(true);
 	}*/
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()) return;
 		if(!e.canBuild()) return;
 		if(!e.getID().equals(obj)) return;
@@ -195,6 +220,8 @@ public class mailBox implements Listener {
 		e.remove();
 		obj=null;
 	}
+	
+	public void onFurnitureClick(FurnitureClickEvent e){}
 	
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){

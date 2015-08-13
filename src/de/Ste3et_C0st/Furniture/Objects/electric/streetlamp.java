@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -23,15 +22,15 @@ import org.bukkit.util.Vector;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class streetlamp implements Listener{
+public class streetlamp extends Furniture implements Listener{
 	
 	Location loc, light;
 	Vector loc2;
@@ -45,12 +44,11 @@ public class streetlamp implements Listener{
 	boolean redstone = false;
 	List<Location> blockLocation = new ArrayList<Location>();
 	
-	private String id;
-	public String getID(){return this.id;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public streetlamp(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public streetlamp(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -61,17 +59,11 @@ public class streetlamp implements Listener{
 		this.lib = lib;
 		this.plugin = plugin;
 		this.light = lutil.getRelativ(loc, b, -1D, 0D);
+		this.obj = id;
 		setBlock();
-		if(id!=null){
-			this.obj = id;
+		if(id.isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 	}
@@ -132,7 +124,6 @@ public class streetlamp implements Listener{
 			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -164,6 +155,7 @@ public class streetlamp implements Listener{
 			if(e.getClickedBlock()==null) return;
 			if(blockLocation.contains(e.getClickedBlock().getLocation())){
 				e.setCancelled(true);
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
 				FurnitureLib.getInstance().getLightManager().removeLight(light);
 				obj.remove(e.getPlayer());
 				for(Location loc : blockLocation){
@@ -174,6 +166,7 @@ public class streetlamp implements Listener{
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			if(e.getClickedBlock()==null) return;
 			if(blockLocation.contains(e.getClickedBlock().getLocation())){
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
 				if(isOn()){
 					setLight(false);
 				}else{
@@ -182,24 +175,7 @@ public class streetlamp implements Listener{
 			}
 		}
 	}
-	
-	@EventHandler
-	private void onClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
-		e.setCancelled(true);
-		Boolean isOn = isOn();
-		ArmorStandPacket packet = getPacket();
-		if(packet==null) return;
-		if(redstone) return;
-		if(isOn){
-			setLight(false);
-		}else{
-			setLight(true);
-		}
-	}
-	
+
 	@EventHandler
 	private void onBlockPowered(BlockRedstoneEvent e){
 		if(e.getBlock()==null) return;
@@ -255,7 +231,7 @@ public class streetlamp implements Listener{
 	}
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
@@ -267,5 +243,23 @@ public class streetlamp implements Listener{
 			loc.getBlock().setType(Material.AIR);
 		}
 		blockLocation.clear();
+		
+	}
+	
+	@EventHandler
+	public void onFurnitureClick(FurnitureClickEvent e) {
+		if(obj==null){return;}
+		if(e.isCancelled()){return;}
+		if(!e.getID().equals(obj)){return;}
+		e.setCancelled(true);
+		Boolean isOn = isOn();
+		ArmorStandPacket packet = getPacket();
+		if(packet==null) return;
+		if(redstone) return;
+		if(isOn){
+			setLight(false);
+		}else{
+			setLight(true);
+		}
 	}
 }

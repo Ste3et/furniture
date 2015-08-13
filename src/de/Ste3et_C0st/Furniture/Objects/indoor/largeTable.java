@@ -20,15 +20,15 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class largeTable implements Listener{
+public class largeTable extends Furniture implements Listener{
 
 	Location loc;
 	BlockFace b;
@@ -40,7 +40,12 @@ public class largeTable implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public largeTable(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public ObjectID getObjectID(){return this.obj;}
+	public Location getLocation(){return this.loc;}
+	public BlockFace getBlockFace(){return this.b;}
+	
+	public largeTable(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -49,9 +54,8 @@ public class largeTable implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
-			
+		this.obj = id;
+		if(id.isFinish()){
 			for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 				if(packet.getName().startsWith("#TELLER")){
 					tellerIDs.add(packet.getEntityId());
@@ -60,12 +64,6 @@ public class largeTable implements Listener{
 			
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 	}
@@ -186,7 +184,6 @@ public class largeTable implements Listener{
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -201,7 +198,7 @@ public class largeTable implements Listener{
 	}
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
@@ -220,7 +217,7 @@ public class largeTable implements Listener{
 	}
 	
 	@EventHandler
-	private void onClick(FurnitureClickEvent e){
+	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
@@ -284,7 +281,9 @@ public class largeTable implements Listener{
 		if(as!=null&&as.getInventory().getItemInHand()!= null && as.getInventory().getItemInHand().equals(is)){return;}
 		if(as.getInventory().getItemInHand()!=null&&!as.getInventory().getItemInHand().getType().equals(Material.AIR)){
 			ArmorStandPacket asp = as;
-			asp.getLocation().getWorld().dropItem(asp.getLocation(), asp.getInventory().getItemInHand());
+			ItemStack item = asp.getInventory().getItemInHand();
+			item.setAmount(1);
+			asp.getLocation().getWorld().dropItem(asp.getLocation(), item);
 		}
 		
 		ItemStack IS = is.clone();

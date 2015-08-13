@@ -25,15 +25,15 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class graveStone implements Listener{
+public class graveStone extends Furniture implements Listener{
 
 	Location loc;
 	BlockFace b;
@@ -43,14 +43,13 @@ public class graveStone implements Listener{
 	FurnitureLib lib;
 	LocationUtil lutil;
 	Plugin plugin;
-	
-	private String id;
-	public String getID(){return this.id;}
+
 	public ObjectID getObjectID(){return this.obj;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public graveStone(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public graveStone(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -59,17 +58,11 @@ public class graveStone implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
+		this.obj = id;
+		if(id.isFinish()){
 			setBlock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 		setBlock();
@@ -153,13 +146,12 @@ public class graveStone implements Listener{
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()) return;
 		if(!e.canBuild()) return;
 		if(!e.getID().equals(obj)) return;
@@ -205,7 +197,7 @@ public class graveStone implements Listener{
 	  
 	
 	@EventHandler
-	private void onClick(FurnitureClickEvent e){
+	public void onFurnitureClick(FurnitureClickEvent e){
 		Player p = e.getPlayer();
 		if(e.isCancelled()) return;
 		if(!e.canBuild()) return;

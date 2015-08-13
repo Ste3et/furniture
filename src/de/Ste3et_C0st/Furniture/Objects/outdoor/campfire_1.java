@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -16,14 +15,14 @@ import org.bukkit.plugin.Plugin;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 
-public class campfire_1 implements Listener{
+public class campfire_1 extends Furniture implements Listener{
 
 	Location loc;
 	BlockFace b;
@@ -35,7 +34,12 @@ public class campfire_1 implements Listener{
 	Integer id;
 	Plugin plugin;
 	
-	public campfire_1(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public ObjectID getObjectID(){return this.obj;}
+	public Location getLocation(){return this.loc;}
+	public BlockFace getBlockFace(){return this.b;}
+	
+	public campfire_1(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -44,22 +48,16 @@ public class campfire_1 implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
+		this.obj = id;
+		if(id.isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		spawn(location);
 	}
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
@@ -76,7 +74,7 @@ public class campfire_1 implements Listener{
 	}
 	
 	@EventHandler
-	private void onClick(FurnitureClickEvent e){
+	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}

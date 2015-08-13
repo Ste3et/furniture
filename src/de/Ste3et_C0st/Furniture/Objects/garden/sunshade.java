@@ -27,15 +27,15 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 
-public class sunshade implements Listener{
+public class sunshade extends Furniture implements Listener{
 
 	Location loc;
 	BlockFace b;
@@ -45,12 +45,11 @@ public class sunshade implements Listener{
 	FurnitureLib lib;
 	LocationUtil lutil;
 	Plugin plugin;
-	
-	private String id;
-	public String getID(){return this.id;}
+
 	public ObjectID getObjectID(){return this.obj;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
+	
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,
@@ -63,7 +62,8 @@ public class sunshade implements Listener{
 	Integer timer;
 	Block block;
 	
-	public sunshade(Location location, FurnitureLib lib, String name, Plugin plugin, ObjectID id, Player player){
+	public sunshade(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(location, lib, plugin, id);
 		this.lutil = main.getLocationUtil();
 		this.b = lutil.yawToFace(location.getYaw());
 		this.loc = location.getBlock().getLocation();
@@ -72,17 +72,11 @@ public class sunshade implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(id!=null){
-			this.obj = id;
+		this.obj = id;
+		if(id.isFinish()){
 			setblock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
-		}else{
-			this.obj = new ObjectID(name, plugin.getName(), location);
-			if(player!=null){
-				FurnitureLateSpawnEvent lateSpawn = new FurnitureLateSpawnEvent(player, obj, obj.getProjectOBJ(), location);
-				Bukkit.getServer().getPluginManager().callEvent(lateSpawn);
-			}
 		}
 		setblock();
 		spawn(location);
@@ -137,14 +131,12 @@ public class sunshade implements Listener{
 			packet.setGravity(false);
 			packet.setBasePlate(false);
 		}
-		
-		
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	private void onClick(FurnitureClickEvent e){
+	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
@@ -199,6 +191,7 @@ public class sunshade implements Listener{
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
 				e.setCancelled(true);
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
 				stopTimer();
 				for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 					if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -215,6 +208,7 @@ public class sunshade implements Listener{
 			}
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
 				Player p = e.getPlayer();
 				ItemStack is = p.getItemInHand();
 				if(is==null||!is.getType().equals(Material.BANNER)){
@@ -252,7 +246,7 @@ public class sunshade implements Listener{
 	}
 	
 	@EventHandler
-	private void onBreak(FurnitureBreakEvent e){
+	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
