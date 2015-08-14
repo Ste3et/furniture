@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class tent_1 extends Furniture implements Listener{
 
@@ -280,7 +281,7 @@ public class tent_1 extends Furniture implements Listener{
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			p.openWorkbench(this.block.getLocation(), true);
 		}else{
-			Boolean canBuild = lib.canBuild(p, e.getLocation());
+			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}
@@ -290,7 +291,7 @@ public class tent_1 extends Furniture implements Listener{
 	private void onBlockBreak(BlockBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!lib.canBuild(e.getPlayer(), loc)){return;}
+		if(!lib.canBuild(e.getPlayer(), loc, EventType.BREAK)){return;}
 		if(obj==null){return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
 		this.obj.remove(e.getPlayer());

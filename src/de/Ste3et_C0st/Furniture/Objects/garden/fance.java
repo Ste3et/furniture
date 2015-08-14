@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class fance extends Furniture implements Listener{
 
@@ -101,7 +102,7 @@ public class fance extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation())){return;}
+		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation(), EventType.BREAK)){return;}
 		this.block.setType(Material.AIR);
 		this.obj.remove(e.getPlayer());
 		block=null;

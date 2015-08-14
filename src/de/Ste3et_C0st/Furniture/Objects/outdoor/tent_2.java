@@ -29,6 +29,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class tent_2 extends Furniture implements Listener{
 
@@ -229,7 +230,7 @@ public class tent_2 extends Furniture implements Listener{
 				}
 			}
 		}else{
-			Boolean canBuild = lib.canBuild(p, e.getLocation());
+			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}

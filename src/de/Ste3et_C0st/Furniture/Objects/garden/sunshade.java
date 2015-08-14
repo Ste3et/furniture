@@ -34,6 +34,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class sunshade extends Furniture implements Listener{
 
@@ -191,7 +192,7 @@ public class sunshade extends Furniture implements Listener{
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
 				e.setCancelled(true);
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.BREAK)){return;}
 				stopTimer();
 				for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 					if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -208,7 +209,7 @@ public class sunshade extends Furniture implements Listener{
 			}
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.INTERACT)){return;}
 				Player p = e.getPlayer();
 				ItemStack is = p.getItemInHand();
 				if(is==null||!is.getType().equals(Material.BANNER)){

@@ -25,6 +25,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class barrels extends Furniture implements Listener {
 	
@@ -108,7 +109,7 @@ public class barrels extends Furniture implements Listener {
 		if(e.getClickedBlock()==null){return;}
 		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
+		if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.INTERACT)){return;}
 		Player p = e.getPlayer();
 		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){e.getPlayer().sendMessage("03");return;}
 		e.setCancelled(true);
@@ -139,7 +140,7 @@ public class barrels extends Furniture implements Listener {
 		if(obj==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation())){return;}
+		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation(), EventType.BREAK)){return;}
 		ArmorStandPacket packet = manager.getArmorStandPacketByObjectID(obj).get(0);
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();

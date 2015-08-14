@@ -31,6 +31,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class tent_3 extends Furniture implements Listener{
 
@@ -194,7 +195,7 @@ public class tent_3 extends Furniture implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			Boolean canBuild = lib.canBuild(p, e.getLocation());
+			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
 			Material m = Material.BANNER;
 			color(p, canBuild, m);
 		}else{

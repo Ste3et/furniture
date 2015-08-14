@@ -171,9 +171,8 @@ public class main extends JavaPlugin implements Listener{
 		loc.setYaw(e.getPlayer().getLocation().getYaw());
 		loc.add(0, 1, 0);
 		Project pro = e.getProject();
-		lib.getLimitationManager().add(e.getLocation(), pro);
-		ObjectID obj = new ObjectID(pro.getName(), pro.getPlugin().getName(), e.getLocation());
-		
+		lib.getLimitationManager().add(loc, pro);
+		ObjectID obj = new ObjectID(pro.getName(), pro.getPlugin().getName(), loc);
 		switch(e.getProject().getName()){
 			case "Camera" : new camera(loc, lib, instance, obj);break;
 			case "TV" : new tv(loc, lib, instance, obj);break;

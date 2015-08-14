@@ -29,6 +29,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class streetlamp extends Furniture implements Listener{
 	
@@ -155,7 +156,7 @@ public class streetlamp extends Furniture implements Listener{
 			if(e.getClickedBlock()==null) return;
 			if(blockLocation.contains(e.getClickedBlock().getLocation())){
 				e.setCancelled(true);
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.BREAK)){return;}
 				FurnitureLib.getInstance().getLightManager().removeLight(light);
 				obj.remove(e.getPlayer());
 				for(Location loc : blockLocation){
@@ -166,7 +167,7 @@ public class streetlamp extends Furniture implements Listener{
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 			if(e.getClickedBlock()==null) return;
 			if(blockLocation.contains(e.getClickedBlock().getLocation())){
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation())){return;}
+				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.INTERACT)){return;}
 				if(isOn()){
 					setLight(false);
 				}else{
@@ -251,6 +252,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Boolean isOn = isOn();
 		ArmorStandPacket packet = getPacket();
