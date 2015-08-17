@@ -63,13 +63,13 @@ public class sunshade extends Furniture implements Listener{
 	Integer timer;
 	Block block;
 	
-	public sunshade(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public sunshade(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -80,7 +80,7 @@ public class sunshade extends Furniture implements Listener{
 			return;
 		}
 		setblock();
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	private void setblock(){
@@ -140,8 +140,8 @@ public class sunshade extends Furniture implements Listener{
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
@@ -189,10 +189,10 @@ public class sunshade extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
+		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
 				e.setCancelled(true);
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.BREAK)){return;}
+				if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
 				stopTimer();
 				for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 					if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -206,10 +206,8 @@ public class sunshade extends Furniture implements Listener{
 				this.block = null;
 				this.obj.remove(e.getPlayer());
 				obj=null;
-			}
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-			if(e.getClickedBlock().getLocation().equals(block.getLocation())){
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.INTERACT)){return;}
+			if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 				Player p = e.getPlayer();
 				ItemStack is = p.getItemInHand();
 				if(is==null||!is.getType().equals(Material.BANNER)){
@@ -242,7 +240,6 @@ public class sunshade extends Furniture implements Listener{
 						p.updateInventory();
 					}
 				}
-			}
 		}
 	}
 	
@@ -250,8 +247,8 @@ public class sunshade extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		stopTimer();
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){

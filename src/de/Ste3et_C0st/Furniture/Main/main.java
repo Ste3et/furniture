@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -87,26 +86,26 @@ public class main extends JavaPlugin implements Listener{
 			if(!objList.contains(obj)) objList.add(obj);
 			if(obj.getPlugin().equalsIgnoreCase(this.getName())){
 				switch (obj.getProject()) {
-				case "Camera":new camera(obj.getStartLocation(), lib, this, obj);break;
-				case "TV":new tv(obj.getStartLocation(), lib, this, obj);break;
-				case "GraveStone":new graveStone(obj.getStartLocation(), lib, this, obj);break;
-				case "Chair":new chair(obj.getStartLocation(), lib, this, obj);break;
-				case "LargeTable":new largeTable(obj.getStartLocation(), lib, this, obj);break;
-				case "Lantern":new lantern(obj.getStartLocation(), lib, this, obj);break;
-				case "Sofa":new sofa(obj.getStartLocation(), lib, this, obj);break;
-				case "Table":new table(obj.getStartLocation(), lib, this, obj);break;
-				case "Barrels":new barrels(obj.getStartLocation(), lib, this, obj);break;
-				case "Campfire1":new campfire_1(obj.getStartLocation(), lib, this, obj);break;
-				case "Campfire2":new campfire_2(obj.getStartLocation(), lib, this, obj);break;
-				case "Tent1":new tent_1(obj.getStartLocation(), lib, this, obj);break;
-				case "Tent2":new tent_2(obj.getStartLocation(), lib, this, obj);break;
-				case "Tent3":new tent_3(obj.getStartLocation(), lib, this, obj);break;
-				case "Fence":new fance(obj.getStartLocation(), lib, this, obj);break;
-				case "Sunshade":new sunshade(obj.getStartLocation(), lib, this, obj);break;
-				case "Streetlamp":new streetlamp(obj.getStartLocation(), lib, this, obj);break;
-				case "Billboard": new billboard(obj.getStartLocation(), lib, this, obj); break;
+				case "Camera":new camera(lib, this, obj);break;
+				case "TV":new tv(lib, this, obj);break;
+				case "GraveStone":new graveStone(lib, this, obj);break;
+				case "Chair":new chair(lib, this, obj);break;
+				case "LargeTable":new largeTable(lib, this, obj);break;
+				case "Lantern":new lantern(lib, this, obj);break;
+				case "Sofa":new sofa(lib, this, obj);break;
+				case "Table":new table(lib, this, obj);break;
+				case "Barrels":new barrels(lib, this, obj);break;
+				case "Campfire1":new campfire_1(lib, this, obj);break;
+				case "Campfire2":new campfire_2(lib, this, obj);break;
+				case "Tent1":new tent_1(lib, this, obj);break;
+				case "Tent2":new tent_2(lib, this, obj);break;
+				case "Tent3":new tent_3(lib, this, obj);break;
+				case "Fence":new fance(lib, this, obj);break;
+				case "Sunshade":new sunshade(lib, this, obj);break;
+				case "Streetlamp":new streetlamp(lib, this, obj);break;
+				case "Billboard": new billboard(lib, this, obj); break;
 				case "Mailbox" : 
-					mailBox mail = new mailBox(obj.getStartLocation(), lib, this, obj);
+					mailBox mail = new mailBox(lib, this, obj);
 					/*try {
 						mail.addMailbox(loadPlayerMailBox(obj));
 					} catch (Exception e) {
@@ -164,39 +163,33 @@ public class main extends JavaPlugin implements Listener{
 	@EventHandler
 	private void onClick(FurnitureItemEvent e){
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getProject().hasPermissions(e.getPlayer())){return;}
 		if(!e.getProject().getPlugin().getName().equalsIgnoreCase(this.getName())){return;}
-		Location loc = e.getLocation().getBlock().getLocation();
-		loc.setYaw(e.getPlayer().getLocation().getYaw());
-		loc.add(0, 1, 0);
-		Project pro = e.getProject();
-		lib.getLimitationManager().add(loc, pro);
-		ObjectID obj = new ObjectID(pro.getName(), pro.getPlugin().getName(), loc);
+		ObjectID obj = e.getObjID();
+		if(!e.canBuild()){return;}
 		switch(e.getProject().getName()){
-			case "Camera" : new camera(loc, lib, instance, obj);break;
-			case "TV" : new tv(loc, lib, instance, obj);break;
-			case "GraveStone" : new graveStone(loc, lib, instance, obj);break;
-			case "Chair" : new chair(loc, lib, instance, obj);  break;
-			case "LargeTable" : new largeTable(loc, lib, instance, obj);break;
-			case "Lantern" : new lantern(loc, lib, instance, obj);break;
-			case "Sofa" : new sofa(loc, lib, instance, obj);break;
-			case "Table" : new table(loc, lib, instance, obj);break;
-			case "Barrels" : new barrels(loc, lib, instance, obj);break;
-			case "Campfire1" : new campfire_1(loc, lib, instance, obj);break;
-			case "Campfire2" : new campfire_2(loc, lib, instance, obj);break;
-			case "Tent1" : new tent_1(loc, lib, instance, obj);break;
-			case "Tent2" : new tent_2(loc, lib, instance, obj);break;
-			case "Tent3" : new tent_3(loc, lib, instance, obj);break;
-			case "Fence" : new fance(loc, lib, instance, obj);break;
-			case "Sunshade": new sunshade(loc, lib, instance, obj);break;
-			case "Streetlamp": new streetlamp(loc, lib, this, obj);break;
-			case "Billboard": new billboard(loc, lib, instance, obj);break;
-			case "Mailbox" : new mailBox(loc, lib, instance, obj); break;
+			case "Camera" : new camera(lib, instance, obj);break;
+			case "TV" : new tv(lib, instance, obj);break;
+			case "GraveStone" : new graveStone(lib, instance, obj);break;
+			case "Chair" : new chair(lib, instance, obj);  break;
+			case "LargeTable" : new largeTable(lib, instance, obj);break;
+			case "Lantern" : new lantern(lib, instance, obj);break;
+			case "Sofa" : new sofa(lib, instance, obj);break;
+			case "Table" : new table(lib, instance, obj);break;
+			case "Barrels" : new barrels(lib, instance, obj);break;
+			case "Campfire1" : new campfire_1(lib, instance, obj);break;
+			case "Campfire2" : new campfire_2(lib, instance, obj);break;
+			case "Tent1" : new tent_1(lib, instance, obj);break;
+			case "Tent2" : new tent_2(lib, instance, obj);break;
+			case "Tent3" : new tent_3(lib, instance, obj);break;
+			case "Fence" : new fance(lib, instance, obj);break;
+			case "Sunshade": new sunshade(lib, instance, obj);break;
+			case "Streetlamp": new streetlamp(lib, this, obj);break;
+			case "Billboard": new billboard(lib, instance, obj);break;
+			case "Mailbox" : new mailBox(lib, instance, obj); break;
 			default: e.getPlayer().sendMessage("A error occorupted");return;
 		}
-		obj.setFinish();
-		
+		e.finish();
 		e.removeItem();
 	}
 	

@@ -47,13 +47,13 @@ public class tent_1 extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public tent_1(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public tent_1(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -263,8 +263,8 @@ public class tent_1 extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		block.setType(Material.AIR);
 		e.remove();
@@ -276,12 +276,13 @@ public class tent_1 extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			p.openWorkbench(this.block.getLocation(), true);
 		}else{
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
+			Boolean canBuild = true;
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}
@@ -291,8 +292,7 @@ public class tent_1 extends Furniture implements Listener{
 	private void onBlockBreak(BlockBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!lib.canBuild(e.getPlayer(), loc, EventType.BREAK)){return;}
-		if(obj==null){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
 		this.obj.remove(e.getPlayer());
 		obj=null;

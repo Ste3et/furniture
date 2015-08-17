@@ -40,13 +40,13 @@ public class chair extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public chair(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public chair(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -55,7 +55,7 @@ public class chair extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	public void spawn(Location loc){
@@ -120,8 +120,8 @@ public class chair extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.remove();
 		obj=null;
 	}

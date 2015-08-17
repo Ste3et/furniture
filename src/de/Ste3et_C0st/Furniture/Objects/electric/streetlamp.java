@@ -48,14 +48,14 @@ public class streetlamp extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public streetlamp(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public streetlamp(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.loc2 = location.toVector();
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.loc2 = id.getStartLocation().toVector();
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -66,7 +66,7 @@ public class streetlamp extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	public void spawn(Location location){
@@ -152,28 +152,23 @@ public class streetlamp extends Furniture implements Listener{
 		if(e.isCancelled()){return;}
 		if(redstone) return;
 		if(e.getAction()==null) return;
+		if(e.getClickedBlock()==null) return;
+		if(!blockLocation.contains(e.getClickedBlock().getLocation())){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
+		e.setCancelled(true);
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-			if(e.getClickedBlock()==null) return;
-			if(blockLocation.contains(e.getClickedBlock().getLocation())){
-				e.setCancelled(true);
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.BREAK)){return;}
 				FurnitureLib.getInstance().getLightManager().removeLight(light);
 				obj.remove(e.getPlayer());
 				for(Location loc : blockLocation){
 					loc.getBlock().setType(Material.AIR);
 				}
 				obj=null;
-			}
 		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-			if(e.getClickedBlock()==null) return;
-			if(blockLocation.contains(e.getClickedBlock().getLocation())){
-				if(!lib.canBuild(e.getPlayer(), e.getClickedBlock().getLocation(), EventType.INTERACT)){return;}
 				if(isOn()){
 					setLight(false);
 				}else{
 					setLight(true);
 				}
-			}
 		}
 	}
 
@@ -234,9 +229,8 @@ public class streetlamp extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(obj==null){return;}
+		if(!e.canBuild()){return;}
 		FurnitureLib.getInstance().getLightManager().removeLight(light);
 		e.remove();
 		obj=null;

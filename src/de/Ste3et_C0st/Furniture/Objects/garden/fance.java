@@ -56,13 +56,13 @@ public class fance extends Furniture implements Listener{
 	Block block;
 	Material m;
 	
-	public fance(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public fance(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -72,7 +72,7 @@ public class fance extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 		setBlock();
 	}
 	
@@ -102,7 +102,7 @@ public class fance extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
-		if(!lib.canBuild(e.getPlayer(), e.getBlock().getLocation(), EventType.BREAK)){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
 		this.block.setType(Material.AIR);
 		this.obj.remove(e.getPlayer());
 		block=null;
@@ -114,8 +114,8 @@ public class fance extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		if(this.block!=null) this.block.setType(Material.AIR);
 		e.remove();
@@ -133,6 +133,7 @@ public class fance extends Furniture implements Listener{
 		if(e.getAction()==null)return;
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 		if(!e.getClickedBlock().getLocation().equals(this.block.getLocation())) return;
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
@@ -167,8 +168,8 @@ public class fance extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(this.block==null) return;
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();

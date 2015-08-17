@@ -42,13 +42,13 @@ public class lantern extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public lantern(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public lantern(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -59,7 +59,7 @@ public class lantern extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	Block block;
@@ -133,7 +133,7 @@ public class lantern extends Furniture implements Listener{
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
-		if(!e.canBuild()) return;
+		if(!e.canBuild()){return;}
 		e.remove();
 		block.setType(Material.AIR);
 	}
@@ -144,7 +144,7 @@ public class lantern extends Furniture implements Listener{
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
-		if(!e.canBuild()) return;
+		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
 		if(is.getType().equals(Material.FLINT_AND_STEEL)){

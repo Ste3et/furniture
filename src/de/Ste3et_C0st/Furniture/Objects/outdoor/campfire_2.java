@@ -79,13 +79,13 @@ public class campfire_2 extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public campfire_2(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public campfire_2(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -100,7 +100,7 @@ public class campfire_2 extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	public void spawn(Location loc){
@@ -180,8 +180,8 @@ public class campfire_2 extends Furniture implements Listener{
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		List<ArmorStandPacket> aspList = manager.getArmorStandPacketByObjectID(obj);
 		final ItemStack itemStack = e.getPlayer().getItemInHand();
@@ -234,8 +234,8 @@ public class campfire_2 extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);

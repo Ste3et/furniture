@@ -44,13 +44,13 @@ public class sofa extends Furniture implements Listener {
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public sofa(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public sofa(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -60,7 +60,7 @@ public class sofa extends Furniture implements Listener {
 			return;
 		}
 		place = .3;
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	ItemStack is;
@@ -179,7 +179,7 @@ public class sofa extends Furniture implements Listener {
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
+			Boolean canBuild = lib.canBuild(e.getPlayer(), obj, EventType.INTERACT);
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}else{
@@ -239,8 +239,8 @@ public class sofa extends Furniture implements Listener {
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
 		e.setCancelled(true);
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getPessanger()!=null){

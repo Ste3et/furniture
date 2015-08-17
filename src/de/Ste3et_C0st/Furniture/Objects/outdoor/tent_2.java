@@ -51,37 +51,37 @@ public class tent_2 extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public tent_2(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public tent_2(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
-		if(b.equals(BlockFace.WEST)){location=lutil.getRelativ(location, b, 1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){location=lutil.getRelativ(location, b, 1D, 1D);}
-		if(b.equals(BlockFace.EAST)){location=lutil.getRelativ(location, b, 0D, 1D);}
+		if(b.equals(BlockFace.WEST)){loc=lutil.getRelativ(loc, b, 1D, 0D);}
+		if(b.equals(BlockFace.NORTH)){loc=lutil.getRelativ(loc, b, 1D, 1D);}
+		if(b.equals(BlockFace.EAST)){loc=lutil.getRelativ(loc, b, 0D, 1D);}
 		this.obj = id;
+		
+		Location loca = loc.clone();
+		
+		switch (b) {
+		case NORTH: loca=lutil.getRelativ(loca, b, -1D, -1D); break;
+		case EAST: loca=lutil.getRelativ(loca, b, 0D, -1D); break;
+		case WEST: loca=lutil.getRelativ(loca, b, -1D, 0D); break;
+		default:break;
+		}
+		
+		setBlock(loca);
+		
 		if(id.isFinish()){
-			Bukkit.broadcastMessage(b.name());
-			
-			Location loca = loc.clone();
-			
-			switch (b) {
-			case NORTH: loca=lutil.getRelativ(loca, b, -1D, -1D); break;
-			case EAST: loca=lutil.getRelativ(loca, b, 0D, -1D); break;
-			case WEST: loca=lutil.getRelativ(loca, b, -1D, 0D); break;
-			default:break;
-			}
-			
-			setBlock(loca);
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(loc);
 	}
 	
 	
@@ -145,7 +145,6 @@ public class tent_2 extends Furniture implements Listener{
 			packet.setInvisible(true);
 			packet.setGravity(false);
 		}
-		setBlock(this.loc);
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -203,8 +202,8 @@ public class tent_2 extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		for(Block bl : block){
 			bl.setType(Material.AIR);
@@ -220,7 +219,8 @@ public class tent_2 extends Furniture implements Listener{
 		if(!e.getID().equals(obj)){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
-		
+		if(!e.canBuild()){return;}
+		Boolean canBuild = lib.canBuild(e.getPlayer(), obj, EventType.INTERACT);
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			
 			for(Block b : block){
@@ -230,7 +230,6 @@ public class tent_2 extends Furniture implements Listener{
 				}
 			}
 		}else{
-			Boolean canBuild = lib.canBuild(p, e.getLocation(), EventType.INTERACT);
 			Material m = Material.CARPET;
 			color(p, canBuild, m);
 		}

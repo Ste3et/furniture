@@ -43,13 +43,13 @@ public class table extends Furniture implements Listener {
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public table(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public table(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -58,7 +58,7 @@ public class table extends Furniture implements Listener {
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	public void spawn(Location loc){
 		List<ArmorStandPacket> packetL = new ArrayList<ArmorStandPacket>();
@@ -96,8 +96,8 @@ public class table extends Furniture implements Listener {
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -116,9 +116,9 @@ public class table extends Furniture implements Listener {
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
+		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
 		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){

@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 
 public class mailBox extends Furniture implements Listener {
 
@@ -47,13 +48,13 @@ public class mailBox extends Furniture implements Listener {
 	
 	UUID uuid;
 	
-	public mailBox(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public mailBox(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -62,7 +63,7 @@ public class mailBox extends Furniture implements Listener {
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	public void spawn(Location location){
@@ -210,8 +211,8 @@ public class mailBox extends Furniture implements Listener {
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(e.isCancelled()) return;
-		if(!e.canBuild()) return;
 		if(!e.getID().equals(obj)) return;
+		if(!e.canBuild()){return;}
 		if(obj==null){return;}
 		for(Block b : blockList){
 			b.setType(Material.AIR);
@@ -228,6 +229,7 @@ public class mailBox extends Furniture implements Listener {
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 			if(blockList.contains(e.getClickedBlock())){
 				e.setCancelled(true);

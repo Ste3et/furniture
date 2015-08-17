@@ -43,13 +43,13 @@ public class camera extends Furniture implements Listener{
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
 	
-	public camera(Location location, FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(location, lib, plugin, id);
+	public camera(FurnitureLib lib, Plugin plugin, ObjectID id){
+		super(lib, plugin, id);
 		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(location.getYaw());
-		this.loc = location.getBlock().getLocation();
-		this.loc.setYaw(location.getYaw());
-		this.w = location.getWorld();
+		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
+		this.loc = id.getStartLocation().getBlock().getLocation();
+		this.loc.setYaw(id.getStartLocation().getYaw());
+		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
@@ -58,7 +58,7 @@ public class camera extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
-		spawn(location);
+		spawn(id.getStartLocation());
 	}
 	
 	public void spawn(Location location){
@@ -132,13 +132,14 @@ public class camera extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		if(obj==null){return;}
 		e.remove();
 		obj=null;
 	}
 	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
@@ -147,21 +148,24 @@ public class camera extends Furniture implements Listener{
 		if(obj==null){return;}
 		Player p = e.getPlayer();
 		Location pLocation = lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D).clone();
-		Location locCopy = getLocation().clone();
-		if(pLocation.equals(locCopy) && lutil.yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(b)){
-			if(!p.getInventory().getItemInHand().getType().equals(Material.MAP)){return;}
-			
-			MapView view = Bukkit.getMap(p.getItemInHand().getDurability());
-			Location l = getLocation();
-			l.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
-			Iterator<MapRenderer> iter = view.getRenderers().iterator();
-            while(iter.hasNext()){
-                view.removeRenderer(iter.next());
-            }
-            try{
-                RenderClass renderer = new RenderClass(l);
-                view.addRenderer(renderer);
-            }catch (Exception ex){}
+		Location locCopy = getLocation().getBlock().getLocation().clone();
+		pLocation.setYaw(locCopy.getYaw());
+		if(pLocation.equals(locCopy)){
+			if(lutil.yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(b)){
+				if(!p.getInventory().getItemInHand().getType().equals(Material.MAP)){return;}
+				
+				MapView view = Bukkit.getMap(p.getItemInHand().getDurability());
+				Location l = getLocation();
+				l.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
+				Iterator<MapRenderer> iter = view.getRenderers().iterator();
+	            while(iter.hasNext()){
+	                view.removeRenderer(iter.next());
+	            }
+	            try{
+	                RenderClass renderer = new RenderClass(l);
+	                view.addRenderer(renderer);
+	            }catch (Exception ex){}
+			}
 		}
 	}
 	
