@@ -1,6 +1,8 @@
 TV:
     name: '&cTV'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: XXX,XEX,0A0

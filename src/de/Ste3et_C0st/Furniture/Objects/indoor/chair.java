@@ -61,7 +61,7 @@ public class chair extends Furniture implements Listener{
 	public void spawn(Location loc){
 		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
 		BlockFace b = lutil.yawToFace(loc.getYaw()).getOppositeFace();
-		Location center = lutil.getCenter(loc);
+		Location center = lutil.getCenter(loc).add(0, -.05, 0);
 		Location sitz = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 		Location feet1 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 		Location feet2 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());

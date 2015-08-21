@@ -1,6 +1,6 @@
 name: DiceFurniture
-version: 2.1
-description: Furniture
+version: 2.2
+description: Add some new Objects to the Server
 author: Ste3et_C0st
 website: http://dicecraft.de
 depend: [FurnitureLib]

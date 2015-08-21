@@ -1,6 +1,8 @@
 LargeTable:
     name: '&cLarge Table'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: XXX,XXX,A0A

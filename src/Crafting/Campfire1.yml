@@ -1,6 +1,8 @@
 Campfire1:
     name: '&cCampfire #1'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: 0X0,XEX,0X0

@@ -1,6 +1,8 @@
 Mailbox:
     name: '&cMailBox'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: ADA,0X0,0X0

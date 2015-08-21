@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,7 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
-import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 
 public class tent_2 extends Furniture implements Listener{
 
@@ -220,7 +219,6 @@ public class tent_2 extends Furniture implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		Boolean canBuild = lib.canBuild(e.getPlayer(), obj, EventType.INTERACT);
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			
 			for(Block b : block){
@@ -230,35 +228,7 @@ public class tent_2 extends Furniture implements Listener{
 				}
 			}
 		}else{
-			Material m = Material.CARPET;
-			color(p, canBuild, m);
+			lib.getColorManager().color(p, e.canBuild(), Material.CARPET, obj, ColorType.BLOCK, 1);
 		}
-	}
-	
-	private void color(Player p, boolean canBuild, Material m){
-		if(!canBuild){return;}
-		ItemStack is = p.getItemInHand();
-		Integer Amount = is.getAmount();
-		List<ArmorStandPacket> asp = manager.getArmorStandPacketByObjectID(obj);
-		short color = lutil.getFromDey(is.getDurability());
-		for(ArmorStandPacket packet : asp){
-			if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(m)){
-				if(Amount>0){
-					ItemStack is2 = packet.getInventory().getHelmet();
-					if(is2.getDurability() != color){
-						is2.setDurability(color);
-						packet.getInventory().setHelmet(is2);
-						if(!p.getGameMode().equals(GameMode.CREATIVE)){Amount--;}
-					}
-				}
-			}
-		}
-		manager.updateFurniture(obj);
-		if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
-		Integer i = p.getInventory().getHeldItemSlot();
-		ItemStack item = p.getItemInHand();
-		item.setAmount(Amount);
-		p.getInventory().setItem(i, item);
-		p.updateInventory();
 	}
 }

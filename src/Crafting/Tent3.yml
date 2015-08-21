@@ -1,6 +1,8 @@
 Tent3:
     name: '&cTent #3'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: 000,0E0,EAE

@@ -41,6 +41,7 @@ import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class main extends JavaPlugin implements Listener{
 	
@@ -82,8 +83,11 @@ public class main extends JavaPlugin implements Listener{
 		
 		List<ObjectID> objList = new ArrayList<ObjectID>();
 		for(ObjectID obj : manager.getObjectList()){
+			if(obj==null) continue;
 			if(objList.contains(obj)) continue;
 			if(!objList.contains(obj)) objList.add(obj);
+			if(obj.getPlugin()==null) continue;
+			if(obj.getSQLAction().equals(SQLAction.REMOVE)) continue;
 			if(obj.getPlugin().equalsIgnoreCase(this.getName())){
 				switch (obj.getProject()) {
 				case "Camera":new camera(lib, this, obj);break;

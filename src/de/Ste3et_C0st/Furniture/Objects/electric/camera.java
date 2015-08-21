@@ -132,9 +132,9 @@ public class camera extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(e.isCancelled()){return;}
+		if(obj==null){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
-		if(obj==null){return;}
 		e.remove();
 		obj=null;
 	}

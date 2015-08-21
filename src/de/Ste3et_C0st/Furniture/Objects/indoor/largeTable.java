@@ -27,6 +27,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 
 public class largeTable extends Furniture implements Listener{
 
@@ -77,30 +78,33 @@ public class largeTable extends Furniture implements Listener{
 		location = lutil.getRelativ(location, this.b, 0.1, 0.28);
 		location.add(0,.2,0);
 		Double winkel = 1.57;
+		ItemStack iTemStack_1 = new ItemStack(Material.STAINED_GLASS_PANE);
 		for(int x=1; x<=3;x++){
-			Location l = null;
-			l = lutil.getRelativ(location, this.b, 0.0, x*-.63);
+			Location l = lutil.getRelativ(location.clone(), this.b, 0.0, x*-.63);
 			l.add(0,-1.2,0);
 			l.setYaw(yaw);
-			ItemStack iTemStack_1 = new ItemStack(Material.STAINED_GLASS_PANE);
 			
-			ArmorStandPacket as = manager.createArmorStand(obj, l);
+			ArmorStandPacket as = manager.createArmorStand(obj, l.clone());
 			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
 			as.getInventory().setHelmet(iTemStack_1);
 			armorlist.add(as);
-			
-			l = lutil.getRelativ(location, this.b, 0.63, x*-.63);
+		}
+		
+		for(int x=1; x<=3;x++){
+			Location l = lutil.getRelativ(location.clone(), this.b, 0.63, x*-.63);
 			l.add(0,-1.2,0);
 			l.setYaw(yaw);
-			as = manager.createArmorStand(obj, l);
+			ArmorStandPacket as = manager.createArmorStand(obj, l.clone());
 			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
 			as.getInventory().setHelmet(iTemStack_1);
 			armorlist.add(as);
-			
-			l = lutil.getRelativ(location, this.b, 1.26, x*-.63);
+		}
+		
+		for(int x=1; x<=3;x++){
+			Location l = lutil.getRelativ(location.clone(), this.b, 1.26, x*-.63);
 			l.add(0,-1.2,0);
 			l.setYaw(yaw);
-			as = manager.createArmorStand(obj, l);
+			ArmorStandPacket as = manager.createArmorStand(obj, l.clone());
 			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
 			as.getInventory().setHelmet(iTemStack_1);
 			armorlist.add(as);
@@ -179,10 +183,9 @@ public class largeTable extends Furniture implements Listener{
 		armorlist.add(as);
 		tellerIDs.add(as.getEntityId());
 		
-		for(ArmorStandPacket asp : armorlist){
-			asp.setGravity(false);
-			asp.setInvisible(true);
-			asp.setBasePlate(false);
+		for(ArmorStandPacket packet : armorlist){
+			packet.setInvisible(true);
+			packet.setGravity(false);
 		}
 		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -223,41 +226,12 @@ public class largeTable extends Furniture implements Listener{
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		final Player p = e.getPlayer();
+		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
-			if(!e.canBuild()){return;}
-			ItemStack is = p.getItemInHand();
-			Integer Amount = is.getAmount();
-			List<ArmorStandPacket> asp = manager.getArmorStandPacketByObjectID(obj);
-			short color = lutil.getFromDey(is.getDurability());
-			for(ArmorStandPacket packet : asp){
-				if(packet.getInventory().getHelmet()!=null){
-					if(packet.getInventory().getHelmet().getType().equals(Material.STAINED_GLASS_PANE)){
-						if(Amount>0){
-							ItemStack is2 = packet.getInventory().getHelmet();
-							if(is2.getDurability()!=color){
-								if(p.getGameMode().equals(GameMode.SURVIVAL) || !lib.useGamemode()){Amount=Amount-1;}
-								is2.setDurability(color);
-								packet.getInventory().setHelmet(is2);
-							}
-						}
-					}
-				}
-			}
-
-			manager.updateFurniture(obj);
-			if(p.getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
-			Integer o = Amount;
-			Integer i = p.getInventory().getHeldItemSlot();
-			ItemStack itemStack = p.getItemInHand();
-			itemStack.setAmount(o);
-			p.getInventory().setItem(i, itemStack);
-			p.updateInventory();
-
+			lib.getColorManager().color(p, e.canBuild(), Material.STAINED_GLASS_PANE, obj, ColorType.BLOCK, 3);
 			return;
 		}else{
-			if(!e.canBuild()) return;
-			setTeller(e.getPlayer(), e.getPlayer().getInventory().getItemInHand());
+			setTeller(p, p.getInventory().getItemInHand());
 		}
 	}
 	
@@ -277,7 +251,6 @@ public class largeTable extends Furniture implements Listener{
 				}
 			}
 		}
-		
 		
 		if(as!=null&&as.getInventory().getItemInHand()!= null && as.getInventory().getItemInHand().equals(is)){return;}
 		if(as.getInventory().getItemInHand()!=null&&!as.getInventory().getItemInHand().getType().equals(Material.AIR)){

@@ -152,10 +152,9 @@ public class graveStone extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(e.isCancelled()) return;
-		if(!e.getID().equals(obj)) return;
-		if(!e.canBuild()){return;}
 		if(obj==null){return;}
+		if(e.isCancelled()) return;
+		if(!e.canBuild()){return;}
 		e.remove();
 		sign.setType(Material.AIR);
 		sign = null;

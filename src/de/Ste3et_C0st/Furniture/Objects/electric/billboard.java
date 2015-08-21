@@ -50,8 +50,8 @@ public class billboard extends Furniture implements Listener{
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
 		this.plugin = plugin;
+		this.obj = id;
 		if(id.isFinish()){
-			this.obj = id;
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
@@ -115,6 +115,7 @@ public class billboard extends Furniture implements Listener{
 			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
+		manager.send(obj);
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 

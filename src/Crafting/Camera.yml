@@ -1,6 +1,8 @@
 Camera:
   name: '&cCamera'
   material: 383
+  glow: false
+  lore: ''
   crafting:
     disable: false
     recipe: DXD,AEA,EAE

@@ -1,6 +1,8 @@
 GraveStone:
     name: '&cGrave Stone'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: true
       recipe: XXX,XXX,XXX

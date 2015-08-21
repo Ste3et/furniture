@@ -1,6 +1,10 @@
 Barrels:
     name: '&cBarrels'
     material: 383
+    glow: true
+    lore: 
+       - "&cTest1"
+       - "&a&lTest2"
     crafting:
       disable: false
       recipe: X0X,X0X,XXX

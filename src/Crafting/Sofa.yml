@@ -1,6 +1,8 @@
 Sofa:
     name: '&cSofa'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: +0+,+++,X0X

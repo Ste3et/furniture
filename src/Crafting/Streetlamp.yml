@@ -1,6 +1,8 @@
 Streetlamp:
     name: '&cStreetlamp'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: 0XX,0AX,00X

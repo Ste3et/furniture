@@ -1,6 +1,8 @@
 Table:
     name: '&cTable'
     material: 383
+    glow: false
+    lore: ''
     crafting:
       disable: false
       recipe: 0X0,0E0,0A0
