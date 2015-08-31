@@ -34,7 +34,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 public class streetlamp extends Furniture implements Listener{
 	
 	Location loc, light;
-	Vector loc2;
+	Vector loc2, loc3;
 	BlockFace b;
 	World w;
 	ObjectID obj;
@@ -55,6 +55,7 @@ public class streetlamp extends Furniture implements Listener{
 		this.loc = id.getStartLocation().getBlock().getLocation();
 		this.loc.setYaw(id.getStartLocation().getYaw());
 		this.loc2 = id.getStartLocation().toVector();
+		this.loc3 = id.getStartLocation().getBlock().getRelative(BlockFace.DOWN).getLocation().toVector();
 		this.w = id.getStartLocation().getWorld();
 		this.manager = lib.getFurnitureManager();
 		this.lib = lib;
@@ -148,12 +149,12 @@ public class streetlamp extends Furniture implements Listener{
 	
 	@EventHandler
 	private void onPlayerInteract(PlayerInteractEvent e){
-		if(obj==null) return;
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
-		if(redstone) return;
 		if(e.getAction()==null) return;
 		if(e.getClickedBlock()==null) return;
 		if(!blockLocation.contains(e.getClickedBlock().getLocation())){return;}
+		if(redstone){return;}
 		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 		e.setCancelled(true);
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
@@ -174,8 +175,8 @@ public class streetlamp extends Furniture implements Listener{
 
 	@EventHandler
 	private void onBlockPowered(BlockRedstoneEvent e){
-		if(e.getBlock()==null) return;
-		if(obj==null) return;
+		if(obj==null){return;} 
+		if(e.getBlock()==null){return;}
 		Vector loc = e.getBlock().getLocation().toVector();
 		if(loc2.distance(loc)<=1){
 			if(e.getNewCurrent()==0){
@@ -185,6 +186,17 @@ public class streetlamp extends Furniture implements Listener{
 				setLight(true);
 				redstone = true;
 			}
+			return;
+		}
+		if(loc3.distance(loc)<=1){
+			if(e.getNewCurrent()==0){
+				setLight(false);
+				redstone = false;
+			}else{
+				setLight(true);
+				redstone = true;
+			}
+			return;
 		}
 	}
 	
@@ -193,14 +205,16 @@ public class streetlamp extends Furniture implements Listener{
 			ArmorStandPacket packet = getPacket();
 			if(packet==null) return;
 			packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_LAMP_OFF));
-			FurnitureLib.getInstance().getLightManager().removeLight(light);
 			manager.updateFurniture(obj);
+			FurnitureLib.getInstance().getLightManager().removeLight(light);
+			return;
 		}else{
 			ArmorStandPacket packet = getPacket();
 			if(packet==null) return;
 			packet.getInventory().setHelmet(new ItemStack(Material.GLOWSTONE));
-			FurnitureLib.getInstance().getLightManager().addLight(light, 15);
 			manager.updateFurniture(obj);
+			FurnitureLib.getInstance().getLightManager().addLight(light, 15);
+			return;
 		}
 	}
 	

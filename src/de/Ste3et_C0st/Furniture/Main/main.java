@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.Ste3et_C0st.Furniture.Objects.RPG.weaponStand;
 import de.Ste3et_C0st.Furniture.Objects.electric.billboard;
 import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.electric.streetlamp;
@@ -80,6 +81,7 @@ public class main extends JavaPlugin implements Listener{
 		new Project("Streetlamp", new CraftingFile("Streetlamp", getResource("Crafting/Streetlamp.yml")), this, sunshade.class);
 		new Project("Billboard", new CraftingFile("Billboard", getResource("Crafting/Billboard.yml")), this, billboard.class);
 		new Project("Mailbox", new CraftingFile("Mailbox", getResource("Crafting/Mailbox.yml")), this, mailBox.class);
+		new Project("WeaponStand", new CraftingFile("WeaponStand", getResource("Crafting/WeaponStand.yml")), this, weaponStand.class);
 		
 		List<ObjectID> objList = new ArrayList<ObjectID>();
 		for(ObjectID obj : manager.getObjectList()){
@@ -108,6 +110,7 @@ public class main extends JavaPlugin implements Listener{
 				case "Sunshade":new sunshade(lib, this, obj);break;
 				case "Streetlamp":new streetlamp(lib, this, obj);break;
 				case "Billboard": new billboard(lib, this, obj); break;
+				case "WeaponStand": new weaponStand(lib, this, obj);break;
 				case "Mailbox" : 
 					mailBox mail = new mailBox(lib, this, obj);
 					/*try {
@@ -116,7 +119,6 @@ public class main extends JavaPlugin implements Listener{
 						e.printStackTrace();
 					}*/
 				break;
-				default:break;
 				}
 			}
 		}
@@ -191,7 +193,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Streetlamp": new streetlamp(lib, this, obj);break;
 			case "Billboard": new billboard(lib, instance, obj);break;
 			case "Mailbox" : new mailBox(lib, instance, obj); break;
-			default: e.getPlayer().sendMessage("A error occorupted");return;
+			case "WeaponStand": new weaponStand(lib, instance, obj); break;
 		}
 		e.finish();
 		e.removeItem();

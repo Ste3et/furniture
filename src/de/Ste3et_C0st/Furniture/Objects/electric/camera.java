@@ -131,8 +131,8 @@ public class camera extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.isCancelled()){return;}
 		if(obj==null){return;}
+		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -143,9 +143,9 @@ public class camera extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
-		if(obj==null){return;}
 		Player p = e.getPlayer();
 		Location pLocation = lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();

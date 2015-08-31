@@ -44,7 +44,7 @@ public class fance extends Furniture implements Listener{
 	public ObjectID getObjectID(){return this.obj;}
 	public Location getLocation(){return this.loc;}
 	public BlockFace getBlockFace(){return this.b;}
-	
+	private void setTypes(ItemStack is){for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){packet.getInventory().setHelmet(is);}}
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,
@@ -127,7 +127,7 @@ public class fance extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){
-		if(obj==null) return;
+		if(obj==null){return;}
 		if(e.isCancelled()) return;
 		if(this.block==null) return;
 		if(e.getAction()==null)return;
@@ -137,16 +137,15 @@ public class fance extends Furniture implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
-		if(is==null||!is.getType().isBlock()) return;
-		Material m = p.getItemInHand().getType();
-		byte data = (byte) is.getDurability();
-		if(matList.contains(m)){
-			this.block.setType(m); 
-			this.block.setData(data);
+		if(is==null||!is.getType().isBlock()||is.getType().equals(Material.AIR)) return;
+		ItemStack itemStack = is.clone();
+		if(matList.contains(itemStack.getType())){
+			this.block.setType(itemStack.getType()); 
+			this.block.setData((byte) itemStack.getDurability());
 			remove(p, is);
 			return;
-		}else if(main.materialWhiteList.contains(m)){
-			setTypes(is);
+		}else if(main.materialWhiteList.contains(itemStack.getType())){
+			setTypes(itemStack);
 			remove(p, is);
 			manager.updateFurniture(obj);
 			return;
@@ -173,25 +172,18 @@ public class fance extends Furniture implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
-		if(is==null || !is.getType().isBlock()) return;
-		Material m = p.getItemInHand().getType();
-		byte data = (byte) is.getDurability();
-		if(matList.contains(m)){
-			this.block.setType(m); 
-			this.block.setData(data);
+		if(is==null || !is.getType().isBlock()||is.getType().equals(Material.AIR)) return;
+		ItemStack itemStack = is.clone();
+		if(matList.contains(itemStack.getType())){
+			this.block.setType(itemStack.getType()); 
+			this.block.setData((byte) itemStack.getDurability());
 			remove(p, is);
 			return;
-		}else if(main.materialWhiteList.contains(m)){
-			setTypes(is);
+		}else if(main.materialWhiteList.contains(itemStack.getType())){
+			setTypes(itemStack);
 			remove(p, is);
 			manager.updateFurniture(obj);
 			return;
-		}
-	}
-	
-	private void setTypes(ItemStack is){
-		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
-			packet.getInventory().setHelmet(is);
 		}
 	}
 	

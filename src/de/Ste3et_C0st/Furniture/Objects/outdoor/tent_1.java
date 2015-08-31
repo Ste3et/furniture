@@ -243,11 +243,11 @@ public class tent_1 extends Furniture implements Listener{
 		Location crafting = lutil.getCenter(block.getLocation());
 		crafting.setYaw(lutil.FaceToYaw(b)+90);
 		
-		asp = manager.createArmorStand(obj, crafting.add(0,-1,0));
+		asp = manager.createArmorStand(obj, crafting.add(0,-1,0).clone());
 		asp.getInventory().setHelmet(new ItemStack(Material.LADDER));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, crafting.add(0,.62,0));
+		asp = manager.createArmorStand(obj, crafting.add(0,.62,0).clone());
 		asp.getInventory().setHelmet(new ItemStack(Material.LADDER));
 		aspList.add(asp);
 		

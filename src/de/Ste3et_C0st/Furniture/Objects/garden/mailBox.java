@@ -210,10 +210,11 @@ public class mailBox extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
+		if(obj==null){return;} 
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(obj)) return;
 		if(!e.canBuild()){return;}
-		if(obj==null){return;}
+		
 		for(Block b : blockList){
 			b.setType(Material.AIR);
 		}
@@ -229,9 +230,10 @@ public class mailBox extends Furniture implements Listener {
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
+		if(e.getClickedBlock()==null){return;}
+		if(!blockList.contains(e.getClickedBlock())){return;}
 		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-			if(blockList.contains(e.getClickedBlock())){
 				e.setCancelled(true);
 				for(Block b : blockList){
 					b.setType(Material.AIR);
@@ -239,7 +241,6 @@ public class mailBox extends Furniture implements Listener {
 				blockList.clear();
 				this.obj.remove(e.getPlayer());
 				obj=null;
-			}
 		}
 	}
 }

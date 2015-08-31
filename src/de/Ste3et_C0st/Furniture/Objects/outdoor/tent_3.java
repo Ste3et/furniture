@@ -174,10 +174,10 @@ public class tent_3 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
+		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
-		if(obj==null){return;}
 		e.setCancelled(true);
 		bed.setType(Material.AIR);
 		e.remove();

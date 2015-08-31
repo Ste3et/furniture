@@ -154,15 +154,15 @@ public class sunshade extends Furniture implements Listener{
 			}
 		}else{
 			if(isRunning()){return;}
-			
-			
-			BannerMeta banner = (BannerMeta) is.getItemMeta();
+			if(!is.hasItemMeta()){return;}
+			ItemStack itemstack = is.clone();
+			BannerMeta banner = (BannerMeta) itemstack.getItemMeta();
 			Short s = lutil.getfromDyeColor(banner.getBaseColor());
 			Short newS = lutil.getFromDey(s);
 			
 			for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 				if(packet.getName().startsWith("#ELEMENT#")){
-					packet.getInventory().setHelmet(is);
+					packet.getInventory().setHelmet(itemstack);
 				}else if(packet.getName().equalsIgnoreCase("#TOP#")){
 					packet.getInventory().setHelmet(new ItemStack(Material.CARPET, 1, newS));
 				}
@@ -189,6 +189,7 @@ public class sunshade extends Furniture implements Listener{
 		if(obj==null){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
+		if(e.getClickedBlock()==null){return;}
 		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 				e.setCancelled(true);
@@ -220,13 +221,15 @@ public class sunshade extends Furniture implements Listener{
 				}else{
 					e.setCancelled(true);
 					if(isRunning()){return;}
-					BannerMeta banner = (BannerMeta) is.getItemMeta();
+					if(!is.hasItemMeta()){return;}
+					ItemStack itemstack = is.clone();
+					BannerMeta banner = (BannerMeta) itemstack.getItemMeta();
 					Short s = lutil.getfromDyeColor(banner.getBaseColor());
 					Short newS = lutil.getFromDey(s);
 					
 					for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
 						if(packet.getName().startsWith("#ELEMENT#")){
-							packet.getInventory().setHelmet(is);
+							packet.getInventory().setHelmet(itemstack);
 						}else if(packet.getName().equalsIgnoreCase("#TOP#")){
 							packet.getInventory().setHelmet(new ItemStack(Material.CARPET, 1, newS));
 						}

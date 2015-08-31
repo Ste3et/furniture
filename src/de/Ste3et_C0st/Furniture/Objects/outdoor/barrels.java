@@ -111,7 +111,7 @@ public class barrels extends Furniture implements Listener {
 		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){return;}
 		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
 		Player p = e.getPlayer();
-		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){e.getPlayer().sendMessage("03");return;}
+		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
 		e.setCancelled(true);
 		ItemStack Itemstack = p.getItemInHand().clone();
 		Itemstack.setAmount(1);

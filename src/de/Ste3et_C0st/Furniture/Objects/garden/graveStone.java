@@ -197,6 +197,7 @@ public class graveStone extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
+		if(obj==null){return;} 
 		Player p = e.getPlayer();
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(obj)) return;

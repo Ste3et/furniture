@@ -293,7 +293,7 @@ public class campfire_2 extends Furniture implements Listener{
 		this.armorS = manager.createArmorStand(obj, grill);
 		this.armorS.setInvisible(true);
 		this.armorS.getInventory().setItemInHand(is);
-		manager.send(armorS);
+		manager.send(obj);
 		this.timer = main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(main.getInstance(), new Runnable() {
 			Integer rounds = lutil.randInt(15, 30);
 			Integer labs = 0;

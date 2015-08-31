@@ -113,10 +113,10 @@ public class tv extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
+		if(obj==null){return;} 
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
-		if(obj==null){return;}
 		e.remove();
 		obj=null;
 	}
