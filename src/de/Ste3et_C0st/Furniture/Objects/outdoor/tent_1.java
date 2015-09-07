@@ -29,6 +29,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class tent_1 extends Furniture implements Listener{
 
@@ -262,6 +263,7 @@ public class tent_1 extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
@@ -274,6 +276,7 @@ public class tent_1 extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
@@ -289,8 +292,12 @@ public class tent_1 extends Furniture implements Listener{
 	@EventHandler
 	private void onBlockBreak(BlockBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
+		if(e.getBlock()==null){return;}
+		if(block==null){return;}
+		if(!e.getBlock().equals(block)){return;}
+		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){e.getPlayer().sendMessage("ERROR1");return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
 		this.obj.remove(e.getPlayer());
 		obj=null;

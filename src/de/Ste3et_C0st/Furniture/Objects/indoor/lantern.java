@@ -25,6 +25,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class lantern extends Furniture implements Listener{
 
@@ -121,6 +122,7 @@ public class lantern extends Furniture implements Listener{
 	@EventHandler
 	public void onWaterFlow(BlockFromToEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		Location locTo = e.getToBlock().getLocation();
 		if(loc!=null && locTo.equals(loc.getBlock().getLocation())){
 			e.setCancelled(true);
@@ -130,6 +132,7 @@ public class lantern extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;
@@ -141,6 +144,7 @@ public class lantern extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
 		if(!e.getID().equals(obj)) return;

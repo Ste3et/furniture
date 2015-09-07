@@ -26,6 +26,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class barrels extends Furniture implements Listener {
 	
@@ -138,6 +139,7 @@ public class barrels extends Furniture implements Listener {
 	@EventHandler
 	private void onBlockBreak(BlockBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(block==null){return;}
 		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
 		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}

@@ -32,6 +32,7 @@ import de.Ste3et_C0st.Furniture.Objects.indoor.table;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.barrels;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.campfire_1;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.campfire_2;
+import de.Ste3et_C0st.Furniture.Objects.outdoor.hammock;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_1;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_2;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_3;
@@ -82,6 +83,7 @@ public class main extends JavaPlugin implements Listener{
 		new Project("Billboard", new CraftingFile("Billboard", getResource("Crafting/Billboard.yml")), this, billboard.class);
 		new Project("Mailbox", new CraftingFile("Mailbox", getResource("Crafting/Mailbox.yml")), this, mailBox.class);
 		new Project("WeaponStand", new CraftingFile("WeaponStand", getResource("Crafting/WeaponStand.yml")), this, weaponStand.class);
+		new Project("Hammock", new CraftingFile("Hammock", getResource("Crafting/Hammock.yml")), this, hammock.class);
 		
 		List<ObjectID> objList = new ArrayList<ObjectID>();
 		for(ObjectID obj : manager.getObjectList()){
@@ -111,6 +113,7 @@ public class main extends JavaPlugin implements Listener{
 				case "Streetlamp":new streetlamp(lib, this, obj);break;
 				case "Billboard": new billboard(lib, this, obj); break;
 				case "WeaponStand": new weaponStand(lib, this, obj);break;
+				case "Hammock": new hammock(lib, this, obj); break;
 				case "Mailbox" : 
 					mailBox mail = new mailBox(lib, this, obj);
 					/*try {
@@ -134,13 +137,12 @@ public class main extends JavaPlugin implements Listener{
 		this.c.saveConfig("whiteList", this.file, "plugin/fence/");
 		setDefaults();
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	private void setDefaults(){
 		c = new config();
 		this.file = c.getConfig("whiteList", "plugin/fence/");
-		List<Integer> intList = this.file.getIntegerList("Material");
-		for(int i : intList){
+		List<String> intList = this.file.getStringList("MaterialData");
+		for(String i : intList){
 			if(Material.getMaterial(i)!=null){
 				Material m = Material.getMaterial(i);
 				materialWhiteList.add(m);
@@ -194,6 +196,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Billboard": new billboard(lib, instance, obj);break;
 			case "Mailbox" : new mailBox(lib, instance, obj); break;
 			case "WeaponStand": new weaponStand(lib, instance, obj); break;
+			case "Hammock": new hammock(lib, instance, obj); break;
 		}
 		e.finish();
 		e.removeItem();

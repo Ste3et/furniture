@@ -32,6 +32,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class graveStone extends Furniture implements Listener{
 
@@ -153,7 +154,9 @@ public class graveStone extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
+		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
 		sign.setType(Material.AIR);
@@ -165,6 +168,7 @@ public class graveStone extends Furniture implements Listener{
 	private void onBlockRemove(BlockBreakEvent e)
 	{
 	  if(obj==null){return;}
+	  if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 	  if (sign==null) return;
 	  if (e.getBlock() == null) return;
 	  if (e.getBlock().getLocation() == null) return;
@@ -175,6 +179,7 @@ public class graveStone extends Furniture implements Listener{
 	@EventHandler
 	private void onBlockPlaceEvent(BlockPlaceEvent e){
 		  if(obj==null){return;}
+		  if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		  if (sign==null) return;
 		  if (e.getBlock() == null) return;
 		  if (e.getBlock().getLocation() == null) return;
@@ -185,6 +190,7 @@ public class graveStone extends Furniture implements Listener{
 	  @EventHandler
 	  private void onDrop(ItemSpawnEvent e){
 		  if(obj==null){return;}
+		  if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		  if (sign==null) return;
 		  if (e.getLocation() == null) return;
 		  ItemStack is = e.getEntity().getItemStack();
@@ -198,6 +204,7 @@ public class graveStone extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;} 
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		Player p = e.getPlayer();
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(obj)) return;

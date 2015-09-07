@@ -1,0 +1,13 @@
+Hammock:
+    name: '&cHammock'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: 000,XEX,A0A
+      index:
+        X: 280
+        E: 425
+        A: 17
+        0: 0

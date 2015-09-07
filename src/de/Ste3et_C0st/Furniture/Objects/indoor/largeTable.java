@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class largeTable extends Furniture implements Listener{
 
@@ -203,6 +204,7 @@ public class largeTable extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
@@ -222,6 +224,7 @@ public class largeTable extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}

@@ -29,6 +29,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class weaponStand extends Furniture {
 
@@ -101,10 +102,11 @@ public class weaponStand extends Furniture {
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(p!=null){return;}
 		if(e.isCancelled()){return;}
-		if(!e.canBuild()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(!e.canBuild()){return;}
 		ItemStack is1 = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
 		ItemStack is3 = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
 		
@@ -158,6 +160,7 @@ public class weaponStand extends Furniture {
 	@EventHandler
 	private void onClick(InventoryClickEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(p==null){return;}
 		if(inv==null){return;}
 		if(e.getInventory()==null){return;}
@@ -183,6 +186,7 @@ public class weaponStand extends Furniture {
 	@EventHandler
 	private void onClose(InventoryCloseEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(p==null){return;}
 		if(inv==null){return;}
 		if(!e.getInventory().getTitle().equalsIgnoreCase(inv.getTitle())){return;}

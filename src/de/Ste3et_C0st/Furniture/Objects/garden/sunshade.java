@@ -35,6 +35,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class sunshade extends Furniture implements Listener{
 
@@ -139,6 +140,7 @@ public class sunshade extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
@@ -187,6 +189,7 @@ public class sunshade extends Furniture implements Listener{
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
 		if(e.getClickedBlock()==null){return;}
@@ -249,6 +252,7 @@ public class sunshade extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}

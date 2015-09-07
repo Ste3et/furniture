@@ -30,6 +30,7 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class streetlamp extends Furniture implements Listener{
 	
@@ -150,6 +151,7 @@ public class streetlamp extends Furniture implements Listener{
 	@EventHandler
 	private void onPlayerInteract(PlayerInteractEvent e){
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null) return;
 		if(e.getClickedBlock()==null) return;
@@ -176,6 +178,7 @@ public class streetlamp extends Furniture implements Listener{
 	@EventHandler
 	private void onBlockPowered(BlockRedstoneEvent e){
 		if(obj==null){return;} 
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.getBlock()==null){return;}
 		Vector loc = e.getBlock().getLocation().toVector();
 		if(loc2.distance(loc)<=1){
@@ -244,6 +247,7 @@ public class streetlamp extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(!e.canBuild()){return;}
 		FurnitureLib.getInstance().getLightManager().removeLight(light);
 		e.remove();
@@ -258,6 +262,7 @@ public class streetlamp extends Furniture implements Listener{
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
 		if(obj==null){return;}
+		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(obj)){return;}
 		if(!e.canBuild()){return;}
