@@ -20,6 +20,7 @@ import de.Ste3et_C0st.Furniture.Objects.electric.billboard;
 import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.electric.streetlamp;
 import de.Ste3et_C0st.Furniture.Objects.electric.tv;
+import de.Ste3et_C0st.Furniture.Objects.garden.campchair;
 import de.Ste3et_C0st.Furniture.Objects.garden.fance;
 import de.Ste3et_C0st.Furniture.Objects.garden.graveStone;
 import de.Ste3et_C0st.Furniture.Objects.garden.mailBox;
@@ -84,6 +85,7 @@ public class main extends JavaPlugin implements Listener{
 		new Project("Mailbox", new CraftingFile("Mailbox", getResource("Crafting/Mailbox.yml")), this, mailBox.class);
 		new Project("WeaponStand", new CraftingFile("WeaponStand", getResource("Crafting/WeaponStand.yml")), this, weaponStand.class);
 		new Project("Hammock", new CraftingFile("Hammock", getResource("Crafting/Hammock.yml")), this, hammock.class);
+		new Project("CampChair", new CraftingFile("CampChair", getResource("Crafting/CampChair.yml")), this, campchair.class);
 		
 		List<ObjectID> objList = new ArrayList<ObjectID>();
 		for(ObjectID obj : manager.getObjectList()){
@@ -114,6 +116,7 @@ public class main extends JavaPlugin implements Listener{
 				case "Billboard": new billboard(lib, this, obj); break;
 				case "WeaponStand": new weaponStand(lib, this, obj);break;
 				case "Hammock": new hammock(lib, this, obj); break;
+				case "CampChair": new campchair(lib, this, obj); break;
 				case "Mailbox" : 
 					mailBox mail = new mailBox(lib, this, obj);
 					/*try {
@@ -197,6 +200,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Mailbox" : new mailBox(lib, instance, obj); break;
 			case "WeaponStand": new weaponStand(lib, instance, obj); break;
 			case "Hammock": new hammock(lib, instance, obj); break;
+			case "CampChair": new campchair(lib, instance, obj); break;
 		}
 		e.finish();
 		e.removeItem();

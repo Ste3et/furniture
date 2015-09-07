@@ -1,0 +1,12 @@
+CampChair:
+  name: '&cCampChair'
+  material: 383
+  glow: false
+  lore: ''
+  crafting:
+    disable: false
+    recipe: XXX,XEX,AXA
+    index:
+      E: 126
+      X: 0
+      A: 65
