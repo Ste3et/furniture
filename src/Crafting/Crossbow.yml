@@ -1,0 +1,13 @@
+Crossbow:
+    name: '&cCrossbow'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: XAX,XOX,OBO
+      index:
+        X: 0
+        A: 261
+        O: 280
+        B: 44

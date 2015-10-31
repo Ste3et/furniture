@@ -1,0 +1,11 @@
+BlackBoard:
+    name: '&cBlackBoard'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: AAA,AAA,OOO
+      index:
+        A: 425
+        O: 72

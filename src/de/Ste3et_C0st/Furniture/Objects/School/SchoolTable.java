@@ -1,4 +1,4 @@
-package de.Ste3et_C0st.Furniture.Objects.indoor;
+package de.Ste3et_C0st.Furniture.Objects.School;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,9 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class table extends Furniture implements Listener {
-	
-	public table(Plugin plugin, ObjectID id){
+public class SchoolTable extends Furniture implements Listener {
+
+	public SchoolTable(Plugin plugin, ObjectID id){
 		super(plugin, id);
 		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -32,38 +32,7 @@ public class table extends Furniture implements Listener {
 		}
 		spawn(id.getStartLocation());
 	}
-	public void spawn(Location loc){
-		List<fArmorStand> packetL = new ArrayList<fArmorStand>();
-		Location middle1 = getLutil().getCenter(loc);
-		Location middle2 = getLutil().getCenter(loc);
-		Location l = loc;
-		l.setYaw(0);
-		
-		fArmorStand asp = getManager().createArmorStand(getObjID(), middle1.add(0, -2.1, 0));
-		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
-		packetL.add(asp);
-		asp = getManager().createArmorStand(getObjID(), middle2.add(0,-1.05,0));
-		asp.getInventory().setHelmet(new ItemStack(Material.TRAP_DOOR));
-		packetL.add(asp);
-		Location locatio = l.clone().add(0.9,0.15,0.3);
-		asp = getManager().createArmorStand(getObjID(), locatio);
-		asp.setName("#ITEM#");
-		asp.setPose(new EulerAngle(0.0,0.0,0.0), BodyPart.RIGHT_ARM);
-		packetL.add(asp);
-		locatio = locatio.clone().add(0,-0.65,0.68);
-		asp = getManager().createArmorStand(getObjID(), locatio);
-		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
-		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		packetL.add(asp);
-		
-		for(fArmorStand packet : packetL){
-			packet.setInvisible(true);
-			packet.setGravity(false);
-		}
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
-	
+
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(getObjID()==null){return;}
@@ -83,7 +52,7 @@ public class table extends Furniture implements Listener {
 		e.remove();
 		delete();
 	}
-	
+
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(getObjID()==null){return;}
@@ -115,4 +84,63 @@ public class table extends Furniture implements Listener {
 		}
 		update();
 	}
+
+	@Override
+	public void spawn(Location arg0) {
+		List<fArmorStand> asList = new ArrayList<fArmorStand>();
+		
+		Location loc1 = getRelative(getCenter(), getBlockFace(), .16, .67).subtract(0, 1.9, 0);
+		loc1.setYaw(getYaw()+90);
+		Location loc2 = getRelative(getCenter(), getBlockFace(), .16+.41, .67).subtract(0, 1.9, 0);
+		loc2.setYaw(getYaw()+90);
+		Location loc3 = getRelative(getCenter(), getBlockFace(), .16, .67-.36).subtract(0, 1.9, 0);
+		loc3.setYaw(getYaw()+90);
+		Location loc4 = getRelative(getCenter(), getBlockFace(), .16+.41, .67-.36).subtract(0, 1.9, 0);
+		loc4.setYaw(getYaw()+90);
+		
+		Location loc5 = getRelative(getCenter(), getBlockFace(), .37, .33).subtract(0, .22, 0);
+		loc5.setYaw(getYaw()+90);
+		
+		fArmorStand stand = spawnArmorStand(loc1);
+		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
+		stand.setMarker(false);
+		asList.add(stand);
+		
+		stand = spawnArmorStand(loc2);
+		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
+		stand.setMarker(false);
+		asList.add(stand);
+		
+		stand = spawnArmorStand(loc3);
+		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
+		stand.setMarker(false);
+		asList.add(stand);
+		
+		stand = spawnArmorStand(loc4);
+		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
+		stand.setMarker(false);
+		asList.add(stand);
+		
+		stand = spawnArmorStand(getCenter().subtract(0, 1.2, 0));
+		stand.setHelmet(new ItemStack(Material.WOOD_PLATE));
+		asList.add(stand);
+		
+		stand = spawnArmorStand(loc5);
+		stand.setPose(new EulerAngle(0.0,0.0,0.0), BodyPart.RIGHT_ARM);
+		stand.setMarker(false);
+		stand.setName("#ITEM#");
+		asList.add(stand);
+		
+		for(fArmorStand as : asList){
+			as.setInvisible(true);
+			as.setGravity(false);
+		}
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
+	}
+	
 }

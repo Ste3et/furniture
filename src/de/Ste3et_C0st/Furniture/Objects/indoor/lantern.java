@@ -1,14 +1,13 @@
 package de.Ste3et_C0st.Furniture.Objects.indoor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,46 +15,18 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class lantern extends Furniture implements Listener{
-
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Integer id;
-	Plugin plugin;
 	
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
-	public lantern(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
-			
+	public lantern(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			setBlock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
@@ -66,15 +37,16 @@ public class lantern extends Furniture implements Listener{
 	Block block;
 	
 	private void setBlock(){
-		Location center = lutil.getCenter(loc);
+		Location center = getLutil().getCenter(getLocation());
 		block = center.getWorld().getBlockAt(center);
 		if(!block.getType().equals(Material.AIR)){return;}
 		block.setType(Material.TORCH);
+		getObjID().addBlock(Arrays.asList(block));
 	}
 	
 	public void spawn(Location loc){
-		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
-		Location center = lutil.getCenter(loc);
+		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
+		Location center = getLutil().getCenter(loc);
 		setBlock();
 		Location obsidian = center;
 		Location l = new Location(center.getWorld(), center.getX(), center.getY() -1.43, center.getZ());
@@ -84,58 +56,58 @@ public class lantern extends Furniture implements Listener{
 		Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-.21, obsidian.getY()+.62, obsidian.getZ()-.21);
 		Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+.21, obsidian.getY() + .62, obsidian.getZ() -.21);
 		
-		ArmorStandPacket asp = manager.createArmorStand(obj, obsidian);
+		fArmorStand asp = getManager().createArmorStand(getObjID(), obsidian);
 		asp.getInventory().setHelmet(new ItemStack(Material.OBSIDIAN));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, lutil.getRelativ(l.clone(), b, 0D, 0.01D));
+		asp = getManager().createArmorStand(getObjID(), getLutil().getRelativ(l.clone(), getBlockFace(), 0D, 0.01D));
 		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, left_down);
+		asp = getManager().createArmorStand(getObjID(), left_down);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, left_upper);
+		asp = getManager().createArmorStand(getObjID(), left_upper);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, right_upper);
+		asp = getManager().createArmorStand(getObjID(), right_upper);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, right_down);
+		asp = getManager().createArmorStand(getObjID(), right_down);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		for(ArmorStandPacket packet : aspList){
+		for(fArmorStand packet : aspList){
 			packet.setBasePlate(false);
 			packet.setGravity(false);
 			packet.setInvisible(true);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	
 	
 	@EventHandler
 	public void onWaterFlow(BlockFromToEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		Location locTo = e.getToBlock().getLocation();
-		if(loc!=null && locTo.equals(loc.getBlock().getLocation())){
+		if(getLocation()!=null && locTo.equals(getLocation().getBlock().getLocation())){
 			e.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
-		if(!e.getID().equals(obj)) return;
+		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		e.remove();
 		block.setType(Material.AIR);
@@ -143,11 +115,11 @@ public class lantern extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
 		if(block==null) return;
-		if(!e.getID().equals(obj)) return;
+		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();

@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,43 +18,18 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class camera extends Furniture implements Listener{
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Plugin plugin;
-
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
-	public camera(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
+	public camera(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
@@ -63,103 +37,103 @@ public class camera extends Furniture implements Listener{
 	}
 	
 	public void spawn(Location location){
-		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
-		BlockFace b = lutil.yawToFace(location.getYaw()).getOppositeFace();
-		Location center = lutil.getCenter(location);
-		Location gehäuse = lutil.getRelativ(center, b, 0D, 0D).add(0,-1.0,0);
-		Location gehäuse2 = lutil.getRelativ(center, b, 0D, 0D).add(0,-0.4,0);
-		Location fokus = lutil.getRelativ(center, b, .15D, 0D).add(0,-.24,0);
-		Location search = lutil.getRelativ(center, b, .15D, 0D).add(0,-.7,0);
-		Location button = lutil.getRelativ(center, b, -.15D, -.15D).add(0,.08,0);
+		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
+		BlockFace b = getLutil().yawToFace(location.getYaw()).getOppositeFace();
+		Location center = getLutil().getCenter(location);
+		Location gehäuse = getLutil().getRelativ(center, b, 0D, 0D).add(0,-1.0,0);
+		Location gehäuse2 = getLutil().getRelativ(center, b, 0D, 0D).add(0,-0.4,0);
+		Location fokus = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.24,0);
+		Location search = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.7,0);
+		Location button = getLutil().getRelativ(center, b, -.15D, -.15D).add(0,.08,0);
 		
-		Location feet1 = lutil.getRelativ(center, b, .5D, .4D).add(0,-.9,0);
-		Location feet2 = lutil.getRelativ(center, b, -.2D, -.7D).add(0,-.9,0);
-		Location feet3 = lutil.getRelativ(center, b, -.7D, .2D).add(0,-.9,0);
+		Location feet1 = getLutil().getRelativ(center, b, .5D, .4D).add(0,-.9,0);
+		Location feet2 = getLutil().getRelativ(center, b, -.2D, -.7D).add(0,-.9,0);
+		Location feet3 = getLutil().getRelativ(center, b, -.7D, .2D).add(0,-.9,0);
 		
-		gehäuse.setYaw(lutil.FaceToYaw(b));
-		fokus.setYaw(lutil.FaceToYaw(b));
-		search.setYaw(lutil.FaceToYaw(b));
-		button.setYaw(lutil.FaceToYaw(b));
-		feet1.setYaw(lutil.FaceToYaw(b));
-		feet2.setYaw(lutil.FaceToYaw(b) + 180 - 45);
-		feet3.setYaw(lutil.FaceToYaw(b) + 180 + 45);
+		gehäuse.setYaw(getLutil().FaceToYaw(b));
+		fokus.setYaw(getLutil().FaceToYaw(b));
+		search.setYaw(getLutil().FaceToYaw(b));
+		button.setYaw(getLutil().FaceToYaw(b));
+		feet1.setYaw(getLutil().FaceToYaw(b));
+		feet2.setYaw(getLutil().FaceToYaw(b) + 180 - 45);
+		feet3.setYaw(getLutil().FaceToYaw(b) + 180 + 45);
 		
-		ArmorStandPacket as = manager.createArmorStand(obj, gehäuse);
+		fArmorStand as = getManager().createArmorStand(getObjID(), gehäuse);
 		as.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 15));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, gehäuse2);
+		as = getManager().createArmorStand(getObjID(), gehäuse2);
 		as.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 15));
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, fokus);
+		as = getManager().createArmorStand(getObjID(), fokus);
 		as.getInventory().setHelmet(new ItemStack(Material.DISPENSER));
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, search);
+		as = getManager().createArmorStand(getObjID(), search);
 		as.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, button);
+		as = getManager().createArmorStand(getObjID(), button);
 		as.getInventory().setHelmet(new ItemStack(Material.WOOD_BUTTON));
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet1);
+		as = getManager().createArmorStand(getObjID(), feet1);
 		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet2);
+		as = getManager().createArmorStand(getObjID(), feet2);
 		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, feet3);
+		as = getManager().createArmorStand(getObjID(), feet3);
 		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
-		for(ArmorStandPacket asp : aspList){
+		for(fArmorStand asp : aspList){
 			asp.setInvisible(true);
 			asp.setGravity(false);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
-		obj=null;
+		delete();
 	}
 	
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		Player p = e.getPlayer();
-		Location pLocation = lutil.getRelativ(p.getLocation().getBlock().getLocation(), b, -1D, 0D).clone();
+		Location pLocation = getLutil().getRelativ(p.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
 		if(pLocation.equals(locCopy)){
-			if(lutil.yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(b)){
+			if(getLutil().yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
 				if(!p.getInventory().getItemInHand().getType().equals(Material.MAP)){return;}
 				
 				MapView view = Bukkit.getMap(p.getItemInHand().getDurability());
-				Location l = getLocation();
-				l.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
+				Location l = getLocation().clone();
+				l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 				Iterator<MapRenderer> iter = view.getRenderers().iterator();
 	            while(iter.hasNext()){
 	                view.removeRenderer(iter.next());

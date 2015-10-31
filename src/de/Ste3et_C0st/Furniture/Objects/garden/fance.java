@@ -7,45 +7,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class fance extends Furniture implements Listener{
-
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Plugin plugin;
 	
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	private void setTypes(ItemStack is){for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){packet.getInventory().setHelmet(is);}}
+	private void setTypes(ItemStack is){for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){packet.getInventory().setHelmet(is);}}
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,
@@ -57,18 +38,9 @@ public class fance extends Furniture implements Listener{
 	Block block;
 	Material m;
 	
-	public fance(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
+	public fance(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			setBlock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
@@ -79,13 +51,13 @@ public class fance extends Furniture implements Listener{
 	
 	public void spawn(Location location){
 		this.m = Material.STONE;
-		Location locat = loc.clone();
-		locat=lutil.getCenter(locat);
+		Location locat = getLocation().clone();
+		locat=getLutil().getCenter(locat);
 		locat.add(0, -1.2, 0);
-		locat.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
+		locat.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 		for(int i = 0; i<=2;i++){
 			Location loc = locat.clone();
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setHelmet(new ItemStack(m,0,(short) 0));
 			packet.setGravity(false);
 			packet.setInvisible(true);
@@ -93,52 +65,30 @@ public class fance extends Furniture implements Listener{
 			packet.setSmall(true);
 			locat.add(0, .44, 0);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	
 	@EventHandler
-	private void onBlockBreak(BlockBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(block==null){return;}
-		if(!e.getBlock().getLocation().equals(block.getLocation())){return;}
-		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
-		this.block.setType(Material.AIR);
-		this.obj.remove(e.getPlayer());
-		block=null;
-		manager.remove(obj);
-		obj=null;
-	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+	private void onBlockBreak(FurnitureBlockBreakEvent e){
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
-		if(this.block!=null) this.block.setType(Material.AIR);
 		e.remove();
-		obj=null;
-		block.setType(Material.AIR);
-		block=null;
+		delete();
 	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	private void onInteract(PlayerInteractEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
-		if(this.block==null) return;
-		if(e.getAction()==null)return;
-		if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-		if(!e.getClickedBlock().getLocation().equals(this.block.getLocation())) return;
-		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
-		e.setCancelled(true);
+	private void onBlockBreak(FurnitureBlockClickEvent e){
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(e.isCancelled()){return;}
+		if(!e.getID().equals(getObjID())){return;}
+		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
 		if(is==null||!is.getType().isBlock()||is.getType().equals(Material.AIR)) return;
@@ -151,9 +101,24 @@ public class fance extends Furniture implements Listener{
 		}else if(main.materialWhiteList.contains(itemStack.getType())){
 			setTypes(itemStack);
 			remove(p, is);
-			manager.updateFurniture(obj);
+			getManager().updateFurniture(getObjID());
 			return;
 		}
+	}
+	
+	
+	
+	@EventHandler
+	public void onFurnitureBreak(FurnitureBreakEvent e){
+		if(getObjID()==null){return;}
+		if(e.getID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(e.isCancelled()){return;}
+		if(!e.getID().equals(getObjID())){return;}
+		if(!e.canBuild()){return;}
+		e.setCancelled(true);
+		e.remove();
+		delete();
 	}
 	
 	private void remove(Player p, ItemStack is){
@@ -168,11 +133,11 @@ public class fance extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(this.block==null) return;
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
@@ -187,19 +152,20 @@ public class fance extends Furniture implements Listener{
 		}else if(main.materialWhiteList.contains(itemStack.getType())){
 			setTypes(itemStack);
 			remove(p, is);
-			manager.updateFurniture(obj);
+			getManager().updateFurniture(getObjID());
 			return;
 		}
 	}
 	
 	private void setBlock(){
-		Location location = loc.clone();
+		Location location = getLocation().clone();
 		this.block = location.getBlock();
 		if(this.block.getType()==null||this.block.getType().equals(Material.AIR)||!this.block.getType().equals(Material.FENCE)){
 			if(!this.matList.contains(this.block.getType())){
 				this.block.setType(Material.FENCE);
 			}
 		}
+		getObjID().addBlock(Arrays.asList(this.block));
 	}
 	
 	

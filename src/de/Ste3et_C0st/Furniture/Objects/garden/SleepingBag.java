@@ -16,12 +16,12 @@ import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class campchair extends Furniture implements Listener {
-	public campchair(Plugin plugin, ObjectID id){
+public class SleepingBag extends Furniture implements Listener {
+
+	public SleepingBag(Plugin plugin, ObjectID id){
 		super(plugin, id);
 		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -30,6 +30,7 @@ public class campchair extends Furniture implements Listener {
 		spawn(id.getStartLocation());
 	}
 
+	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
 		if(getObjID()==null){return;}
@@ -56,43 +57,31 @@ public class campchair extends Furniture implements Listener {
 		}
 	}
 
-	@Override
-	public void spawn(Location location) {
-		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
-		Location middle = getLutil().getCenter(location);
-		middle.add(0, -1.05, 0);
-		middle.setYaw(getLutil().FaceToYaw(getBlockFace()));
+	public void spawn(Location loc) {
+		List<fArmorStand> asList = new ArrayList<fArmorStand>();
+		double offset = .3;
+		fArmorStand stand = spawnArmorStand(getRelative(getCenter(), 0 - offset, 0).add(0, -2.15, 0));
+		asList.add(stand);
+		stand.setHelmet(new ItemStack(Material.IRON_TRAPDOOR));
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
 		
-		Location l1 = getLutil().getRelativ(middle, getBlockFace(), .25, .4);
-		fArmorStand packet = getManager().createArmorStand(getObjID(), l1);
-		packet.getInventory().setItemInHand(new ItemStack(Material.LADDER));
-		packet.setPose(getLutil().degresstoRad(new EulerAngle(50, 0, 0)), BodyPart.RIGHT_ARM);
-		aspList.add(packet);
+		stand = spawnArmorStand(getRelative(getCenter(), 2 - offset, 0).add(0, -1.7, 0));
+		asList.add(stand);
+		stand.setHelmet(new ItemStack(Material.BANNER, 1, (short) 3));
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90, 0, 0)));
+
+		stand = spawnArmorStand(getRelative(getCenter(), -.5 - offset, 0).add(0, -1.68, 0));
+		asList.add(stand);
+		stand.setHelmet(new ItemStack(Material.BANNER, 1, (short) 3));
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90, 180, 0)));
 		
-		l1 = getLutil().getRelativ(middle, getBlockFace().getOppositeFace(), .25, .4);
-	    packet = getManager().createArmorStand(getObjID(), l1);
-		packet.getInventory().setItemInHand(new ItemStack(Material.LADDER));
-		packet.setPose(getLutil().degresstoRad(new EulerAngle(50, 0, 0)), BodyPart.RIGHT_ARM);
-		aspList.add(packet);
-		
-		l1 = middle.clone();
-		l1.add(0, -.65, 0);
-		packet = getManager().createArmorStand(getObjID(), l1);
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
-		aspList.add(packet);
-		
-		middle.add(0,-0.6,0);
-		middle.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-		packet = getManager().createArmorStand(getObjID(), middle);
-		packet.setName("#SITZ#");
-		aspList.add(packet);
-		
-		for(fArmorStand as : aspList){
+		stand = spawnArmorStand(getRelative(getCenter(), .3 - offset, 0).add(0, -2.1, 0));
+		stand.setName("#SITZ#");
+		asList.add(stand);
+		for(fArmorStand as : asList){
 			as.setInvisible(true);
-			as.setBasePlate(false);
 			as.setGravity(false);
 		}
-		
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}

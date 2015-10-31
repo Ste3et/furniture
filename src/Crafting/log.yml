@@ -1,0 +1,12 @@
+Log:
+    name: '&cLog'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: XXX,XAX,XOX
+      index:
+        X: 0
+        A: 389
+        O: 17

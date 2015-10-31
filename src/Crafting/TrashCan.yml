@@ -1,0 +1,11 @@
+TrashCan:
+    name: '&cTrashCan'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: XOX,XOX,OXO
+      index:
+        O: 0
+        X: 101

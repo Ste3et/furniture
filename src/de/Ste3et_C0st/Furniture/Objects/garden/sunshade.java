@@ -9,49 +9,30 @@ import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class sunshade extends Furniture implements Listener{
-
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Plugin plugin;
-
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,
@@ -64,18 +45,9 @@ public class sunshade extends Furniture implements Listener{
 	Integer timer;
 	Block block;
 	
-	public sunshade(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
+	public sunshade(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			setblock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
@@ -85,27 +57,28 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	private void setblock(){
-		Location loc = this.loc.clone();
+		Location loc = getLocation().clone();
 		loc.add(0, 2, 0);
 		block = loc.getBlock();
 		block.setType(Material.BARRIER);
+		getObjID().addBlock(Arrays.asList(block));
 	}
 	
 	public void spawn(Location location){
-		Location center = lutil.getCenter(location).clone();
-		List<ArmorStandPacket> asList = new ArrayList<ArmorStandPacket>();
+		Location center = getLutil().getCenter(location).clone();
+		List<fArmorStand> asList = new ArrayList<fArmorStand>();
 		center.add(0, -1.1, 0);
 		
 		for(int i = 0; i<=2;i++){
-			Location loc = lutil.getRelativ(center.clone(), b, .47, .38).add(0, .88*i, 0);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
 		
 		center.add(0, 1.758, 0);
-		ArmorStandPacket aspacket = manager.createArmorStand(obj, center);
+		fArmorStand aspacket = getManager().createArmorStand(getObjID(), center);
 		aspacket.getInventory().setHelmet(new ItemStack(Material.CARPET));
 		aspacket.setName("#TOP#");
 		asList.add(aspacket);
@@ -121,62 +94,53 @@ public class sunshade extends Furniture implements Listener{
 		
 		for(int i = 0; i<=17; i++){
 			loc.setYaw(i*21);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc.clone());
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc.clone());
 			packet.getInventory().setHelmet(is);
 			packet.setPose(new EulerAngle(-3.054, 0, 0), BodyPart.HEAD);
 			packet.setName("#ELEMENT#" + i);
 			asList.add(packet);
 		}
 		
-		for(ArmorStandPacket packet : asList){
+		for(fArmorStand packet : asList){
 			packet.setInvisible(true);
 			packet.setGravity(false);
 			packet.setBasePlate(false);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getItemInHand();
-		if(is==null||!is.getType().equals(Material.BANNER)){
+		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.INTERACT)){return;}
+		if(is.getType().equals(Material.BANNER)){
+			e.setCancelled(true);
+			if(isRunning()){return;}
+			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
+					packet.getInventory().setHelmet(is);
+				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.CARPET)){
+					ItemStack item = new ItemStack(Material.CARPET);
+					item.setDurability(getLutil().getFromDey((short) is.getDurability()));
+					packet.getInventory().setHelmet(item);
+				}
+			}
+			removeItem(p);
+			update();
+		}else{
 			if(isRunning()){return;}
 			if(!isOpen()){
 				open();
 			}else{
 				close();
-			}
-		}else{
-			if(isRunning()){return;}
-			if(!is.hasItemMeta()){return;}
-			ItemStack itemstack = is.clone();
-			BannerMeta banner = (BannerMeta) itemstack.getItemMeta();
-			Short s = lutil.getfromDyeColor(banner.getBaseColor());
-			Short newS = lutil.getFromDey(s);
-			
-			for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
-				if(packet.getName().startsWith("#ELEMENT#")){
-					packet.getInventory().setHelmet(itemstack);
-				}else if(packet.getName().equalsIgnoreCase("#TOP#")){
-					packet.getInventory().setHelmet(new ItemStack(Material.CARPET, 1, newS));
-				}
-			}
-			
-			manager.updateFurniture(obj);
-			
-			if(!p.getGameMode().equals(GameMode.CREATIVE)){
-				Integer i = p.getInventory().getHeldItemSlot();
-				is.setAmount(is.getAmount()-1);
-				p.getInventory().setItem(i, is);
-				p.updateInventory();
 			}
 		}
 	}
@@ -187,107 +151,109 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	@EventHandler
-	private void onInteract(PlayerInteractEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+	public void onBlockBreak(FurnitureBlockBreakEvent e){
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(e.getAction()==null){return;}
-		if(e.getClickedBlock()==null){return;}
-		if(!e.getClickedBlock().getLocation().equals(block.getLocation())){return;}
-		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-				e.setCancelled(true);
-				if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){return;}
-				stopTimer();
-				for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
-					if(packet.getName().equalsIgnoreCase("#ITEM#")){
-						if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-							ItemStack is = packet.getInventory().getItemInHand();
-							w.dropItem(loc, is);
-						}
-					}
+		if(!e.getID().equals(getObjID())){return;}
+		if(!e.canBuild()){return;}
+		e.setCancelled(true);
+		stopTimer();
+		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			if(packet.getName().equalsIgnoreCase("#ITEM#")){
+				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInHand();
+					getWorld().dropItem(getLocation(), is);
 				}
-				this.block.setType(Material.AIR);
-				this.block = null;
-				this.obj.remove(e.getPlayer());
-				obj=null;
-		}else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-			if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
-				Player p = e.getPlayer();
-				ItemStack is = p.getItemInHand();
-				if(is==null||!is.getType().equals(Material.BANNER)){
-					if(isRunning()){return;}
-					if(!isOpen()){
-						open();
-					}else{
-						close();
-					}
-				}else{
-					e.setCancelled(true);
-					if(isRunning()){return;}
-					if(!is.hasItemMeta()){return;}
-					ItemStack itemstack = is.clone();
-					BannerMeta banner = (BannerMeta) itemstack.getItemMeta();
-					Short s = lutil.getfromDyeColor(banner.getBaseColor());
-					Short newS = lutil.getFromDey(s);
-					
-					for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
-						if(packet.getName().startsWith("#ELEMENT#")){
-							packet.getInventory().setHelmet(itemstack);
-						}else if(packet.getName().equalsIgnoreCase("#TOP#")){
-							packet.getInventory().setHelmet(new ItemStack(Material.CARPET, 1, newS));
-						}
-					}
-					manager.updateFurniture(obj);
-					
-					if(!p.getGameMode().equals(GameMode.CREATIVE)){
-						Integer i = p.getInventory().getHeldItemSlot();
-						is.setAmount(is.getAmount()-1);
-						p.getInventory().setItem(i, is);
-						p.updateInventory();
-					}
-				}
+			}
 		}
+		getObjID().remove(e.getPlayer());
+		delete();
+	}
+	
+	@EventHandler
+	public void onBlockBreak(FurnitureBlockClickEvent e){
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(e.isCancelled()){return;}
+		if(!e.getID().equals(getObjID())){return;}
+		if(!e.canBuild()){return;}
+		e.setCancelled(true);
+		Player p = e.getPlayer();
+		ItemStack is = p.getItemInHand();
+		if(is.getType().equals(Material.BANNER)){
+			e.setCancelled(true);
+			if(isRunning()){return;}
+			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
+					packet.getInventory().setHelmet(is);
+				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.CARPET)){
+					ItemStack item = new ItemStack(Material.CARPET);
+					item.setDurability(getLutil().getFromDey((short) is.getDurability()));
+					packet.getInventory().setHelmet(item);
+				}
+			}
+			removeItem(p);
+			update();
+		}else{
+			if(isRunning()){return;}
+			if(!isOpen()){
+				open();
+			}else{
+				close();
+			}
+		}
+	}
+	
+	public void removeItem(Player p){
+		Boolean useGameMode = FurnitureLib.getInstance().useGamemode();
+		if(useGameMode&&p.getGameMode().equals(GameMode.CREATIVE)){return;}
+		Integer slot = p.getInventory().getHeldItemSlot();
+		ItemStack itemStack = p.getItemInHand().clone();
+		itemStack.setAmount(itemStack.getAmount()-1);
+		p.getInventory().setItem(slot, itemStack);
+		p.updateInventory();
 	}
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		stopTimer();
-		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
 					ItemStack is = packet.getInventory().getItemInHand();
-					w.dropItem(loc, is);
+					getWorld().dropItem(getLocation(), is);
 				}
 			}
 		}
 		e.remove();
 		this.block.setType(Material.AIR);
 		this.block = null;
-		manager.remove(obj);
-		obj=null;
+		getManager().remove(getObjID());
+		delete();
 	}
 	
 	private void close(){
-		timer = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		timer = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				try{
-					for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+					for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 						if(packet.getName().startsWith("#ELEMENT#")){
 							if(!isClose(packet)){
-								Double x = packet.getAngle(BodyPart.HEAD).getX();
+								Double x = packet.getPose(BodyPart.HEAD).getX();
 								packet.setPose(new EulerAngle(x-.32, 0, 0), BodyPart.HEAD);
 							}else{
 								stopTimer();
 								return;
 							}
-							manager.updateFurniture(obj);
+							getManager().updateFurniture(getObjID());
 						}
 					}
 				}catch(Exception e){
@@ -300,20 +266,20 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	private void open(){
-		timer = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		timer = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				try{
-					for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+					for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 						if(packet.getName().startsWith("#ELEMENT#")){
 							if(!isOpen(packet)){
-								Double x = packet.getAngle(BodyPart.HEAD).getX();
+								Double x = packet.getPose(BodyPart.HEAD).getX();
 								packet.setPose(new EulerAngle(x+.32, 0, 0), BodyPart.HEAD);
 							}else{
 								stopTimer();
 								return;
 							}
-							manager.updateFurniture(obj);
+							getManager().updateFurniture(getObjID());
 						}
 					}
 				}catch(Exception e){
@@ -326,30 +292,30 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	private void reset(){
-		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(!isOpen(packet)){
 				packet.setPose(new EulerAngle(-3.054, 0, 0), BodyPart.HEAD);
 			}
 		}
-		manager.updateFurniture(obj);
+		update();
 	}
 	
-	private boolean isClose(ArmorStandPacket packet){
-		if(packet.getAngle(BodyPart.HEAD).getX()> -3.054){
+	private boolean isClose(fArmorStand packet){
+		if(packet.getPose(BodyPart.HEAD).getX()> -3.054){
 			return false;
 		}return true;
 	}
 	
-	private boolean isOpen(ArmorStandPacket packet){
-		if(packet.getAngle(BodyPart.HEAD).getX()< -1.85){
+	private boolean isOpen(fArmorStand packet){
+		if(packet.getPose(BodyPart.HEAD).getX()< -1.85){
 			return false;
 		}return true;
 	}
 	
 	private boolean isOpen(){
-		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().startsWith("#ELEMENT#")){
-				if(packet.getAngle(BodyPart.HEAD).getX()< -1.85){
+				if(packet.getPose(BodyPart.HEAD).getX()< -1.85){
 					return false;
 				}
 			}

@@ -1,12 +1,12 @@
 package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -17,51 +17,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class tent_1 extends Furniture implements Listener{
 
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Integer id;
 	Block block;
-	Plugin plugin;
-	
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
-	public tent_1(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		if(b.equals(BlockFace.WEST)){loc=lutil.getRelativ(loc, b, 1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){loc=lutil.getRelativ(loc, b, 1D, 1D);}
-		if(b.equals(BlockFace.EAST)){loc=lutil.getRelativ(loc, b, 0D, 1D);}
-		this.obj = id;
+	public tent_1(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		Location loc = id.getStartLocation();
+		if(getBlockFace().equals(BlockFace.WEST)){loc=getLutil().getRelativ(loc, getBlockFace(), 1D, 0D);}
+		if(getBlockFace().equals(BlockFace.NORTH)){loc=getLutil().getRelativ(loc, getBlockFace(), 1D, 1D);}
+		if(getBlockFace().equals(BlockFace.EAST)){loc=getLutil().getRelativ(loc, getBlockFace(), 0D, 1D);}
 		if(id.isFinish()){
 			setblock();
 			Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -71,78 +45,79 @@ public class tent_1 extends Furniture implements Listener{
 	}
 	
 	public void setblock(){
-		Location blockLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-		if(b.equals(BlockFace.SOUTH)){
-			this.block = blockLocation.getWorld().getBlockAt(lutil.getRelativ(blockLocation, b, 2D, -2D));
+		Location blockLocation = new Location(getWorld(), getLocation().getBlockX(), getLocation().getBlockY(), getLocation().getBlockZ());
+		if(getBlockFace().equals(BlockFace.SOUTH)){
+			this.block = blockLocation.getWorld().getBlockAt(getLutil().getRelativ(blockLocation, getBlockFace(), 2D, -2D));
 			this.block.setType(Material.WORKBENCH);
-		}else if(b.equals(BlockFace.WEST)){
-			this.block = blockLocation.getWorld().getBlockAt(lutil.getRelativ(blockLocation, b, 1D, -2D));
+		}else if(getBlockFace().equals(BlockFace.WEST)){
+			this.block = blockLocation.getWorld().getBlockAt(getLutil().getRelativ(blockLocation, getBlockFace(), 2D, -2D));
 			this.block.setType(Material.WORKBENCH);
-		}else if(b.equals(BlockFace.NORTH)){
-			this.block = blockLocation.getWorld().getBlockAt(lutil.getRelativ(blockLocation, b, 1D, -3D));
+		}else if(getBlockFace().equals(BlockFace.NORTH)){
+			this.block = blockLocation.getWorld().getBlockAt(getLutil().getRelativ(blockLocation, getBlockFace(), 2D, -2D));
 			this.block.setType(Material.WORKBENCH);
-		}else if(b.equals(BlockFace.EAST)){
-			this.block = blockLocation.getWorld().getBlockAt(lutil.getRelativ(blockLocation, b, 2D, -3D));
+		}else if(getBlockFace().equals(BlockFace.EAST)){
+			this.block = blockLocation.getWorld().getBlockAt(getLutil().getRelativ(blockLocation, getBlockFace(), 2D, -2D));
 			this.block.setType(Material.WORKBENCH);
 		}
+		getObjID().addBlock(Arrays.asList(block));
 	}
 	
 	
 	private Location getNew(Location loc, BlockFace b){
-		if(b.equals(BlockFace.WEST)){loc=lutil.getRelativ(loc, b, -1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){loc=lutil.getRelativ(loc, b, -1D, -1D);}
-		if(b.equals(BlockFace.EAST)){loc=lutil.getRelativ(loc, b, 0D, -1D);}
+		if(b.equals(BlockFace.WEST)){loc=getLutil().getRelativ(loc, b, -1D, 0D);}
+		if(b.equals(BlockFace.NORTH)){loc=getLutil().getRelativ(loc, b, -1D, -1D);}
+		if(b.equals(BlockFace.EAST)){loc=getLutil().getRelativ(loc, b, 0D, -1D);}
 		return loc;
 	}
 	
 	public void spawn(Location loc){
-		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
+		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
 		Location loc_1 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		Location loc_2 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		Location loc_3 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		
-		Location karabine1 = getNew(lutil.getRelativ(loc, b, 0D, 0D), b);
-		Location karabine2 = getNew(lutil.getRelativ(loc, b, 3D, 0D), b);
-		Location karabine3 = getNew(lutil.getRelativ(loc, b, 3D, -4D), b);
-		Location karabine4 = getNew(lutil.getRelativ(loc, b, 0D, -4D), b);
+		Location karabine1 = getNew(getLutil().getRelativ(loc, getBlockFace(), 0D, 0D), getBlockFace());
+		Location karabine2 = getNew(getLutil().getRelativ(loc, getBlockFace(), 3D, 0D), getBlockFace());
+		Location karabine3 = getNew(getLutil().getRelativ(loc, getBlockFace(), 3D, -4D), getBlockFace());
+		Location karabine4 = getNew(getLutil().getRelativ(loc, getBlockFace(), 0D, -4D), getBlockFace());
 		
 		
-		karabine1 = lutil.getCenter(karabine1);
-		karabine2 = lutil.getCenter(karabine2);
-		karabine3 = lutil.getCenter(karabine3);
-		karabine4 = lutil.getCenter(karabine4);
-		karabine1.setYaw(lutil.FaceToYaw(b)+90);
-		karabine2.setYaw(lutil.FaceToYaw(b)+90);
-		karabine3.setYaw(lutil.FaceToYaw(b)+90);
-		karabine4.setYaw(lutil.FaceToYaw(b)+90);
+		karabine1 = getLutil().getCenter(karabine1);
+		karabine2 = getLutil().getCenter(karabine2);
+		karabine3 = getLutil().getCenter(karabine3);
+		karabine4 = getLutil().getCenter(karabine4);
+		karabine1.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+		karabine2.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+		karabine3.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+		karabine4.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		
-		Location saveLoc = lutil.getRelativ(loc_1, b, -.55D, -0.6);
+		Location saveLoc = getLutil().getRelativ(loc_1, getBlockFace(), -.55D, -0.6);
 		saveLoc.add(0,-1.25,0);
-		saveLoc.setYaw(lutil.FaceToYaw(b) -90);
+		saveLoc.setYaw(getLutil().FaceToYaw(getBlockFace()) -90);
 		
-		Location saveLoc2 = lutil.getRelativ(loc_2, b, -4.27, -4.4);
+		Location saveLoc2 = getLutil().getRelativ(loc_2, getBlockFace(), -4.27, -4.4);
 		saveLoc2.add(0,-1.25,0);
-		saveLoc2.setYaw(lutil.FaceToYaw(b) -90);
+		saveLoc2.setYaw(getLutil().FaceToYaw(getBlockFace()) -90);
 		
-		Location saveLoc3 = lutil.getRelativ(loc_3, b, -8D, -2.5D);
+		Location saveLoc3 = getLutil().getRelativ(loc_3, getBlockFace(), -8D, -2.5D);
 		saveLoc3.add(0,.64,0);
-		saveLoc3.setYaw(lutil.FaceToYaw(b) -90);
+		saveLoc3.setYaw(getLutil().FaceToYaw(getBlockFace()) -90);
 		Double d = .0;
 
 		setblock();
 		
 		for(int i = 0; i<=5;i++){
-			Location loc1= lutil.getRelativ(saveLoc, b, d, 0D);
-			Location loc2= lutil.getRelativ(saveLoc, b, d, -.48).add(0,.3,0);
-			Location loc3= lutil.getRelativ(saveLoc, b, d, -.86).add(0,.81,0);
-			Location loc4= lutil.getRelativ(saveLoc, b, d, -1.08).add(0,1.33,0);
-			Location loc5= lutil.getRelativ(saveLoc, b, d, -1.38).add(0,1.86,0);
+			Location loc1= getLutil().getRelativ(saveLoc, getBlockFace(), d, 0D);
+			Location loc2= getLutil().getRelativ(saveLoc, getBlockFace(), d, -.48).add(0,.3,0);
+			Location loc3= getLutil().getRelativ(saveLoc, getBlockFace(), d, -.86).add(0,.81,0);
+			Location loc4= getLutil().getRelativ(saveLoc, getBlockFace(), d, -1.08).add(0,1.33,0);
+			Location loc5= getLutil().getRelativ(saveLoc, getBlockFace(), d, -1.38).add(0,1.86,0);
 			
-			loc1.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
-			loc2.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
-			loc3.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
-			loc4.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
-			loc5.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
+			loc1.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+			loc2.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+			loc3.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+			loc4.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+			loc5.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 			
 			loc.add(loc1);
 			loc.add(loc2);
@@ -150,23 +125,23 @@ public class tent_1 extends Furniture implements Listener{
 			loc.add(loc4);
 			loc.add(loc5);
 			
-			ArmorStandPacket asp = manager.createArmorStand(obj, loc1);
+			fArmorStand asp = getManager().createArmorStand(getObjID(), loc1);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc2);
+			asp = getManager().createArmorStand(getObjID(), loc2);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc3);
+			asp = getManager().createArmorStand(getObjID(), loc3);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc4);
+			asp = getManager().createArmorStand(getObjID(), loc4);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.7), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc5);
+			asp = getManager().createArmorStand(getObjID(), loc5);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -.7), BodyPart.HEAD);
 			aspList.add(asp);
@@ -174,17 +149,17 @@ public class tent_1 extends Furniture implements Listener{
 		}
 
 		for(int i = 0; i<=5;i++){
-			Location loc1= lutil.getRelativ(saveLoc2, b, d, .02D);
-			Location loc2= lutil.getRelativ(saveLoc2, b, d, .48).add(0,.3,0);
-			Location loc3= lutil.getRelativ(saveLoc2, b, d, .86).add(0,.81,0);
-			Location loc4= lutil.getRelativ(saveLoc2, b, d, 1.08).add(0,1.33,0);
-			Location loc5= lutil.getRelativ(saveLoc2, b, d, 1.38).add(0,1.86,0);
+			Location loc1= getLutil().getRelativ(saveLoc2, getBlockFace(), d, .02D);
+			Location loc2= getLutil().getRelativ(saveLoc2, getBlockFace(), d, .48).add(0,.3,0);
+			Location loc3= getLutil().getRelativ(saveLoc2, getBlockFace(), d, .86).add(0,.81,0);
+			Location loc4= getLutil().getRelativ(saveLoc2, getBlockFace(), d, 1.08).add(0,1.33,0);
+			Location loc5= getLutil().getRelativ(saveLoc2, getBlockFace(), d, 1.38).add(0,1.86,0);
 			
-			loc1.setYaw(lutil.FaceToYaw(b));
-			loc2.setYaw(lutil.FaceToYaw(b));
-			loc3.setYaw(lutil.FaceToYaw(b));
-			loc4.setYaw(lutil.FaceToYaw(b));
-			loc5.setYaw(lutil.FaceToYaw(b));
+			loc1.setYaw(getLutil().FaceToYaw(getBlockFace()));
+			loc2.setYaw(getLutil().FaceToYaw(getBlockFace()));
+			loc3.setYaw(getLutil().FaceToYaw(getBlockFace()));
+			loc4.setYaw(getLutil().FaceToYaw(getBlockFace()));
+			loc5.setYaw(getLutil().FaceToYaw(getBlockFace()));
 			
 			loc.add(loc1);
 			loc.add(loc2);
@@ -192,23 +167,23 @@ public class tent_1 extends Furniture implements Listener{
 			loc.add(loc4);
 			loc.add(loc5);
 			
-			ArmorStandPacket asp = manager.createArmorStand(obj, loc1);
+			fArmorStand asp = getManager().createArmorStand(getObjID(), loc1);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc2);
+			asp = getManager().createArmorStand(getObjID(), loc2);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc3);
+			asp = getManager().createArmorStand(getObjID(), loc3);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.2), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc4);
+			asp = getManager().createArmorStand(getObjID(), loc4);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -7.7), BodyPart.HEAD);
 			aspList.add(asp);
-			asp = manager.createArmorStand(obj, loc5);
+			asp = getManager().createArmorStand(getObjID(), loc5);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
 			asp.setPose(new EulerAngle(0, 0, -.7), BodyPart.HEAD);
 			aspList.add(asp);
@@ -217,89 +192,89 @@ public class tent_1 extends Furniture implements Listener{
 		
 		//middle
 		for(int i = 0; i<=5;i++){
-			Location loc1= lutil.getRelativ(saveLoc3, b, d, 0D);
-			loc1.setYaw(lutil.FaceToYaw(b.getOppositeFace()));
+			Location loc1= getLutil().getRelativ(saveLoc3, getBlockFace(), d, 0D);
+			loc1.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 			loc.add(loc1);
 			
-			ArmorStandPacket asp = manager.createArmorStand(obj, loc1);
+			fArmorStand asp = getManager().createArmorStand(getObjID(), loc1);
 			asp.getInventory().setHelmet( new ItemStack(Material.WOOD_STEP));
 			aspList.add(asp);
 
 			d+=.62;
 		}
 		
-		ArmorStandPacket asp = manager.createArmorStand(obj, karabine1.add(0,-1.9,0));
+		fArmorStand asp = getManager().createArmorStand(getObjID(), karabine1.add(0,-1.9,0));
 		asp.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(asp);
-		asp = manager.createArmorStand(obj, karabine2.add(0,-1.9,0));
+		asp = getManager().createArmorStand(getObjID(), karabine2.add(0,-1.9,0));
 		asp.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(asp);
-		asp = manager.createArmorStand(obj, karabine3.add(0,-1.9,0));
+		asp = getManager().createArmorStand(getObjID(), karabine3.add(0,-1.9,0));
 		asp.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(asp);
-		asp = manager.createArmorStand(obj, karabine4.add(0,-1.9,0));
+		asp = getManager().createArmorStand(getObjID(), karabine4.add(0,-1.9,0));
 		asp.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(asp);
 		
-		Location crafting = lutil.getCenter(block.getLocation());
-		crafting.setYaw(lutil.FaceToYaw(b)+90);
+		Location crafting = getLutil().getCenter(block.getLocation());
+		crafting.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		
-		asp = manager.createArmorStand(obj, crafting.add(0,-1,0).clone());
+		asp = getManager().createArmorStand(getObjID(), crafting.add(0,-1,0).clone());
 		asp.getInventory().setHelmet(new ItemStack(Material.LADDER));
 		aspList.add(asp);
 		
-		asp = manager.createArmorStand(obj, crafting.add(0,.62,0).clone());
+		asp = getManager().createArmorStand(getObjID(), crafting.add(0,.62,0).clone());
 		asp.getInventory().setHelmet(new ItemStack(Material.LADDER));
 		aspList.add(asp);
 		
-		for(ArmorStandPacket packet : aspList){
+		for(fArmorStand packet : aspList){
 			packet.setInvisible(true);
 			packet.setGravity(false);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		block.setType(Material.AIR);
 		e.remove();
-		obj=null;
+		delete();
 	}
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
 			p.openWorkbench(this.block.getLocation(), true);
 		}else{
-			lib.getColorManager().color(p, e.canBuild(), Material.CARPET, obj, ColorType.BLOCK, 1);
+			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 1);
 		}
 	}
 	
 	@EventHandler
 	private void onBlockBreak(BlockBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(e.getBlock()==null){return;}
 		if(block==null){return;}
 		if(!e.getBlock().equals(block)){return;}
-		if(!lib.canBuild(e.getPlayer(), obj, EventType.BREAK)){e.getPlayer().sendMessage("ERROR1");return;}
+		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.BREAK)){return;}
 		if(this.block!=null&&e.getBlock().equals(block)){this.block.setType(Material.AIR);this.block=null;}
-		this.obj.remove(e.getPlayer());
-		obj=null;
+		this.getObjID().remove(e.getPlayer());
+		delete();
 	}
 }

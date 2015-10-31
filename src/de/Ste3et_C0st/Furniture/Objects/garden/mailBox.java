@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -18,49 +17,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class mailBox extends Furniture implements Listener {
-
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Plugin plugin;
 	List<Block> blockList = new ArrayList<Block>();
-
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
 	UUID uuid;
 	
-	public mailBox(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
+	public mailBox(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
@@ -68,42 +40,42 @@ public class mailBox extends Furniture implements Listener {
 	}
 	
 	public void spawn(Location location){
-		List<ArmorStandPacket> aspList = new ArrayList<ArmorStandPacket>();
-		Location middle = lutil.getCenter(loc);
+		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
+		Location middle = getLutil().getCenter(getLocation());
 		middle.add(0, -1.4, 0);
 		
-		switch (b) {
-		case NORTH:middle = lutil.getRelativ(middle, b, 0D, 0.03D);break;
-		case EAST:middle = lutil.getRelativ(middle, b, 0D, 0.03D);break;
+		switch (getBlockFace()) {
+		case NORTH:middle = getLutil().getRelativ(middle, getBlockFace(), 0D, 0.03D);break;
+		case EAST:middle = getLutil().getRelativ(middle, getBlockFace(), 0D, 0.03D);break;
 		default:break;
 		}
 		
-		ArmorStandPacket as = manager.createArmorStand(obj, middle);
+		fArmorStand as = getManager().createArmorStand(getObjID(), middle);
 		as.getInventory().setHelmet(new ItemStack(Material.STONE));
 		as.setSmall(true);
 		aspList.add(as);
 
 		for(int i = 0; i<=1;i++){
-			Location loc = lutil.getRelativ(middle.clone(), b, .47, .38).add(0, .88*i, 0);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			Location loc = getLutil().getRelativ(middle.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			aspList.add(packet);
 		}
 		
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.2, 0), b, -.21, 0D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), -.21, 0D));
 		as.getInventory().setHelmet(new ItemStack(Material.SMOOTH_BRICK, 1, (short) 0));
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.2, 0), b, .21, 0D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), .21, 0D));
 		as.getInventory().setHelmet(new ItemStack(Material.SMOOTH_BRICK, 1, (short) 0));
 		as.setSmall(true);
 		aspList.add(as);
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = lutil.getRelativ(middle.clone().add(0, 1.898, 0), b, -.44+.165*i, .43D);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			Location loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace(), -.44+.165*i, .43D);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.setSmall(true);
 			//x z y
 			//-.7 .73 -.3
@@ -111,8 +83,8 @@ public class mailBox extends Furniture implements Listener {
 			packet.getInventory().setItemInHand(new ItemStack(Material.SMOOTH_STAIRS));
 			aspList.add(packet);
 			
-			loc = lutil.getRelativ(middle.clone().add(0, 1.898, 0), b.getOppositeFace(), -.44+.165*i, .462D);
-			packet = manager.createArmorStand(obj, loc);
+			loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace().getOppositeFace(), -.44+.165*i, .462D);
+			packet = getManager().createArmorStand(getObjID(), loc);
 			packet.setSmall(true);
 			//x z y
 			//-.7 .73 -.3
@@ -121,8 +93,8 @@ public class mailBox extends Furniture implements Listener {
 			aspList.add(packet);
 			
 			
-			loc = lutil.getRelativ(middle.clone().add(0, 1.898, 0), b.getOppositeFace(), -.44+.165*i, .362D);
-			packet = manager.createArmorStand(obj, loc);
+			loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace().getOppositeFace(), -.44+.165*i, .362D);
+			packet = getManager().createArmorStand(getObjID(), loc);
 			packet.setSmall(true);
 			//x z y
 			//-.7 .73 -.3
@@ -131,47 +103,50 @@ public class mailBox extends Furniture implements Listener {
 			aspList.add(packet);
 		}
 		
-		BlockFace face = b;
-		face = lutil.yawToFace(lutil.FaceToYaw(b) + 90);
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.5, 0), face, -.21, -.32D));
+		BlockFace face = getBlockFace();
+		face = getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 90);
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.5, 0), face, -.21, -.32D));
 		as.getInventory().setHelmet(new ItemStack(Material.REDSTONE_TORCH_ON, 1, (short) 0));
-		as.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
+		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
 		as.setName("#ELEMENT#");
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.10, 0), face.getOppositeFace(), -.0, .31D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.10, 0), face.getOppositeFace(), -.0, .31D));
 		as.getInventory().setItemInHand(new ItemStack(Material.PAPER, 1, (short) 0));
-		as.setPose(lutil.degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
+		as.setPose(getLutil().degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.40, 0), face.getOppositeFace(), -.1, .34D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.40, 0), face.getOppositeFace(), -.1, .34D));
 		as.getInventory().setItemInHand(new ItemStack(Material.WOOD_BUTTON, 1, (short) 0));
-		as.setPose(lutil.degresstoRad(new EulerAngle(-15,-67, -90)), BodyPart.RIGHT_ARM);
+		as.setPose(getLutil().degresstoRad(new EulerAngle(-15,-67, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = manager.createArmorStand(obj, lutil.getRelativ(middle.clone().add(0, 1.2, 0), b, .2, .07D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), .2, .07D));
 		as.getInventory().setItemInHand(new ItemStack(Material.EMPTY_MAP, 1, (short) 0));
-		as.setPose(lutil.degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
+		as.setPose(getLutil().degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);
 		
 		
-		for(ArmorStandPacket asp : aspList){
+		for(fArmorStand asp : aspList){
 			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
-		
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
+	}
+	
+	public void setBlock(){
 		for(int i = 0; i<=1;i++){
-			Block b = location.clone().add(0, i, 0).getBlock();
+			Block b = getLocation().clone().add(0, i, 0).getBlock();
 			b.setType(Material.BARRIER);
 			blockList.add(b);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		getObjID().addBlock(blockList);
 	}
 	
 	/*public void addMailbox(Player p){
@@ -186,15 +161,15 @@ public class mailBox extends Furniture implements Listener {
 	}
 	
 	public void setSendet(Boolean b){
-		for(ArmorStandPacket packet : manager.getArmorStandPacketByObjectID(obj)){
+		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet!=null&&packet.getName().equalsIgnoreCase("#ELEMENT#")){
 				if(b){
-					packet.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 0)), BodyPart.HEAD);
-					manager.updateFurniture(obj);
+					packet.setPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)), BodyPart.HEAD);
+					getManager().updateFurniture(getObjID());
 					return;
 				}
-				packet.setPose(lutil.degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
-				manager.updateFurniture(obj);
+				packet.setPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
+				getManager().updateFurniture(getObjID());
 				return;
 			}
 		}
@@ -211,10 +186,10 @@ public class mailBox extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;} 
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;} 
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()) return;
-		if(!e.getID().equals(obj)) return;
+		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		
 		for(Block b : blockList){
@@ -222,28 +197,28 @@ public class mailBox extends Furniture implements Listener {
 		}
 		blockList.clear();
 		e.remove();
-		obj=null;
+		delete();
 	}
 	
 	public void onFurnitureClick(FurnitureClickEvent e){}
 	
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(e.getAction()==null){return;}
 		if(e.getClickedBlock()==null){return;}
 		if(!blockList.contains(e.getClickedBlock())){return;}
-		if(!lib.canBuild(e.getPlayer(), obj, EventType.INTERACT)){return;}
+		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.INTERACT)){return;}
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 				e.setCancelled(true);
 				for(Block b : blockList){
 					b.setType(Material.AIR);
 				}
 				blockList.clear();
-				this.obj.remove(e.getPlayer());
-				obj=null;
+				this.getObjID().remove(e.getPlayer());
+				delete();
 		}
 	}
 }

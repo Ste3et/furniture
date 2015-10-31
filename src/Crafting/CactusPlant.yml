@@ -1,0 +1,11 @@
+CactusPlant:
+    name: '&cCactusPlant'
+    material: 383
+    glow: true
+    lore: ''
+    crafting:
+      disable: true
+      recipe: X0X,X0X,XXX
+      index:
+        '0': 0
+        X: 280

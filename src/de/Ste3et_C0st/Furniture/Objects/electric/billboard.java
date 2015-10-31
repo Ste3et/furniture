@@ -6,8 +6,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,44 +13,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class billboard extends Furniture implements Listener{
-	
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Plugin plugin;
-
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
-	public billboard(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-		this.obj = id;
-		if(id.isFinish()){
+	public billboard(Plugin plugin, ObjectID id){
+		super(plugin, id);
+		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
 		}
@@ -60,42 +32,42 @@ public class billboard extends Furniture implements Listener{
 	}
 
 	public void spawn(Location location){
-		List<ArmorStandPacket> asList = new ArrayList<ArmorStandPacket>();
-		Location center = lutil.getCenter(location).add(0, -1.2, 0);
-		Location center2 = lutil.getRelativ(center, b, 0D, -4D);
-		Location center3 = lutil.getRelativ(center, b, 0D, -3.3D);
+		List<fArmorStand> asList = new ArrayList<fArmorStand>();
+		Location center = getLutil().getCenter(location).add(0, -1.2, 0);
+		Location center2 = getLutil().getRelativ(center, getBlockFace(), 0D, -4D);
+		Location center3 = getLutil().getRelativ(center, getBlockFace(), 0D, -3.3D);
 		
 		for(int i = 0; i<=3;i++){
-			Location loc = lutil.getRelativ(center.clone(), b, -.1, -.5).add(0, .88*i, 0);
+			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
 		
 		for(int i = 0; i<=3;i++){
-			Location loc = lutil.getRelativ(center2.clone(), b, -.1, -.5).add(0, .88*i, 0);
+			Location loc = getLutil().getRelativ(center2.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = lutil.getRelativ(center3.clone(), b, -.1, .88*i).add(0, .7D, 0);
+			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, .7D, 0);
 			loc.setYaw(loc.getYaw()+90);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = lutil.getRelativ(center3.clone(), b, -.1, .88*i).add(0, 2.9D, 0);
+			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, 2.9D, 0);
 			loc.setYaw(loc.getYaw()+90);
-			ArmorStandPacket packet = manager.createArmorStand(obj, loc);
+			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
@@ -103,33 +75,32 @@ public class billboard extends Furniture implements Listener{
 		
 		for(int x = 0; x<=1;x++){
 			for(int y = 0;y<=2;y++){
-				Location loc = lutil.getRelativ(location, b,0D,(double) -y-1).add(0, x+1, 0);
-				Location loc2 = lutil.getRelativ(location, b,-1D,(double) -y-1).add(0, x+1, 0);
+				Location loc = getLutil().getRelativ(location, getBlockFace(),0D,(double) -y-1).add(0, x+1, 0);
+				Location loc2 = getLutil().getRelativ(location, getBlockFace(),-1D,(double) -y-1).add(0, x+1, 0);
 				loc.getBlock().setType(Material.BARRIER);
-				ItemFrame frame = (ItemFrame) w.spawn(loc2, ItemFrame.class);
-				frame.setFacingDirection(b);
+				ItemFrame frame = (ItemFrame) getWorld().spawn(loc2, ItemFrame.class);
+				frame.setFacingDirection(getBlockFace());
 			}
 		}
 		
-		for(ArmorStandPacket pack : asList){
+		for(fArmorStand pack : asList){
 			pack.setInvisible(true);
 			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		send();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
-		if(!e.canBuild()){return;}
+		if(!e.getID().equals(getObjID())){return;}
+		if(!canBuild(e.getPlayer())){return;}
 		e.remove();
-		obj=null;
-		
+		delete();
 	}
 	
 	@EventHandler

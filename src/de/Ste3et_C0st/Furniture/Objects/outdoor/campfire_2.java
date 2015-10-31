@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -19,14 +17,11 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.ArmorStandPacket;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureManager;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class campfire_2 extends Furniture implements Listener{
 	List<Material> items = new ArrayList<Material>(
@@ -60,43 +55,20 @@ public class campfire_2 extends Furniture implements Listener{
 			
 	};
 	
-	Location loc;
-	BlockFace b;
-	World w;
-	ObjectID obj;
-	FurnitureManager manager;
-	FurnitureLib lib;
-	LocationUtil lutil;
-	Integer id;
-	Plugin plugin;
-	
 	Location middle;
 	Location grill;
 	Integer timer;
-	ArmorStandPacket armorS;
+	fArmorStand armorS;
 	ItemStack is;
 	
-	public ObjectID getObjectID(){return this.obj;}
-	public Location getLocation(){return this.loc;}
-	public BlockFace getBlockFace(){return this.b;}
-	
-	public campfire_2(FurnitureLib lib, Plugin plugin, ObjectID id){
-		super(lib, plugin, id);
-		this.lutil = main.getLocationUtil();
-		this.b = lutil.yawToFace(id.getStartLocation().getYaw());
-		this.loc = id.getStartLocation().getBlock().getLocation();
-		this.loc.setYaw(id.getStartLocation().getYaw());
-		this.w = id.getStartLocation().getWorld();
-		this.manager = lib.getFurnitureManager();
-		this.lib = lib;
-		this.plugin = plugin;
-	    middle = lutil.getCenter(loc);
-		middle = lutil.getRelativ(middle, b, .5D, -.5D);
+	public campfire_2(Plugin plugin, ObjectID id){
+		super(plugin, id);
+	    middle = getLutil().getCenter(getLocation());
+		middle = getLutil().getRelativ(middle, getBlockFace(), .5D, -.5D);
 		middle.add(0,-1.2,0);
 		
-	    grill = lutil.getRelativ(middle,b, .0D, .5D);
-		grill.setYaw(lutil.FaceToYaw(b)+90);
-		this.obj = id;
+	    grill = getLutil().getRelativ(middle,getBlockFace(), .0D, .5D);
+		grill.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		if(id.isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, plugin);
 			return;
@@ -105,30 +77,30 @@ public class campfire_2 extends Furniture implements Listener{
 	}
 	
 	public void spawn(Location loc){
-		List<ArmorStandPacket> packetList = new ArrayList<ArmorStandPacket>();
-		Location stick1 = lutil.getRelativ(middle, b, .47D, -.05D);
-		Location stick2 = lutil.getRelativ(middle, b, .47D, .85D);
+		List<fArmorStand> packetList = new ArrayList<fArmorStand>();
+		Location stick1 = getLutil().getRelativ(middle, getBlockFace(), .47D, -.05D);
+		Location stick2 = getLutil().getRelativ(middle, getBlockFace(), .47D, .85D);
 		
-		Location bone = lutil.getRelativ(middle, b, .5D, .82D);
-		stick2.setYaw(lutil.FaceToYaw(b));
+		Location bone = getLutil().getRelativ(middle, getBlockFace(), .5D, .82D);
+		stick2.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		
-		stick1.setYaw(lutil.FaceToYaw(b));
-		bone.setYaw(lutil.FaceToYaw(b));
+		stick1.setYaw(getLutil().FaceToYaw(getBlockFace()));
+		bone.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		stick1.add(0,.3,0);
 		stick2.add(0,.3,0);
 		bone.add(0,.17,0);
 		Integer yaw = 90;
 		for(int i = 0; i<=7;i++){
 			Location location = null;
-			if(lutil.axisList.contains(lutil.yawToFaceRadial(yaw))){
-				location = lutil.getRelativ(middle, lutil.yawToFaceRadial(yaw), 0D, .5D);
+			if(getLutil().axisList.contains(getLutil().yawToFaceRadial(yaw))){
+				location = getLutil().getRelativ(middle, getLutil().yawToFaceRadial(yaw), 0D, .5D);
 			}else{
-				location = lutil.getRelativ(middle, lutil.yawToFaceRadial(yaw), 0D, .35D);
+				location = getLutil().getRelativ(middle, getLutil().yawToFaceRadial(yaw), 0D, .35D);
 			}
 			
 			location.setYaw(90+yaw);
 			
-			ArmorStandPacket asp = manager.createArmorStand(obj, location);
+			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
 			asp.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
 			asp.setSmall(true);
 			asp.getInventory().setHelmet(new ItemStack(Material.STEP,1,(short)3));
@@ -138,11 +110,11 @@ public class campfire_2 extends Furniture implements Listener{
 		
 		yaw = 90;
 		for(int i = 0; i<=3;i++){
-			Location location = lutil.getRelativ(middle, lutil.yawToFace(yaw), .4, -.5D);
+			Location location = getLutil().getRelativ(middle, getLutil().yawToFace(yaw), .4, -.5D);
 			location.add(0,-.5,0);
 			location.setYaw(90+yaw);
 			
-			ArmorStandPacket asp = manager.createArmorStand(obj, location);
+			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
 			asp.setPose( new EulerAngle(2, 0, 0), BodyPart.RIGHT_ARM);
 			asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
 			
@@ -150,50 +122,49 @@ public class campfire_2 extends Furniture implements Listener{
 			yaw+=90;
 		}
 		
-		ArmorStandPacket asp = manager.createArmorStand(obj, stick1);
+		fArmorStand asp = getManager().createArmorStand(getObjID(), stick1);
 		
 		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
 		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		packetList.add(asp);
-		asp = manager.createArmorStand(obj, stick2);
+		asp = getManager().createArmorStand(getObjID(), stick2);
 		
 		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
 		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
 		packetList.add(asp);
-		asp = manager.createArmorStand(obj, bone);
+		asp = getManager().createArmorStand(getObjID(), bone);
 		asp.setPose(new EulerAngle(1.38,.0,1.57), BodyPart.RIGHT_ARM);
 		asp.getInventory().setItemInHand(new ItemStack(Material.BONE));
 		packetList.add(asp);
 		
-		asp = manager.createArmorStand(obj, middle.add(0,-1.3,0));
+		asp = getManager().createArmorStand(getObjID(), middle.add(0,-1.3,0));
 		asp.setSmall(true);
 		packetList.add(asp);
 		
-		for(ArmorStandPacket packet : packetList){
+		for(fArmorStand packet : packetList){
 			packet.setInvisible(true);
 			packet.setGravity(false);
 		}
-		manager.send(obj);
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		getManager().send(getObjID());
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		List<ArmorStandPacket> aspList = manager.getArmorStandPacketByObjectID(obj);
+		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		final ItemStack itemStack = e.getPlayer().getItemInHand();
-		ArmorStandPacket packet = null;
-		for(ArmorStandPacket pack : aspList){
-			if(pack.isMini() && pack.isInvisible()){
+		fArmorStand packet = null;
+		for(fArmorStand pack : aspList){
+			if(pack.isSmall() && pack.isVisible()){
 				packet = pack;
 			}
 		}
-
 		if(itemStack.getType().equals(Material.WATER_BUCKET) && packet.isFire()){
 			 setfire(false);
 		}else if(itemStack.getType().equals(Material.FLINT_AND_STEEL) && !packet.isFire()){
@@ -204,7 +175,7 @@ public class campfire_2 extends Furniture implements Listener{
 			
 			setGrill();
 			
-			if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && lib.useGamemode()) return;
+			if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 			Integer i = e.getPlayer().getInventory().getHeldItemSlot();
 			ItemStack item = e.getPlayer().getItemInHand();
 			item.setAmount(item.getAmount()-1);
@@ -215,16 +186,16 @@ public class campfire_2 extends Furniture implements Listener{
 	}
 	
 	private void setfire(boolean b){
-		for(ArmorStandPacket pack : manager.getArmorStandPacketByObjectID(obj)){
-			if(pack.isMini() && pack.isInvisible()){
+		for(fArmorStand pack : getManager().getfArmorStandByObjectID(getObjID())){
+			if(pack.isSmall() && pack.isVisible()){
 				if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
 				   (pack.getInventory().getItemInHand() == null || pack.getInventory().getItemInHand().getType().equals(Material.AIR))){					
 					pack.setFire(b);
 					Location loc = middle.clone();
 					loc.add(0, 1.3, 0);
-					if(b) lib.getLightManager().addLight(loc, 15);
-					if(!b) lib.getLightManager().removeLight(loc);
-					manager.updateFurniture(obj);
+					if(b) getLib().getLightManager().addLight(loc, 15);
+					if(!b) getLib().getLightManager().removeLight(loc);
+					getManager().updateFurniture(getObjID());
 					return;
 				}
 
@@ -234,20 +205,20 @@ public class campfire_2 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(obj==null){return;}
-		if(obj.getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(getObjID()==null){return;}
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
-		if(!e.getID().equals(obj)){return;}
+		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
-			w.dropItem(middle.clone().add(0, .5, 0), is);
+			getWorld().dropItem(middle.clone().add(0, .5, 0), is);
 		}
 		setfire(false);
 		e.remove();
-		obj=null;
+		delete();
 	}
 	
 	public void removeGrill(){
@@ -255,15 +226,15 @@ public class campfire_2 extends Furniture implements Listener{
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
 			if(armorS!=null&&armorS.getInventory().getItemInHand()!=null&&getItem(armorS.getInventory().getItemInHand())!=null){
-				w.dropItem(middle.clone().add(0, .5, 0), getCooked(is));
-				armorS.destroy();
+				getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));
+				armorS.kill();
 				armorS.delete();
 				armorS=null;
 			}
 		}
 		if(armorS!=null){
-			if(armorS.getInventory().getItemInHand()!=null){w.dropItem(middle.clone().add(0, .5, 0), getCooked(is));}
-			armorS.destroy();
+			if(armorS.getInventory().getItemInHand()!=null){getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));}
+			armorS.kill();
 			armorS.delete();
 			armorS=null;
 		}
@@ -293,12 +264,12 @@ public class campfire_2 extends Furniture implements Listener{
 	}
 	
 	public void setGrill(){
-		this.armorS = manager.createArmorStand(obj, grill);
+		this.armorS = getManager().createArmorStand(getObjID(), grill);
 		this.armorS.setInvisible(true);
 		this.armorS.getInventory().setItemInHand(is);
-		manager.send(obj);
+		getManager().send(getObjID());
 		this.timer = main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(main.getInstance(), new Runnable() {
-			Integer rounds = lutil.randInt(15, 30);
+			Integer rounds = getLutil().randInt(15, 30);
 			Integer labs = 0;
 			Integer position = 0;
 			@Override

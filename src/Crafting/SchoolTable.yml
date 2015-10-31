@@ -1,0 +1,12 @@
+SchoolTable:
+    name: '&cSchoolTable'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: AAA,OXO,OXO
+      index:
+        X: 0
+        A: 72
+        O: 280
