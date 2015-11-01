@@ -237,14 +237,16 @@ public class graveStone extends Furniture implements Listener{
 	}
 	
 	public void placetext(){
-		Sign sign = (Sign) this.sign.getState();
-		Integer i = 0;
-		for(String s : lines){
-			if(i>3){break;}
-			sign.setLine(i, s);
-			i++;
-		}
-		sign.update(true, false);
+		if (this.sign.getState() instanceof Sign){
+			Sign sign = (Sign) this.sign.getState();
+			Integer i = 0;
+			for(String s : lines){
+				if(i>3){break;}
+				sign.setLine(i, s);
+				i++;
+			}
+			sign.update(true, false);
+		}		
 	}
 	
 	public String[] getText(){
