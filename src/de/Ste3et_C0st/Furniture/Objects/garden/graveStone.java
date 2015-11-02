@@ -237,7 +237,7 @@ public class graveStone extends Furniture implements Listener{
 	}
 	
 	public void placetext(){
-		if (this.sign.getState() instanceof Sign){
+		if ((this.sign.getState() instanceof Sign) && lines != null){
 			Sign sign = (Sign) this.sign.getState();
 			Integer i = 0;
 			for(String s : lines){
