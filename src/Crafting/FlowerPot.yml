@@ -4,7 +4,7 @@ FlowerPot:
     glow: false
     lore: ''
     crafting:
-      disable: true
+      disable: false
       recipe: XTX,ATA,TAT
       index:
         T: 0

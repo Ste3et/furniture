@@ -14,9 +14,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.Plugin;
@@ -135,44 +133,18 @@ public class graveStone extends Furniture implements Listener{
 		sign.setType(Material.AIR);
 		sign = null;
 		delete();
+		removeSign();
 	}
 	
 	@EventHandler
-	private void onBlockRemove(BlockBreakEvent e)
-	{
-	  if(getObjID()==null){return;}
-	  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-	  if (sign==null) return;
-	  if (e.getBlock() == null) return;
-	  if (e.getBlock().getLocation() == null) return;
-	  if (e.getBlock().getLocation().toVector().distance(signLoc.toVector())==0) return;
-	  resetSign();
-	}
-	
-	@EventHandler
-	private void onBlockPlaceEvent(BlockPlaceEvent e){
-		  if(getObjID()==null){return;}
+	private void onPhysiks(BlockPhysicsEvent e){
+		 if(getObjID()==null){return;}
 		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		  if (sign==null) return;
 		  if (e.getBlock() == null) return;
-		  if (e.getBlock().getLocation() == null) return;
-		  if (e.getBlock().getLocation().toVector().distance(signLoc.toVector())!=1) return;
-		  resetSign();
+		  if (!e.getBlock().equals(sign)) return;
+		  e.setCancelled(true);
 	}
-	
-	  @EventHandler
-	  private void onDrop(ItemSpawnEvent e){
-		  if(getObjID()==null){return;}
-		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		  if (sign==null) return;
-		  if (e.getLocation() == null) return;
-		  ItemStack is = e.getEntity().getItemStack();
-		  if (is == null) return;
-		  if (!is.getType().equals(Material.SIGN)) return;
-		  if (e.getLocation().toVector().distance(signLoc.toVector())>=2) return;
-		  e.getEntity().remove();
-	  }
-	  
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
@@ -237,14 +209,16 @@ public class graveStone extends Furniture implements Listener{
 	}
 	
 	public void placetext(){
-		Sign sign = (Sign) this.sign.getState();
-		Integer i = 0;
-		for(String s : lines){
-			if(i>3){break;}
-			sign.setLine(i, s);
-			i++;
+		if ((this.sign.getState() instanceof Sign) && lines != null){
+			Sign sign = (Sign) this.sign.getState();
+			Integer i = 0;
+			for(String s : lines){
+				if(i>3){break;}
+				sign.setLine(i, s);
+				i++;
+			}
+			sign.update(true, false);
 		}
-		sign.update(true, false);
 	}
 	
 	public String[] getText(){
