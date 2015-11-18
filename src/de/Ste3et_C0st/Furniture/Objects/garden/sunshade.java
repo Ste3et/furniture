@@ -17,9 +17,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -45,11 +45,11 @@ public class sunshade extends Furniture implements Listener{
 	Integer timer;
 	Block block;
 	
-	public sunshade(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public sunshade(ObjectID id){
+		super(id);
 		if(isFinish()){
 			setblock();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		setblock();

@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -25,13 +25,13 @@ public class barrels extends Furniture implements Listener {
 	Integer id;
 	Block block;
 	
-	public barrels(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public barrels(ObjectID id){
+		super(id);
 		if(id.isFinish()){
 			this.block = getLocation().getBlock();
 			this.block.setType(Material.CAULDRON);
 			getObjID().addBlock(Arrays.asList(block));
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

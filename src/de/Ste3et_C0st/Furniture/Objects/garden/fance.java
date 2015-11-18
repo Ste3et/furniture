@@ -12,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
@@ -38,11 +36,11 @@ public class fance extends Furniture implements Listener{
 	Block block;
 	Material m;
 	
-	public fance(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public fance(ObjectID id){
+		super(id);
 		if(isFinish()){
 			setBlock();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

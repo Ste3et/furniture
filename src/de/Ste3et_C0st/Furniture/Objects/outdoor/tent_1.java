@@ -14,9 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -30,15 +30,15 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 public class tent_1 extends Furniture implements Listener{
 
 	Block block;
-	public tent_1(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public tent_1(ObjectID id){
+		super(id);
 		Location loc = id.getStartLocation();
 		if(getBlockFace().equals(BlockFace.WEST)){loc=getLutil().getRelativ(loc, getBlockFace(), 1D, 0D);}
 		if(getBlockFace().equals(BlockFace.NORTH)){loc=getLutil().getRelativ(loc, getBlockFace(), 1D, 1D);}
 		if(getBlockFace().equals(BlockFace.EAST)){loc=getLutil().getRelativ(loc, getBlockFace(), 0D, 1D);}
 		if(id.isFinish()){
 			setblock();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(loc);

@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Objects.RPG;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -8,34 +9,43 @@ import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class catapult  extends Furniture implements Listener {
 
-	public catapult(Plugin plugin, ObjectID id) {
-		super(plugin, id);
+	public catapult(ObjectID id) {
+		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
 	}
-
+	
+	HashMap<Entity, Player> fallingSandList = new HashMap<Entity, Player>();
+	
+	
 	@Override
 	public void spawn(Location paramLocation) {
 		List<fArmorStand> asList = new ArrayList<fArmorStand>();
@@ -143,6 +153,22 @@ public class catapult  extends Furniture implements Listener {
 		delete();
 	}
 	
+	@EventHandler
+	public void onFallingSand(EntityChangeBlockEvent e){
+		if(e.getEntity()==null) return;
+		if(e.getEntity() instanceof FallingBlock){
+			if(fallingSandList.containsKey(e.getEntity())){
+				Entity entity = e.getEntity();
+				Player p = fallingSandList.get(e.getEntity());
+				fallingSandList.remove(e.getEntity());
+				Block b = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
+				if(!FurnitureLib.getInstance().getPermManager().canBuild(p, b.getLocation())){
+					e.setCancelled(true);
+				}
+			}
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
@@ -181,8 +207,8 @@ public class catapult  extends Furniture implements Listener {
 			}
 			block.playEffect(EntityEffect.WITCH_MAGIC);
 			block.setDropItem(false);
-			//block.setHurtEntities(true);
 			block.setVelocity(v.multiply(1));
+			fallingSandList.put(block, e.getPlayer());
 		}
 		
 		if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;

@@ -13,13 +13,14 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -29,11 +30,11 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class graveStone extends Furniture implements Listener{
-	public graveStone(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public graveStone(ObjectID id){
+		super(id);
 		if(isFinish()){
 			setBlock();
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -122,11 +123,12 @@ public class graveStone extends Furniture implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
+		if(e.isCancelled()){return;}
+		if(!e.getID().getPlugin().equalsIgnoreCase(main.getInstance().getName())){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -150,8 +152,9 @@ public class graveStone extends Furniture implements Listener{
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(getObjID()==null){return;} 
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
+		if(!e.getID().getPlugin().equalsIgnoreCase(getPlugin().getName())){return;}
+		if(e.isCancelled()){return;}
 		Player p = e.getPlayer();
-		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		ItemStack is = p.getItemInHand();

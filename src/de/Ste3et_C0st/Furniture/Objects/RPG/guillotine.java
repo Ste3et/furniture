@@ -19,9 +19,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -56,10 +56,10 @@ public class guillotine extends Furniture implements Listener{
 			Material.DIAMOND_BOOTS, Material.CHAINMAIL_BOOTS);
 	List<fArmorStand> armorStandList = new ArrayList<fArmorStand>();
 	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
-	public guillotine(Plugin plugin, ObjectID id) {
-		super(plugin, id);
+	public guillotine(ObjectID id) {
+		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			setDefault();
 			initializeInventory();
 			return;
@@ -82,26 +82,38 @@ public class guillotine extends Furniture implements Listener{
 		invIII = Bukkit.createInventory(null, 54, s + "III");
 	}
 	
-	private void setDefault(){
-		armorStandList.clear();
+	private fArmorStand getByName(String s){
 		for(fArmorStand packets : getManager().getfArmorStandByObjectID(getObjID())){
 			if(!packets.getName().equalsIgnoreCase("")){
 				if(packets.getName().startsWith("#Oblation#")){
-					packet2 = packets;
-				}else if(packets.getName().equalsIgnoreCase("#Head#")){
-					packet3 = packets;
-					if(packet3.getHelmet()!=null&&packet3.getHelmet().getType().equals(Material.SKULL_ITEM)){
-						packet2.getInventory().setHelmet(packet3.getHelmet());
-						packet3.getInventory().setHelmet(new ItemStack(Material.AIR));
-					}
-				}else if(packets.getName().startsWith("iron")){
-					armorStandList.add(packets);
-					Location loc = getStartLocation(packets.getName());
-					packets.teleport(loc);
-				}else{
-					packet1 = packets;
+					return packets;
 				}
 			}
+		}
+		return null;
+	}
+	
+	private void setDefault(){
+		armorStandList.clear();
+		if(packet2==null){packet2 = getByName("#Oblation#");}
+		if(packet3==null){packet3 = getByName("#Head#");}
+		for(fArmorStand packets : getManager().getfArmorStandByObjectID(getObjID())){
+			if(!packets.getName().equalsIgnoreCase("")){
+				if(!(packets.getName().startsWith("#Oblation#") && packets.getName().startsWith("#Head#"))){
+					if(packets.getName().startsWith("iron")){
+						armorStandList.add(packets);
+						Location loc = getStartLocation(packets.getName());
+						packets.teleport(loc);
+					}else{
+						packet1 = packets;
+					}
+				}
+			}
+		}
+		
+		if(packet3.getHelmet()!=null){
+			packet2.setHelmet(packet3.getHelmet());
+			packet3.setHelmet(new ItemStack(Material.AIR));
 		}
 		
 		soundPlaying = false;

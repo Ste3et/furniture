@@ -16,9 +16,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -40,8 +40,8 @@ public class log extends Furniture {
 	List<ItemStack> isList = new ArrayList<ItemStack>();
 	Player p;
 	
-	public log(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public log(ObjectID id){
+		super(id);
 		b = getLocation().getBlock();
 		getObjID().addBlock(Arrays.asList(b));
 		ItemMeta meta = pane.getItemMeta();
@@ -51,7 +51,7 @@ public class log extends Furniture {
 		pane.setItemMeta(meta);
 		setList();
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

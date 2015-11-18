@@ -1,0 +1,10 @@
+ChristmasTree:
+    name: '&cChristmasTree'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: true
+      recipe: XXX,XXX,XXX
+      index:
+        X: 0

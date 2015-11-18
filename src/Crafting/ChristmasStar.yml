@@ -1,0 +1,12 @@
+ChristmasStar:
+    name: '&cChristmasStar'
+    material: 383
+    glow: false
+    lore: ''
+    crafting:
+      disable: false
+      recipe: XXX,XXX,A0A
+      index:
+        '0': 0
+        X: 160
+        A: 352

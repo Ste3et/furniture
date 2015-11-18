@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -27,8 +27,8 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class largeTable extends Furniture implements Listener{
 
-	public largeTable(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public largeTable(ObjectID id){
+		super(id);
 		if(isFinish()){
 			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().startsWith("#TELLER")){
@@ -36,7 +36,7 @@ public class largeTable extends Furniture implements Listener{
 				}
 			}
 			
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -204,6 +204,7 @@ public class largeTable extends Furniture implements Listener{
 		Player p = e.getPlayer();
 		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.STAINED_GLASS_PANE, getObjID(), ColorType.BLOCK, 3);
+			update();
 			return;
 		}else{
 			setTeller(p, p.getInventory().getItemInHand());

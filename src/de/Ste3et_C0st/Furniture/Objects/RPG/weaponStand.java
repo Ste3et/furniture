@@ -15,9 +15,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -38,10 +38,10 @@ public class weaponStand extends Furniture {
 			Material.DARK_OAK_FENCE_GATE,
 			Material.ACACIA_FENCE_GATE);
 	
-	public weaponStand(Plugin plugin, ObjectID id) {
-		super(plugin, id);
+	public weaponStand(ObjectID id) {
+		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

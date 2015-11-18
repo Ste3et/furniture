@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
@@ -61,8 +60,8 @@ public class campfire_2 extends Furniture implements Listener{
 	fArmorStand armorS;
 	ItemStack is;
 	
-	public campfire_2(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public campfire_2(ObjectID id){
+		super(id);
 	    middle = getLutil().getCenter(getLocation());
 		middle = getLutil().getRelativ(middle, getBlockFace(), .5D, -.5D);
 		middle.add(0,-1.2,0);
@@ -70,7 +69,7 @@ public class campfire_2 extends Furniture implements Listener{
 	    grill = getLutil().getRelativ(middle,getBlockFace(), .0D, .5D);
 		grill.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		if(id.isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

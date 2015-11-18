@@ -12,10 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
+import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -33,14 +33,14 @@ public class streetlamp extends Furniture implements Listener{
 	Vector loc2, loc3;
 	boolean redstone = false;
 
-	public streetlamp(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public streetlamp(ObjectID id){
+		super(id);
 		setBlock();
 		this.loc2 = id.getStartLocation().toVector();
 		this.loc3 = id.getStartLocation().getBlock().getRelative(BlockFace.DOWN).getLocation().toVector();
 		this.light = getLutil().getRelativ(getLocation(), getBlockFace(), -1D, 0D);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

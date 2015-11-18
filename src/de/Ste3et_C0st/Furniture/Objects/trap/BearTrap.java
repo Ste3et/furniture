@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
@@ -28,8 +27,8 @@ public class BearTrap extends Furniture implements Listener{
 	fArmorStand stand1, stand2;
 	boolean b;
 	
-	public BearTrap(Plugin plugin, ObjectID id){
-		super(plugin, id);
+	public BearTrap(ObjectID id){
+		super(id);
 		if(isFinish()){
 			for(fArmorStand stand : getfAsList()){
 				if(stand.getName().equalsIgnoreCase("#IRON1#")){
@@ -39,7 +38,7 @@ public class BearTrap extends Furniture implements Listener{
 				}
 			}
 			setStatus(false);
-			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
