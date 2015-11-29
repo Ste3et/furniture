@@ -216,7 +216,7 @@ public class log extends Furniture {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockClick(FurnitureBlockClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
@@ -299,7 +299,7 @@ public class log extends Furniture {
 	
 	@EventHandler
 	public void onBlockBreak(FurnitureBlockBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}

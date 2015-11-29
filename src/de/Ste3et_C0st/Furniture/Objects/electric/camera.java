@@ -109,6 +109,7 @@ public class camera extends Furniture implements Listener{
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -119,7 +120,7 @@ public class camera extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}

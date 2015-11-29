@@ -70,7 +70,7 @@ public class fance extends Furniture implements Listener{
 	
 	@EventHandler
 	private void onBlockBreak(FurnitureBlockBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
@@ -82,7 +82,7 @@ public class fance extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void onBlockBreak(FurnitureBlockClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}

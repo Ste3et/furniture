@@ -44,6 +44,7 @@ public class AdventWreath extends Furniture implements Listener  {
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
 		e.remove(true,false);
@@ -55,6 +56,7 @@ public class AdventWreath extends Furniture implements Listener  {
 		if(getObjID()==null){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		fArmorStand stand = e.getfArmorStand();
@@ -63,9 +65,9 @@ public class AdventWreath extends Furniture implements Listener  {
 			int i = Integer.parseInt(str.split(":")[1]);
 			for(fArmorStand fstand : getfAsList()){
 				if(fstand.getName().equalsIgnoreCase("Fire:" + i)){
-					if(!fstand.getName().endsWith("#Burn")){
+					if(!fstand.getName().endsWith("Burn")){
 						fstand.sendParticle(fstand.getLocation().clone().add(0, .93, 0), 26, true);
-						fstand.setName("Fire:" + i + "#Burn");
+						fstand.setName("Fire:" + i + ":Burn");
 						update();
 					}
 				}
@@ -76,7 +78,7 @@ public class AdventWreath extends Furniture implements Listener  {
 	private void load(){
 		for(fArmorStand fstand : getfAsList()){
 			if(fstand.getName().startsWith("Fire:")){
-				if(fstand.getName().endsWith("#Burn")){
+				if(fstand.getName().endsWith("Burn")){
 					if(!fstand.isParticlePlayed()){
 						fstand.sendParticle(fstand.getLocation().clone().add(0, .93, 0), 26, true);
 					}

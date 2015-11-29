@@ -125,7 +125,7 @@ public class graveStone extends Furniture implements Listener{
 	
 	@EventHandler(priority=EventPriority.LOW)
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().getPlugin().equalsIgnoreCase(main.getInstance().getName())){return;}
@@ -140,7 +140,7 @@ public class graveStone extends Furniture implements Listener{
 	
 	@EventHandler
 	private void onPhysiks(BlockPhysicsEvent e){
-		 if(getObjID()==null){return;}
+		  if(getObjID() == null) return;
 		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		  if (sign==null) return;
 		  if (e.getBlock() == null) return;
@@ -150,7 +150,7 @@ public class graveStone extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(!e.getID().getPlugin().equalsIgnoreCase(getPlugin().getName())){return;}
 		if(e.isCancelled()){return;}
