@@ -132,6 +132,7 @@ public class flag extends Furniture implements Listener {
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		delete();

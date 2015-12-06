@@ -101,12 +101,13 @@ public class AdventCalender extends Furniture implements Listener {
 		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
-		if(!canBuild(e.getPlayer())){return;}
-		if(p!=null){return;}
 		ItemStack is = e.getPlayer().getItemInHand();
-		if(is==null) return;
-		if(is.getType()==null) return;
+		if(is==null){open(e.getPlayer()); return;}
+		if(is.getType()==null){open(e.getPlayer()); return;}
 		if(is.getType().equals(Material.ARROW)){
+			if(p!=null){open(e.getPlayer());return;}
+			if(!getObjID().getUUID().equals(e.getPlayer().getUniqueId())){open(e.getPlayer());return;}
+			if(!canBuild(e.getPlayer())){return;}
 			i = is.getAmount();
 			if(i>31 || i<1) return;
 			this.p = e.getPlayer();
@@ -116,47 +117,66 @@ public class AdventCalender extends Furniture implements Listener {
 				openInventory(null);
 			}
 		}else{
-			if(isList.containsKey(getDay())){
-				if(uuidList.containsKey(e.getPlayer().getUniqueId())){
-					if(uuidList.get(e.getPlayer().getUniqueId()) == getDay()){
-						return;
-					}
+			open(e.getPlayer());
+		}
+	}
+	
+	private void open(Player p){
+		if(isList.containsKey(getDay())){
+			if(uuidList.containsKey(p.getUniqueId())){
+				if(uuidList.get(p.getUniqueId()) == getDay()){
+					return;
 				}
-				ItemStack[] stack = isList.get(getDay());
-				for(ItemStack iS : stack){
-					if(iS!=null&&iS.getType()!=null){
-						if(!iS.getType().equals(Material.FIREWORK)){
-							if(iS.hasItemMeta()&&iS.getItemMeta().hasDisplayName()){
-								if(is.getItemMeta().getDisplayName().startsWith("@CONSOLE ")){
+			}
+			ItemStack[] stack = isList.get(getDay());
+			for(ItemStack iS : stack){
+				if(iS!=null&&iS.getType()!=null){
+					if(iS.getType().equals(Material.FIREWORK)){
+						Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
+						FireworkMeta meta = (FireworkMeta) iS.getItemMeta();
+						fw.setFireworkMeta(meta);
+					}else if(iS.getType().equals(Material.NAME_TAG)){
+						if(iS.getItemMeta()!=null){
+							if(iS.getItemMeta().hasDisplayName()){
+								String name = iS.getItemMeta().getDisplayName();
+								if(name.startsWith("@PLAYER ")){
+									name = name.replace("%player%", p.getName());
+									name = name.replace("@PLAYER ", "");
+									p.sendMessage(name);
+								}else if(name.startsWith("@BROADCAST ")){
+									name = name.replace("%player%", p.getName());
+									name = name.replace("@BROADCAST ", "");
+									getLib().getServer().broadcastMessage(name);
+								}
+							}
+						}
+					}else{
+						if(iS.getItemMeta()!=null){
+							if(iS.getItemMeta().getDisplayName()!=null){
+								if(iS.getItemMeta().getDisplayName().startsWith("@CONSOLE ")){
 									if(!isOP()) continue;
-									String s = is.getItemMeta().getDisplayName();
+									String s = iS.getItemMeta().getDisplayName();
 									s = s.replace("@CONSOLE ", "");
-									s = s.replace("%player%", e.getPlayer().getName());
+									s = s.replace("%player%", p.getName());
 									ConsoleCommandSender sender = Bukkit.getConsoleSender();
 									Bukkit.dispatchCommand(sender, s);
 									continue;
-								}else if(is.getItemMeta().getDisplayName().startsWith("@PLAYER ")){
+								}else if(iS.getItemMeta().getDisplayName().startsWith("@PLAYER ")){
 									if(!isOP()) continue;
-									String s = is.getItemMeta().getDisplayName();
+									String s = iS.getItemMeta().getDisplayName();
 									s = s.replace("@PLAYER ", "");
-									s = s.replace("%player%", e.getPlayer().getName());
-									e.getPlayer().chat(s);
+									s = s.replace("%player%", p.getName());
+									p.chat("/"+s);
 									continue;
 								}
 							}
-							
-							
-							e.getPlayer().getInventory().addItem(iS);
-						}else{
-							Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
-							FireworkMeta meta = (FireworkMeta) iS.getItemMeta();
-							fw.setFireworkMeta(meta);
 						}
+						p.getInventory().addItem(iS);
 					}
 				}
-				save(getDay(), e.getPlayer().getUniqueId());
-				uuidList.put(e.getPlayer().getUniqueId(), getDay());
 			}
+			savePlayer(p.getUniqueId());
+			uuidList.put(p.getUniqueId(), getDay());
 		}
 	}
 	
@@ -170,19 +190,21 @@ public class AdventCalender extends Furniture implements Listener {
 		return false;
 	}
 	
-    public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
+    public static String itemStackArrayToBase64(ItemStack[] items){
     	try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
             dataOutput.writeInt(items.length);
             for (int i = 0; i < items.length; i++) {
-                dataOutput.writeObject(items[i]);
+            	ItemStack is = items[i];
+                dataOutput.writeObject(is);
             }
             dataOutput.close();
             return Base64Coder.encodeLines(outputStream.toByteArray());
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to save item stacks.", e);
+        	e.printStackTrace();
         }
+		return "";
     }
     
     public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
@@ -210,7 +232,7 @@ public class AdventCalender extends Furniture implements Listener {
     			try {
 					ItemStack[] is = itemStackArrayFromBase64(s);
 					isList.put(i, is);
-				} catch (IOException e) {}
+				} catch (IOException e) {e.printStackTrace();}
     		}
     	}
     	
@@ -225,15 +247,17 @@ public class AdventCalender extends Furniture implements Listener {
 	    }
     }
     
-    public void save(int i, UUID uuid){
+    public void save(int i){
     	config conf = new config();
     	FileConfiguration file = conf.getConfig(getObjID().getID(), "plugin/AdventCalender/Data/");
     	file.set(i + "", getSerialze(i));
 		conf.saveConfig(getObjID().getID(), file, "plugin/AdventCalender/Data/");
-		
+    }
+    
+    public void savePlayer(UUID uuid){
 		if(uuid != null){
-			conf = new config();
-	    	file = conf.getConfig(getObjID().getID() + ":Players", "plugin/AdventCalender/Data/");
+			config conf = new config();
+	    	FileConfiguration file = conf.getConfig(getObjID().getID() + ":Players", "plugin/AdventCalender/Data/");
 	    	file.set("Players." + uuid.toString(), i);
 			conf.saveConfig(getObjID().getID() + ":Players", file, "plugin/AdventCalender/Data/");
 		}
@@ -261,7 +285,7 @@ public class AdventCalender extends Furniture implements Listener {
 		if(!e.getInventory().equals(inv)) return;
 		if(!e.getPlayer().equals(p)) return;
 		isList.put(i, e.getInventory().getContents());
-		save(i, null);
+		save(i);
 		p = null;
 		inv = null;
 	}
@@ -352,9 +376,23 @@ public class AdventCalender extends Furniture implements Listener {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
+	public int getMonth(){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date today = new Date();
+		try {
+			Date todayWithZeroTime =formatter.parse(formatter.format(today));
+			int i = todayWithZeroTime.getMonth();
+			return i;
+		} catch (ParseException e) {
+			return 0;
+		}
+		
+	}
+	
 	public void check(){
 		if(currentDay==getDay()){return;}
-		
+		if(getfAsList()==null) return;
 		ItemStack[] is = getStack();
 		fArmorStand stand1= null;
 		fArmorStand stand2 = null;
@@ -371,17 +409,12 @@ public class AdventCalender extends Furniture implements Listener {
 		update();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack[] getStack(){
 		ItemStack[] stack = new ItemStack[2];
 			stack[0] = getSkull(ac_NULL);
 			stack[1] = getSkull(ac_NULL);
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date today = new Date();
-		try {
-			Date todayWithZeroTime =formatter.parse(formatter.format(today));
-			int i = todayWithZeroTime.getDate();
-			int y = todayWithZeroTime.getMonth();
+			int i = getDay();
+			int y = getMonth();
 			if(y==11){
 				switch (i) {
 				case 1: 
@@ -463,11 +496,6 @@ public class AdventCalender extends Furniture implements Listener {
 			}
 
 			return stack;
-			
-			
-		} catch (ParseException e) {
-			return stack;
-		}
 	}
 	
 	public String generateSessionKey(int length){
