@@ -44,25 +44,25 @@ public class SchoolChair extends Furniture implements Listener {
 		loc4.setYaw(getYaw()+90);
 		
 		fArmorStand stand = spawnArmorStand(loc1);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc2);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc3);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc4);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
@@ -93,6 +93,7 @@ public class SchoolChair extends Furniture implements Listener {
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		delete();

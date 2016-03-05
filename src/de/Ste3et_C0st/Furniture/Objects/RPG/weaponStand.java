@@ -62,9 +62,9 @@ public class weaponStand extends Furniture {
 		List<fArmorStand> asList = getManager().getfArmorStandByObjectID(getObjID());
 		for(fArmorStand packet : asList){
 			if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
-				if(packet.getInventory().getItemInHand()!=null){
-					if(!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-						getWorld().dropItem(getLocation(), packet.getInventory().getItemInHand());
+				if(packet.getInventory().getItemInMainHand()!=null){
+					if(!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+						getWorld().dropItem(getLocation(), packet.getInventory().getItemInMainHand());
 					}
 				}
 			}
@@ -84,7 +84,7 @@ public class weaponStand extends Furniture {
 		if(!e.canBuild()){return;}
 		this.p = e.getPlayer();
 		
-		ItemStack itemstack = p.getItemInHand();
+		ItemStack itemstack = p.getInventory().getItemInMainHand();
 		if(itemstack!=null&&matList.contains(itemstack.getType())){
 			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null){
@@ -104,12 +104,12 @@ public class weaponStand extends Furniture {
 		
 		ItemMeta im1 = is1.getItemMeta();
 		ItemMeta im3 = is3.getItemMeta();
-		im1.setDisplayName("§c");
-		im3.setDisplayName("§c");
+		im1.setDisplayName("ï¿½c");
+		im3.setDisplayName("ï¿½c");
 		is1.setItemMeta(im1);
 		is3.setItemMeta(im3);
 		
-		inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
+		inv = Bukkit.createInventory(null, 45, "ï¿½cWeaponBox");
 		List<fArmorStand> asList = getManager().getfArmorStandByObjectID(getObjID());
 		
 		int j = 1;
@@ -122,7 +122,7 @@ public class weaponStand extends Furniture {
 					if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
 						if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
 							ItemStack is = new ItemStack(Material.AIR);
-							if(packet.getInventory().getItemInHand()!=null){is = packet.getInventory().getItemInHand();}
+							if(packet.getInventory().getItemInMainHand()!=null){is = packet.getInventory().getItemInMainHand();}
 							inv.setItem(i, is);
 						}
 					}
@@ -178,7 +178,7 @@ public class weaponStand extends Furniture {
 						if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
 							ItemStack is = inv.getItem(i);
 							if(is==null){is = new ItemStack(Material.AIR);}
-							packet.getInventory().setItemInHand(is);
+							packet.getInventory().setItemInMainHand(is);
 						}
 					}
 				}

@@ -115,7 +115,7 @@ public class campfire_2 extends Furniture implements Listener{
 			
 			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
 			asp.setPose( new EulerAngle(2, 0, 0), BodyPart.RIGHT_ARM);
-			asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			
 			packetList.add(asp);
 			yaw+=90;
@@ -124,16 +124,16 @@ public class campfire_2 extends Furniture implements Listener{
 		fArmorStand asp = getManager().createArmorStand(getObjID(), stick1);
 		
 		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packetList.add(asp);
 		asp = getManager().createArmorStand(getObjID(), stick2);
 		
 		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packetList.add(asp);
 		asp = getManager().createArmorStand(getObjID(), bone);
 		asp.setPose(new EulerAngle(1.38,.0,1.57), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInHand(new ItemStack(Material.BONE));
+		asp.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		packetList.add(asp);
 		
 		asp = getManager().createArmorStand(getObjID(), middle.add(0,-1.3,0));
@@ -157,7 +157,7 @@ public class campfire_2 extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
-		final ItemStack itemStack = e.getPlayer().getItemInHand();
+		final ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
 		fArmorStand packet = null;
 		for(fArmorStand pack : aspList){
 			if(pack.isSmall() && pack.isVisible()){
@@ -176,7 +176,7 @@ public class campfire_2 extends Furniture implements Listener{
 			
 			if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 			Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-			ItemStack item = e.getPlayer().getItemInHand();
+			ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
 			item.setAmount(item.getAmount()-1);
 			e.getPlayer().getInventory().setItem(i, item);
 			e.getPlayer().updateInventory();
@@ -188,7 +188,7 @@ public class campfire_2 extends Furniture implements Listener{
 		for(fArmorStand pack : getManager().getfArmorStandByObjectID(getObjID())){
 			if(pack.isSmall() && pack.isVisible()){
 				if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
-				   (pack.getInventory().getItemInHand() == null || pack.getInventory().getItemInHand().getType().equals(Material.AIR))){					
+				   (pack.getInventory().getItemInMainHand() == null || pack.getInventory().getItemInMainHand().getType().equals(Material.AIR))){					
 					pack.setFire(b);
 					Location loc = middle.clone();
 					loc.add(0, 1.3, 0);
@@ -224,7 +224,7 @@ public class campfire_2 extends Furniture implements Listener{
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
-			if(armorS!=null&&armorS.getInventory().getItemInHand()!=null&&getItem(armorS.getInventory().getItemInHand())!=null){
+			if(armorS!=null&&armorS.getInventory().getItemInMainHand()!=null&&getItem(armorS.getInventory().getItemInMainHand())!=null){
 				getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));
 				armorS.kill();
 				armorS.delete();
@@ -232,7 +232,7 @@ public class campfire_2 extends Furniture implements Listener{
 			}
 		}
 		if(armorS!=null){
-			if(armorS.getInventory().getItemInHand()!=null){getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));}
+			if(armorS.getInventory().getItemInMainHand()!=null){getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));}
 			armorS.kill();
 			armorS.delete();
 			armorS=null;
@@ -265,7 +265,7 @@ public class campfire_2 extends Furniture implements Listener{
 	public void setGrill(){
 		this.armorS = getManager().createArmorStand(getObjID(), grill);
 		this.armorS.setInvisible(true);
-		this.armorS.getInventory().setItemInHand(is);
+		this.armorS.getInventory().setItemInMainHand(is);
 		getManager().send(getObjID());
 		this.timer = main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(main.getInstance(), new Runnable() {
 			Integer rounds = getLutil().randInt(15, 30);

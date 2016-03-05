@@ -64,21 +64,21 @@ public class streetlamp extends Furniture implements Listener{
 		for(int i = 0; i<=3;i++){
 			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
 		
 		
 		fArmorStand packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, getBlockFace(), -.9, .38).add(0, 3.1, 0));
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 		asList.add(packet);
 		
 		float yaw = getLutil().FaceToYaw(getBlockFace());
 		BlockFace face = getLutil().yawToFace(yaw +90);
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, getBlockFace(), -.4, .38).add(0, 2.68, 0));
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 		asList.add(packet);
 		

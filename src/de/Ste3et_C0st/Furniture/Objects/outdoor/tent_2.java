@@ -200,7 +200,7 @@ public class tent_2 extends Furniture implements Listener{
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
+		if(!p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			
 			for(Block b : block){
 				if(b.getType().equals(Material.CHEST)){

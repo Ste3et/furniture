@@ -53,7 +53,7 @@ public class TFlowerPot extends Furniture implements Listener {
 			
 			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
 			asp.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-115,45,0)));
-			asp.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			
 			packetList.add(asp);
 			yaw+=90;

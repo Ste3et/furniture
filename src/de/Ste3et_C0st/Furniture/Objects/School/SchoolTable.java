@@ -43,8 +43,8 @@ public class SchoolTable extends Furniture implements Listener {
 		e.setCancelled(true);
 		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
-				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInHand();
+				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInMainHand();
 					getWorld().dropItem(getLocation(), is);
 				}
 			}
@@ -62,20 +62,20 @@ public class SchoolTable extends Furniture implements Listener {
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		if(p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
+		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
-				ItemStack Itemstack = p.getItemInHand().clone();
+				ItemStack Itemstack = p.getInventory().getItemInMainHand().clone();
 				Itemstack.setAmount(1);
-				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInHand();
+				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
 				}
-				packet.getInventory().setItemInHand(Itemstack);
+				packet.getInventory().setItemInMainHand(Itemstack);
 				if(p.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) break;
 				Integer i = p.getInventory().getHeldItemSlot();
-				ItemStack is = p.getItemInHand();
+				ItemStack is = p.getInventory().getItemInMainHand();
 				is.setAmount(is.getAmount()-1);
 				p.getInventory().setItem(i, is);
 				p.updateInventory();
@@ -102,25 +102,25 @@ public class SchoolTable extends Furniture implements Listener {
 		loc5.setYaw(getYaw()+90);
 		
 		fArmorStand stand = spawnArmorStand(loc1);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc2);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc3);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
 		stand = spawnArmorStand(loc4);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
 		stand.setMarker(false);
 		asList.add(stand);

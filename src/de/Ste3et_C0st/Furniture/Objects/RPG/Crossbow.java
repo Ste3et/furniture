@@ -58,7 +58,7 @@ public class Crossbow extends Furniture implements Listener  {
 			Location loc = getLutil().getRelativ(getCenter().add(0, -1.7, 0), getLutil().yawToFace(yaw), .34, .4);
 			loc.setYaw(yaw+45);
 			fArmorStand stand = spawnArmorStand(loc);
-			stand.setItemInHand(new ItemStack(Material.STICK));
+			stand.setItemInMainHand(new ItemStack(Material.STICK));
 			stand.setMarker(false);
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90,270,135)));
 			asList.add(stand);
@@ -73,7 +73,7 @@ public class Crossbow extends Furniture implements Listener  {
 		Location loc = getRelative(getCenter().add(0, -.74, 0), getBlockFace(), -.6, .48);
 		loc.setYaw(getYaw()-90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80,0,90)));
 		stand.setMarker(false);
 		asList.add(stand);
@@ -81,7 +81,7 @@ public class Crossbow extends Furniture implements Listener  {
 		loc = getRelative(getCenter().add(0, -.62, 0),getBlockFace(), -.4,.07);
 		loc.setYaw(getYaw()-90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.BOW));
+		stand.setItemInMainHand(new ItemStack(Material.BOW));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(0,10,90)));
 		stand.setMarker(false);
 		asList.add(stand);
@@ -134,11 +134,11 @@ public class Crossbow extends Furniture implements Listener  {
 		if(!e.canBuild()){return;}
 		fArmorStand stand = getArmorStand();
 		if(stand==null){return;}
-		ItemStack is = e.getPlayer().getItemInHand();
+		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(!hasArrow()||(is!=null&&is.getType()!=null&&is.getType().equals(Material.ARROW))){
-			if(e.getPlayer().getItemInHand()==null){return;}
-			if(e.getPlayer().getItemInHand().getType()==null){return;}
-			if(!e.getPlayer().getItemInHand().getType().equals(Material.ARROW)){return;}
+			if(e.getPlayer().getInventory().getItemInMainHand()==null){return;}
+			if(e.getPlayer().getInventory().getItemInMainHand().getType()==null){return;}
+			if(!e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ARROW)){return;}
 			addArmor(is, stand);
 		}else{
 			spawnArrow();
@@ -155,11 +155,11 @@ public class Crossbow extends Furniture implements Listener  {
 		if(!e.canBuild()){return;}
 		fArmorStand stand = getArmorStand();
 		if(stand==null){return;}
-		ItemStack is = e.getPlayer().getItemInHand();
+		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(!hasArrow()||(is!=null&&is.getType()!=null&&is.getType().equals(Material.ARROW))){
-			if(e.getPlayer().getItemInHand()==null){return;}
-			if(e.getPlayer().getItemInHand().getType()==null){return;}
-			if(!e.getPlayer().getItemInHand().getType().equals(Material.ARROW)){return;}
+			if(e.getPlayer().getInventory().getItemInMainHand()==null){return;}
+			if(e.getPlayer().getInventory().getItemInMainHand().getType()==null){return;}
+			if(!e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ARROW)){return;}
 			addArmor(is, stand);
 		}else{
 			spawnArrow();
@@ -178,7 +178,7 @@ public class Crossbow extends Furniture implements Listener  {
 		case WEST: v= new Vector(1.2, 0.5, 0);break;
 		default:break;
 		}
-		getWorld().playSound(getLocation(), Sound.SHOOT_ARROW, 1, 1);
+		getWorld().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 		Location start = getRelative(getCenter(), getBlockFace(), 0,0);
 		start.setYaw(getYaw());
 		start = start.add(0, 1.8, 0);
@@ -200,20 +200,20 @@ public class Crossbow extends Furniture implements Listener  {
 	}
 	
 	private void removeArrow(fArmorStand stand){
-		ItemStack is = stand.getItemInHand();
+		ItemStack is = stand.getItemInMainHand();
 		if(is.getAmount()-1<=0){
-			stand.setItemInHand(new ItemStack(Material.AIR));
+			stand.setItemInMainHand(new ItemStack(Material.AIR));
 			update();
 			return;
 		}
 		is.setAmount(is.getAmount()-1);
-		stand.setItemInHand(is);
+		stand.setItemInMainHand(is);
 		update();
 	}
 	
 	private void addArmor(ItemStack is, fArmorStand stand){
 		if(getArrow()!=null){is.setAmount(getArrow().getAmount());}
-		stand.setItemInHand(is);
+		stand.setItemInMainHand(is);
 		update();
 	}
 	
@@ -231,8 +231,8 @@ public class Crossbow extends Furniture implements Listener  {
 	private ItemStack getArrow(){
 		for(fArmorStand stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ARROW#")){
-				if(!(stand.getItemInHand()==null||stand.getItemInHand().getType()==null||stand.getItemInHand().getType().equals(Material.AIR))){
-					return stand.getItemInHand();
+				if(!(stand.getItemInMainHand()==null||stand.getItemInMainHand().getType()==null||stand.getItemInMainHand().getType().equals(Material.AIR))){
+					return stand.getItemInMainHand();
 				}
 			}
 		}
@@ -242,7 +242,7 @@ public class Crossbow extends Furniture implements Listener  {
 	private boolean hasArrow(){
 		for(fArmorStand stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ARROW#")){
-				if(stand.getItemInHand()==null||stand.getItemInHand().getType()==null||stand.getItemInHand().getType().equals(Material.AIR)){
+				if(stand.getItemInMainHand()==null||stand.getItemInMainHand().getType()==null||stand.getItemInMainHand().getType().equals(Material.AIR)){
 					return false;
 				}else{
 					return true;

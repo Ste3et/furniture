@@ -55,7 +55,7 @@ public class campfire_1 extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
-		ItemStack is = e.getPlayer().getItemInHand();
+		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.WATER_BUCKET)){
 			for(fArmorStand packet : aspList){
 				packet.setFire(false);

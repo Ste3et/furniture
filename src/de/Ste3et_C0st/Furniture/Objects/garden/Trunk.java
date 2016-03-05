@@ -49,11 +49,11 @@ public class Trunk extends Furniture implements Listener {
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		if(!e.getPlayer().getItemInHand().getType().isBlock()||
-			e.getPlayer().getItemInHand().getType().equals(Material.AIR)){setPassanger(e.getfArmorStand(), e.getPlayer());return;}
+		if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()||
+			e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){setPassanger(e.getfArmorStand(), e.getPlayer());return;}
 		if(e.getPlayer().isSneaking()){setPassanger(e.getfArmorStand(), e.getPlayer());return;}
 		if(!e.canBuild()){return;}
-		ItemStack stack = e.getPlayer().getItemInHand();
+		ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
 		stack.setAmount(1);
 		for(fArmorStand stand : getfAsList()){
 			if(stand.getName().startsWith("#TO")){
@@ -64,7 +64,7 @@ public class Trunk extends Furniture implements Listener {
 		
 		if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-		ItemStack item = e.getPlayer().getItemInHand();
+		ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
 		item.setAmount(item.getAmount()-1);
 		e.getPlayer().getInventory().setItem(i, item);
 		e.getPlayer().updateInventory();

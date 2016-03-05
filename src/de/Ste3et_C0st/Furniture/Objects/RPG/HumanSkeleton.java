@@ -35,32 +35,32 @@ public class HumanSkeleton extends Furniture implements Listener {
 	public void spawn(Location paramLocation) {
 		List<fArmorStand> asList = new ArrayList<fArmorStand>();		
 		fArmorStand stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), -.25, 0));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-40,0,90)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), .2, 1.2));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(40,0,90)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), .3, .75));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(0,0,90)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), .9, .42));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-30,0,90)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), 1.1, -.6));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-80,0,90)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getLocation().add(0, -1.4, 0), 1.6, 1.3));
-		stand.setItemInHand(new ItemStack(Material.BONE));
+		stand.setItemInMainHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(30,0,90)));
 		asList.add(stand);
 		

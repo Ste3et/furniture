@@ -175,7 +175,7 @@ public class tent_3 extends Furniture implements Listener{
 		e.setCancelled(true);
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
-		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
+		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.BANNER, getObjID(), ColorType.BANNER, 1);
 		}else{
 			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){

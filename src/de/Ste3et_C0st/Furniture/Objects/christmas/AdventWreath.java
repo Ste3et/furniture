@@ -55,6 +55,7 @@ public class AdventWreath extends Furniture implements Listener  {
 	public void onFurnitureClick(FurnitureClickEvent e) {
 		if(getObjID()==null){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.canBuild()){return;}
@@ -102,7 +103,7 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.GOLD_BLOCK));
-			stand.setItemInHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
 			asList.add(stand);
 			l+=o;
 			
@@ -116,7 +117,7 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.LEAVES));
-			stand.setItemInHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
 			stand.setSmall(true);
 			asList.add(stand);
 			l+=o;

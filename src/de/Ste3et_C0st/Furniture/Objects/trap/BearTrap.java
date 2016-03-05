@@ -98,7 +98,7 @@ public class BearTrap extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		if(b){
 			setStatus(false);
-			getWorld().playSound(getLocation(), Sound.ANVIL_LAND, 10, 1);
+			getWorld().playSound(getLocation(), Sound.BLOCK_ANVIL_LAND, 10, 1);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class BearTrap extends Furniture implements Listener{
 		if(b){
 			stand1.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
 			stand2.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
-			getWorld().playSound(getLocation(), Sound.ITEM_BREAK, 5, 1);
+			getWorld().playSound(getLocation(), Sound.ENTITY_ITEM_BREAK, 5, 1);
 		}else{
 			stand1.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
 			stand2.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90, 0, 0)));

@@ -41,7 +41,7 @@ public class billboard extends Furniture implements Listener{
 			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
@@ -50,7 +50,7 @@ public class billboard extends Furniture implements Listener{
 			Location loc = getLutil().getRelativ(center2.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
@@ -59,7 +59,7 @@ public class billboard extends Furniture implements Listener{
 			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, .7D, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
@@ -68,7 +68,7 @@ public class billboard extends Furniture implements Listener{
 			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, 2.9D, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}

@@ -61,10 +61,10 @@ public class WaterBottle extends Furniture implements Listener {
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canInteract(e.getPlayer())){return;}
-		Material data = e.getPlayer().getItemInHand().getType();
+		Material data = e.getPlayer().getInventory().getItemInMainHand().getType();
 		fArmorStand stand = removeItem();
 		if(matList.contains(data)){
-			ItemStack is = e.getPlayer().getItemInHand();
+			ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 			is.setAmount(1);
 			stand.setHelmet(is);
 			update();
@@ -76,8 +76,8 @@ public class WaterBottle extends Furniture implements Listener {
 		for(fArmorStand stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ITEM#")){
 				fstand = stand;
-				if(stand.getItemInHand()!=null&&!stand.getItemInHand().equals(Material.AIR)){
-					ItemStack is = stand.getItemInHand();
+				if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().equals(Material.AIR)){
+					ItemStack is = stand.getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
 				}
@@ -137,14 +137,14 @@ public class WaterBottle extends Furniture implements Listener {
 		
 		as = spawnArmorStand(loc4);
 		as.setSmall(true);
-		as.setItemInHand(new ItemStack(Material.POTION));
+		as.setItemInMainHand(new ItemStack(Material.POTION));
 		as.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-110,0,0)));
 		as.setMarker(false);
 		stand.add(as);
 		
 		as = spawnArmorStand(loc5);
 		as.setSmall(true);
-		as.setItemInHand(new ItemStack(Material.POTION));
+		as.setItemInMainHand(new ItemStack(Material.POTION));
 		as.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-110,0,0)));
 		as.setMarker(false);
 		stand.add(as);

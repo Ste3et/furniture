@@ -55,7 +55,7 @@ public class barrels extends Furniture implements Listener {
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
-		if(!p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){return;}
+		if(!p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		fArmorStand packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();
@@ -63,13 +63,13 @@ public class barrels extends Furniture implements Listener {
 			getWorld().dropItem(getLocation(), is);
 		}
 		
-		packet.getInventory().setHelmet(p.getItemInHand());
+		packet.getInventory().setHelmet(p.getInventory().getItemInMainHand());
 		
 		getManager().updateFurniture(getObjID());
 		
 		if(p.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-		ItemStack item = e.getPlayer().getItemInHand();
+		ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
 		item.setAmount(item.getAmount()-1);
 		e.getPlayer().getInventory().setItem(i, item);
 		e.getPlayer().updateInventory();
@@ -98,9 +98,9 @@ public class barrels extends Furniture implements Listener {
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		if(!e.getPlayer().getItemInHand().getType().isBlock()&&!e.getPlayer().getItemInHand().getType().equals(Material.AIR)){return;}
+		if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()&&!e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		e.setCancelled(true);
-		ItemStack Itemstack = e.getPlayer().getItemInHand().clone();
+		ItemStack Itemstack = e.getPlayer().getInventory().getItemInMainHand().clone();
 		Itemstack.setAmount(1);
 		fArmorStand packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
 		
@@ -116,7 +116,7 @@ public class barrels extends Furniture implements Listener {
 		
 		if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-		ItemStack item = e.getPlayer().getItemInHand();
+		ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
 		item.setAmount(item.getAmount()-1);
 		e.getPlayer().getInventory().setItem(i, item);
 		e.getPlayer().updateInventory();

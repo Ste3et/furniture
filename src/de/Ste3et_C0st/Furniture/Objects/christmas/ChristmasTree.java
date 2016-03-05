@@ -74,12 +74,12 @@ public class ChristmasTree extends Furniture implements Listener{
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getCenter(), getBlockFace(), .5, .4).add(0, d+.2, 0));
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80, 0, 0)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getCenter(), getBlockFace(), .5, .4).add(0, d+3.3, 0));
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80, 0, 0)));
 		asList.add(stand);
 		

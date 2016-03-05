@@ -158,7 +158,7 @@ public class sofa extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
-		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
+		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 12);
 		}else{
 			fArmorStand packet = e.getfArmorStand();

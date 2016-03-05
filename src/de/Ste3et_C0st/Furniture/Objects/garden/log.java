@@ -34,7 +34,7 @@ public class log extends Furniture {
 
 	Block b;
 	int mode = 0;
-	Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
+	Inventory inv = Bukkit.createInventory(null, 9, "ï¿½2Settings");
 	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
 	ItemStack permissions = new ItemStack(Material.ARROW);
 	List<ItemStack> isList = new ArrayList<ItemStack>();
@@ -45,7 +45,7 @@ public class log extends Furniture {
 		b = getLocation().getBlock();
 		getObjID().addBlock(Arrays.asList(b));
 		ItemMeta meta = pane.getItemMeta();
-		meta.setDisplayName("§c");
+		meta.setDisplayName("ï¿½c");
 		pane.setItemMeta(meta);
 		pane.setDurability((short) 15);
 		pane.setItemMeta(meta);
@@ -61,24 +61,24 @@ public class log extends Furniture {
 		ItemStack stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 1);
 		ItemMeta meta = stack.getItemMeta();
-		meta.setDisplayName("§6Mode: §cTop");
+		meta.setDisplayName("ï¿½6Mode: ï¿½cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 2);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("§6Mode: §cFront I");
+		meta.setDisplayName("ï¿½6Mode: ï¿½cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 11);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("§6Mode: §cFront II");
+		meta.setDisplayName("ï¿½6Mode: ï¿½cFront II");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		
 		meta = permissions.getItemMeta();
-		meta.setDisplayName("§cChange Permissions (Owner Only)");
+		meta.setDisplayName("ï¿½cChange Permissions (Owner Only)");
 		permissions.setItemMeta(meta);
 	}
 	
@@ -198,8 +198,8 @@ public class log extends Furniture {
 		}
 		
 		if(standOld!=null&&standCurrent!=null){
-			standCurrent.setItemInHand(standOld.getItemInHand());
-			standOld.setItemInHand(new ItemStack(Material.AIR));
+			standCurrent.setItemInMainHand(standOld.getItemInMainHand());
+			standOld.setItemInMainHand(new ItemStack(Material.AIR));
 			update();
 		}
 	}
@@ -224,18 +224,18 @@ public class log extends Furniture {
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(p.isSneaking()){
-			if(p.getItemInHand().getType().isBlock()&&!p.getItemInHand().getType().equals(Material.AIR)){
+			if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 				e.setCancelled(false);
 				return;
 			}
 			openInventory(p);
 		}else{
-			if(p.getItemInHand().getType().isBlock() && !p.getItemInHand().getType().equals(Material.AIR)){
-				this.b.setType(p.getItemInHand().getType());
-				this.b.setData((byte) p.getItemInHand().getDurability());
+			if(p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+				this.b.setType(p.getInventory().getItemInMainHand().getType());
+				this.b.setData((byte) p.getInventory().getItemInMainHand().getDurability());
 				removeItem(p);
 				return;
-			}else if(!p.getItemInHand().getType().isBlock() && !p.getItemInHand().getType().equals(Material.AIR)){
+			}else if(!p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 				fArmorStand stand = null;
 				for(fArmorStand s : getObjID().getPacketList()){
 					if(s.getName().equalsIgnoreCase(mode+"")){
@@ -245,13 +245,13 @@ public class log extends Furniture {
 				}
 				
 				if(stand==null){return;}
-				if(stand.getItemInHand()!=null&&!stand.getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = stand.getItemInHand();
+				if(stand.getInventory().getItemInMainHand()!=null&&!stand.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = stand.getInventory().getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
 				}
 				
-				ItemStack is = p.getItemInHand().clone();
+				ItemStack is = p.getInventory().getItemInMainHand().clone();
 				is.setAmount(1);
 				stand.setItemInHand(is);
 				update();
@@ -268,8 +268,8 @@ public class log extends Furniture {
 				
 				if(stand==null){return;}
 				
-				if(stand.getItemInHand()!=null&&!stand.getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = stand.getItemInHand();
+				if(stand.getInventory().getItemInMainHand()!=null&&!stand.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = stand.getInventory().getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
 				}
@@ -285,7 +285,7 @@ public class log extends Furniture {
 		Boolean useGameMode = FurnitureLib.getInstance().useGamemode();
 		if(useGameMode&&p.getGameMode().equals(GameMode.CREATIVE)){return;}
 		Integer slot = p.getInventory().getHeldItemSlot();
-		ItemStack itemStack = p.getItemInHand().clone();
+		ItemStack itemStack = p.getInventory().getItemInMainHand().clone();
 		itemStack.setAmount(itemStack.getAmount()-1);
 		p.getInventory().setItem(slot, itemStack);
 		p.updateInventory();
@@ -317,8 +317,8 @@ public class log extends Furniture {
 		
 		if(stand==null){p.sendMessage("test1");return;}
 		
-		if(stand.getItemInHand()!=null&&!stand.getItemInHand().getType().equals(Material.AIR)){
-			ItemStack is = stand.getItemInHand();
+		if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
+			ItemStack is = stand.getItemInMainHand();
 			is.setAmount(1);
 			getWorld().dropItem(getLocation(), is);
 		}

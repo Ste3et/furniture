@@ -237,7 +237,7 @@ public class tent_1 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(getObjID()==null||e.getID()==null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
@@ -257,7 +257,7 @@ public class tent_1 extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		final Player p = e.getPlayer();
-		if(!p.getItemInHand().getType().equals(Material.INK_SACK)){
+		if(!p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			p.openWorkbench(this.block.getLocation(), true);
 		}else{
 			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 1);

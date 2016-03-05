@@ -122,7 +122,7 @@ public class lantern extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
-		ItemStack is = p.getItemInHand();
+		ItemStack is = p.getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.FLINT_AND_STEEL)){
 			setLight(true);
 		}else if(is.getType().equals(Material.WATER_BUCKET)){

@@ -40,8 +40,8 @@ public class camera extends Furniture implements Listener{
 		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
 		BlockFace b = getLutil().yawToFace(location.getYaw()).getOppositeFace();
 		Location center = getLutil().getCenter(location);
-		Location geh‰use = getLutil().getRelativ(center, b, 0D, 0D).add(0,-1.0,0);
-		Location geh‰use2 = getLutil().getRelativ(center, b, 0D, 0D).add(0,-0.4,0);
+		Location geh√§use = getLutil().getRelativ(center, b, 0D, 0D).add(0,-1.0,0);
+		Location geh√§use2 = getLutil().getRelativ(center, b, 0D, 0D).add(0,-0.4,0);
 		Location fokus = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.24,0);
 		Location search = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.7,0);
 		Location button = getLutil().getRelativ(center, b, -.15D, -.15D).add(0,.08,0);
@@ -50,7 +50,7 @@ public class camera extends Furniture implements Listener{
 		Location feet2 = getLutil().getRelativ(center, b, -.2D, -.7D).add(0,-.9,0);
 		Location feet3 = getLutil().getRelativ(center, b, -.7D, .2D).add(0,-.9,0);
 		
-		geh‰use.setYaw(getLutil().FaceToYaw(b));
+		geh√§use.setYaw(getLutil().FaceToYaw(b));
 		fokus.setYaw(getLutil().FaceToYaw(b));
 		search.setYaw(getLutil().FaceToYaw(b));
 		button.setYaw(getLutil().FaceToYaw(b));
@@ -58,11 +58,11 @@ public class camera extends Furniture implements Listener{
 		feet2.setYaw(getLutil().FaceToYaw(b) + 180 - 45);
 		feet3.setYaw(getLutil().FaceToYaw(b) + 180 + 45);
 		
-		fArmorStand as = getManager().createArmorStand(getObjID(), geh‰use);
+		fArmorStand as = getManager().createArmorStand(getObjID(), geh√§use);
 		as.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 15));
 		aspList.add(as);
 		
-		as = getManager().createArmorStand(getObjID(), geh‰use2);
+		as = getManager().createArmorStand(getObjID(), geh√§use2);
 		as.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 15));
 		as.setSmall(true);
 		aspList.add(as);
@@ -82,17 +82,17 @@ public class camera extends Furniture implements Listener{
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet1);
-		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet2);
-		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet3);
-		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.2, 0, 0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		

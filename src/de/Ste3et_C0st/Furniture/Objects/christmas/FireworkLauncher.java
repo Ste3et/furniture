@@ -44,8 +44,8 @@ public class FireworkLauncher extends Furniture implements Listener {
 		if(!canBuild(e.getPlayer())){return;}
 		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#FIREWORK#")){
-				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInHand();
+				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInMainHand();
 					getWorld().dropItem(getLocation(), is);
 				}
 			}
@@ -71,11 +71,11 @@ public class FireworkLauncher extends Furniture implements Listener {
 			}
 		}
 		if(stand == null) return;
-		if(p.getItemInHand()!=null){
-			if(p.getItemInHand().getType()!=null){
-				if(p.getItemInHand().getType().equals(Material.FIREWORK)){
+		if(p.getInventory().getItemInMainHand()!=null){
+			if(p.getInventory().getItemInMainHand().getType()!=null){
+				if(p.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK)){
 					drop(stand);
-					setItem(stand, p.getItemInHand());
+					setItem(stand, p.getInventory().getItemInMainHand());
 					
 					Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable() {
 						
@@ -88,7 +88,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 					
 					if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 					Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-					ItemStack is = e.getPlayer().getItemInHand();
+					ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 					is.setAmount(is.getAmount()-1);
 					p.getInventory().setItem(i, is);
 					p.updateInventory();
@@ -99,7 +99,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 		
 		if(canLaunch(stand)){
 			Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
-			FireworkMeta meta = (FireworkMeta) stand.getItemInHand().getItemMeta();
+			FireworkMeta meta = (FireworkMeta) stand.getItemInMainHand().getItemMeta();
 			fw.setFireworkMeta(meta);
 			setItem(stand, new ItemStack(Material.AIR));
 		}
@@ -110,8 +110,8 @@ public class FireworkLauncher extends Furniture implements Listener {
 	}
 	
 	public boolean canLaunch(fArmorStand stand){
-		if(stand.getItemInHand()!=null){
-			if(stand.getItemInHand().getType().equals(Material.FIREWORK)){
+		if(stand.getItemInMainHand()!=null){
+			if(stand.getItemInMainHand().getType().equals(Material.FIREWORK)){
 				return true;
 			}
 		}
@@ -121,14 +121,14 @@ public class FireworkLauncher extends Furniture implements Listener {
 	public void setItem(fArmorStand stand, ItemStack is){
 		ItemStack stack = is.clone();
 		stack.setAmount(1);
-		stand.setItemInHand(stack);
+		stand.setItemInMainHand(stack);
 		update();
 	}
 	
 	public void drop(fArmorStand stand){
-		if(stand.getItemInHand()!=null){
-			getWorld().dropItem(getCenter(), stand.getItemInHand());
-			stand.setItemInHand(new ItemStack(Material.AIR));
+		if(stand.getItemInMainHand()!=null){
+			getWorld().dropItem(getCenter(), stand.getItemInMainHand());
+			stand.setItemInMainHand(new ItemStack(Material.AIR));
 			update();
 		}
 	}
@@ -139,12 +139,12 @@ public class FireworkLauncher extends Furniture implements Listener {
 		
 		double d = -1.2;
 		fArmorStand stand = spawnArmorStand(getRelative(getCenter(), getBlockFace(), .5, .4).add(0, d+.2, 0));
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80, 0, 0)));
 		asList.add(stand);
 		
 		stand = spawnArmorStand(getRelative(getCenter(), getBlockFace(), .5, .4).add(0, d+.9, 0));
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80, 0, 0)));
 		asList.add(stand);
 		

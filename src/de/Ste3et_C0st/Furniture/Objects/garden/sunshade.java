@@ -72,7 +72,7 @@ public class sunshade extends Furniture implements Listener{
 		for(int i = 0; i<=2;i++){
 			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
@@ -119,7 +119,7 @@ public class sunshade extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
-		ItemStack is = p.getItemInHand();
+		ItemStack is = p.getInventory().getItemInMainHand();
 		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.INTERACT)){return;}
 		if(is.getType().equals(Material.BANNER)){
 			e.setCancelled(true);
@@ -161,8 +161,8 @@ public class sunshade extends Furniture implements Listener{
 		stopTimer();
 		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
-				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInHand();
+				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInMainHand();
 					getWorld().dropItem(getLocation(), is);
 				}
 			}
@@ -180,7 +180,7 @@ public class sunshade extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
-		ItemStack is = p.getItemInHand();
+		ItemStack is = p.getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.BANNER)){
 			e.setCancelled(true);
 			if(isRunning()){return;}
@@ -209,7 +209,7 @@ public class sunshade extends Furniture implements Listener{
 		Boolean useGameMode = FurnitureLib.getInstance().useGamemode();
 		if(useGameMode&&p.getGameMode().equals(GameMode.CREATIVE)){return;}
 		Integer slot = p.getInventory().getHeldItemSlot();
-		ItemStack itemStack = p.getItemInHand().clone();
+		ItemStack itemStack = p.getInventory().getItemInMainHand().clone();
 		itemStack.setAmount(itemStack.getAmount()-1);
 		p.getInventory().setItem(slot, itemStack);
 		p.updateInventory();
@@ -226,8 +226,8 @@ public class sunshade extends Furniture implements Listener{
 		stopTimer();
 		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
-				if(packet.getInventory().getItemInHand()!=null&&!packet.getInventory().getItemInHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInHand();
+				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getItemInMainHand();
 					getWorld().dropItem(getLocation(), is);
 				}
 			}

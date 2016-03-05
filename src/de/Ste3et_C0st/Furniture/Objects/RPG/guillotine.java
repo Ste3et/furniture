@@ -72,7 +72,7 @@ public class guillotine extends Furniture implements Listener{
 		pane = new ItemStack(Material.STAINED_GLASS_PANE);
 		pane.setDurability((short) 15);
 		ItemMeta im = pane.getItemMeta();
-		im.setDisplayName("§c");
+		im.setDisplayName("ï¿½c");
 		pane.setItemMeta(im);
 		
 		
@@ -111,19 +111,27 @@ public class guillotine extends Furniture implements Listener{
 			}
 		}
 		
-		if(packet3.getHelmet()!=null){
-			packet2.setHelmet(packet3.getHelmet());
-			packet3.setHelmet(new ItemStack(Material.AIR));
+		if(packet3!=null){
+			if(packet3.getHelmet()!=null){
+				packet2.setHelmet(packet3.getHelmet());
+				packet3.setHelmet(new ItemStack(Material.AIR));
+			}
 		}
+
 		
 		soundPlaying = false;
-		packet1.setPose(getLutil().degresstoRad(new EulerAngle(190,0,329)), BodyPart.RIGHT_ARM);
-		packet1.setLeftArmPose(BodyPart.LEFT_ARM.getDefAngle());
-		Location loc13 = getStartLocation(packet2.getName());
-		packet2.teleport(loc13);
-		packet2.setPose(getLutil().degresstoRad(new EulerAngle(40,0,320)), BodyPart.RIGHT_ARM);
-		packet2.setPose(getLutil().degresstoRad(new EulerAngle(33,0,41)), BodyPart.LEFT_ARM);
-		packet2.setPose(getLutil().degresstoRad(new EulerAngle(40,25,0)), BodyPart.HEAD);
+		if(packet1!=null){
+			packet1.setPose(getLutil().degresstoRad(new EulerAngle(190,0,329)), BodyPart.RIGHT_ARM);
+			packet1.setLeftArmPose(BodyPart.LEFT_ARM.getDefAngle());
+		}
+
+		if(packet2!=null){
+			Location loc13 = getStartLocation(packet2.getName());
+			packet2.teleport(loc13);
+			packet2.setPose(getLutil().degresstoRad(new EulerAngle(40,0,320)), BodyPart.RIGHT_ARM);
+			packet2.setPose(getLutil().degresstoRad(new EulerAngle(33,0,41)), BodyPart.LEFT_ARM);
+			packet2.setPose(getLutil().degresstoRad(new EulerAngle(40,25,0)), BodyPart.HEAD);
+		}
 		timer = Bukkit.getScheduler().scheduleSyncRepeatingTask(getPlugin(), new Runnable() {
 			int x = 0;
 			@Override
@@ -220,7 +228,7 @@ public class guillotine extends Furniture implements Listener{
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc7);
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 		packList.add(packet);
 		
@@ -309,7 +317,7 @@ public class guillotine extends Furniture implements Listener{
 			if(canDrop(packet1.getChestPlate())){getWorld().dropItem(getLocation(), packet1.getChestPlate());}
 			if(canDrop(packet1.getLeggings())){getWorld().dropItem(getLocation(), packet1.getLeggings());}
 			if(canDrop(packet1.getBoots())){getWorld().dropItem(getLocation(), packet1.getBoots());}
-			if(canDrop(packet1.getItemInHand())){getWorld().dropItem(getLocation(), packet1.getItemInHand());}
+			if(canDrop(packet1.getItemInMainHand())){getWorld().dropItem(getLocation(), packet1.getItemInMainHand());}
 			if(canDrop(packet2.getHelmet())){getWorld().dropItem(getLocation(), packet2.getHelmet());}
 			if(canDrop(packet2.getChestPlate())){getWorld().dropItem(getLocation(), packet2.getChestPlate());}
 			if(canDrop(packet2.getLeggings())){getWorld().dropItem(getLocation(), packet2.getLeggings());}
@@ -346,14 +354,14 @@ public class guillotine extends Furniture implements Listener{
 			ItemStack is = new ItemStack(Material.SKULL_ITEM);
 			is.setDurability((short) 1);
 			ItemMeta im = is.getItemMeta();
-			im.setDisplayName("§2Executioner");
+			im.setDisplayName("ï¿½2Executioner");
 			is.setItemMeta(im);
 			invI.setItem(2, is);
 			
 			is = new ItemStack(Material.SKULL_ITEM);
 			is.setDurability((short) 3);
 			im = is.getItemMeta();
-			im.setDisplayName("§cOblation");
+			im.setDisplayName("ï¿½cOblation");
 			is.setItemMeta(im);
 			invI.setItem(6, is);
 			this.p = p;
@@ -442,7 +450,7 @@ public class guillotine extends Furniture implements Listener{
 		boolean a = false,b = false,c = false;
 		a = !packet1.isVisible();
 		b = !packet2.isVisible();
-		if(packet1.getItemInHand()!=null&&!packet1.getItemInHand().equals(Material.AIR)){
+		if(packet1.getItemInMainHand()!=null&&!packet1.getItemInMainHand().equals(Material.AIR)){
 			c = true;
 		}
 		
@@ -566,12 +574,12 @@ public class guillotine extends Furniture implements Listener{
 				}
 				
 				if(invII.getItem(16)!=null){
-					packet1.getInventory().setItemInHand(invII.getItem(16));
+					packet1.getInventory().setItemInMainHand(invII.getItem(16));
 				}
 			}else{
 				if(invII.getItem(43)!=null&&!invII.getItem(43).getType().equals(Material.AIR)){getWorld().dropItem(getLocation().clone().add(0, 1, 0), invII.getItem(43));}
 				if(invII.getItem(16)!=null&&!invII.getItem(16).getType().equals(Material.AIR)){getWorld().dropItem(getLocation().clone().add(0, 1, 0), invII.getItem(16));}
-				packet1.getInventory().setItemInHand(new ItemStack(Material.AIR));
+				packet1.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 				packet1.setName("#Executioner#");
 				packet1.setNameVasibility(!invisible);
 			}
@@ -602,9 +610,9 @@ public class guillotine extends Furniture implements Listener{
 	
 	private void playSound(){
 		if(!soundPlaying){
-			getWorld().playSound(getLocation(), Sound.GHAST_DEATH, 2, 1);
-			getWorld().playSound(getLocation(), Sound.GHAST_SCREAM, 1, 1);
-			getWorld().playSound(getLocation(), Sound.GHAST_MOAN, 1, 1);
+			getWorld().playSound(getLocation(), Sound.ENTITY_GHAST_DEATH, 2, 1);
+			getWorld().playSound(getLocation(), Sound.ENTITY_GHAST_SCREAM, 1, 1);
+			getWorld().playSound(getLocation(), Sound.ENTITY_GHAST_WARN, 1, 1);
 			soundPlaying= true;
 		}
 	}
@@ -638,7 +646,7 @@ public class guillotine extends Furniture implements Listener{
 			case 19:inv.setItem(j, packet.getChestPlate());break;
 			case 28:inv.setItem(j, packet.getLeggings());break;
 			case 37:inv.setItem(j, packet.getBoots());break;
-			case 16:if(i==1){inv.setItem(j, packet.getItemInHand());break;}
+			case 16:if(i==1){inv.setItem(j, packet.getItemInMainHand());break;}
 			case 43:if(i==1){inv.setItem(j, stack);break;}
 			default: inv.setItem(j, pane);break;
 			}

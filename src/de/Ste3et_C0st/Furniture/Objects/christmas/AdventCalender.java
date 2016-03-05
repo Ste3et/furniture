@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -101,7 +103,7 @@ public class AdventCalender extends Furniture implements Listener {
 		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
-		ItemStack is = e.getPlayer().getItemInHand();
+		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(is==null){open(e.getPlayer()); return;}
 		if(is.getType()==null){open(e.getPlayer()); return;}
 		if(is.getType().equals(Material.ARROW)){
@@ -142,10 +144,12 @@ public class AdventCalender extends Furniture implements Listener {
 								if(name.startsWith("@PLAYER ")){
 									name = name.replace("%player%", p.getName());
 									name = name.replace("@PLAYER ", "");
+									name = ChatColor.translateAlternateColorCodes('&', name);
 									p.sendMessage(name);
 								}else if(name.startsWith("@BROADCAST ")){
 									name = name.replace("%player%", p.getName());
 									name = name.replace("@BROADCAST ", "");
+									name = ChatColor.translateAlternateColorCodes('&', name);
 									getLib().getServer().broadcastMessage(name);
 								}
 							}
@@ -291,7 +295,7 @@ public class AdventCalender extends Furniture implements Listener {
 	}
 	
 	private void openInventory(ItemStack[] is){
-		inv = Bukkit.createInventory(null, 54, "§8Christmas Reward [§c" + i + "§8]");
+		inv = Bukkit.createInventory(null, 54, "ï¿½8Christmas Reward [ï¿½c" + i + "ï¿½8]");
 		if(is!=null) inv.setContents(is);
 		p.openInventory(inv);
 	}
@@ -309,7 +313,7 @@ public class AdventCalender extends Furniture implements Listener {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.GOLD_BLOCK));
-			stand.setItemInHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
 			asList.add(stand);
 			l+=o;
 		}
@@ -322,7 +326,7 @@ public class AdventCalender extends Furniture implements Listener {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.LEAVES));
-			stand.setItemInHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
 			stand.setSmall(true);
 			asList.add(stand);
 			l+=o;

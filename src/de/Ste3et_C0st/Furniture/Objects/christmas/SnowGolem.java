@@ -83,7 +83,7 @@ public class SnowGolem extends Furniture implements Listener{
 		Location loc = getRelative(getCenter().add(0, -.25, 0), -.18, -.54);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.CARROT_ITEM));
+		stand.setItemInMainHand(new ItemStack(Material.CARROT_ITEM));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90, 0, -40)));
 		stand.setMarker(false);
 		asList.add(stand);
@@ -91,7 +91,7 @@ public class SnowGolem extends Furniture implements Listener{
 		loc = getRelative(getCenter().add(0, .2, 0), .05, -.15);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.COAL_BLOCK));
+		stand.setItemInMainHand(new ItemStack(Material.COAL_BLOCK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(70f, 0f, 45f)));
 		stand.setSmall(true);
 		asList.add(stand);
@@ -99,7 +99,7 @@ public class SnowGolem extends Furniture implements Listener{
 		loc = getRelative(getCenter().add(0, .2, 0), .05, -.45);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.COAL_BLOCK));
+		stand.setItemInMainHand(new ItemStack(Material.COAL_BLOCK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(70f, 0f, 45f)));
 		stand.setSmall(true);
 		asList.add(stand);
@@ -107,7 +107,7 @@ public class SnowGolem extends Furniture implements Listener{
 		loc = getRelative(getCenter().add(0, -.55, 0), -.15, -.28);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.COAL_BLOCK));
+		stand.setItemInMainHand(new ItemStack(Material.COAL_BLOCK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(70f, 0f, 45f)));
 		stand.setSmall(true);
 		asList.add(stand);
@@ -115,7 +115,7 @@ public class SnowGolem extends Furniture implements Listener{
 		loc = getRelative(getCenter().add(0, -.95, 0), -.15, -.28);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.COAL_BLOCK));
+		stand.setItemInMainHand(new ItemStack(Material.COAL_BLOCK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(70f, 0f, 45f)));
 		stand.setSmall(true);
 		asList.add(stand);
@@ -123,14 +123,14 @@ public class SnowGolem extends Furniture implements Listener{
 		loc = getRelative(getCenter().add(0, -.45, 0), .0, 1.22);
 		loc.setYaw(getYaw());
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90f,90f,70f)));
 		asList.add(stand);
 		
 		loc = getRelative(getCenter().add(0, -.45, 0), -.1, -1.22);
 		loc.setYaw(getYaw()+180);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90f,90f,70f)));
 		asList.add(stand);
 		

@@ -59,7 +59,7 @@ public class mailBox extends Furniture implements Listener {
 		for(int i = 0; i<=1;i++){
 			Location loc = getLutil().getRelativ(middle.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
 			aspList.add(packet);
 		}
@@ -81,7 +81,7 @@ public class mailBox extends Furniture implements Listener {
 			//x z y
 			//-.7 .73 -.3
 			packet.setPose(new EulerAngle(-.716D, .71D, -.32D), BodyPart.RIGHT_ARM);
-			packet.getInventory().setItemInHand(new ItemStack(Material.SMOOTH_STAIRS));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.SMOOTH_STAIRS));
 			aspList.add(packet);
 			
 			loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace().getOppositeFace(), -.44+.165*i, .462D);
@@ -90,7 +90,7 @@ public class mailBox extends Furniture implements Listener {
 			//x z y
 			//-.7 .73 -.3
 			packet.setPose(new EulerAngle(-.716D, .71D, -.32D), BodyPart.RIGHT_ARM);
-			packet.getInventory().setItemInHand(new ItemStack(Material.SMOOTH_STAIRS));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.SMOOTH_STAIRS));
 			aspList.add(packet);
 			
 			
@@ -100,7 +100,7 @@ public class mailBox extends Furniture implements Listener {
 			//x z y
 			//-.7 .73 -.3
 			packet.setPose(new EulerAngle(-.716D, .71D, -.32D), BodyPart.RIGHT_ARM);
-			packet.getInventory().setItemInHand(new ItemStack(Material.SMOOTH_BRICK, 1 ,(short) 0));
+			packet.getInventory().setItemInMainHand(new ItemStack(Material.SMOOTH_BRICK, 1 ,(short) 0));
 			aspList.add(packet);
 		}
 		
@@ -114,19 +114,19 @@ public class mailBox extends Furniture implements Listener {
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.10, 0), face.getOppositeFace(), -.0, .31D));
-		as.getInventory().setItemInHand(new ItemStack(Material.PAPER, 1, (short) 0));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.PAPER, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.40, 0), face.getOppositeFace(), -.1, .34D));
-		as.getInventory().setItemInHand(new ItemStack(Material.WOOD_BUTTON, 1, (short) 0));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.WOOD_BUTTON, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(-15,-67, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), .2, .07D));
-		as.getInventory().setItemInHand(new ItemStack(Material.EMPTY_MAP, 1, (short) 0));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.EMPTY_MAP, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, -120, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);
 		aspList.add(as);

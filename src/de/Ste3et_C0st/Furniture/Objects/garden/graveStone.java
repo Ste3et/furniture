@@ -106,11 +106,11 @@ public class graveStone extends Furniture implements Listener{
 		}
 		
 		fArmorStand as = getManager().createArmorStand(getObjID(), kreutz1);
-		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		as = getManager().createArmorStand(getObjID(), kreutz2);
-		as.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.38,1.57,1.57), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
@@ -157,7 +157,7 @@ public class graveStone extends Furniture implements Listener{
 		Player p = e.getPlayer();
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
-		ItemStack is = p.getItemInHand();
+		ItemStack is = p.getInventory().getItemInMainHand();
 		if (is == null) return;
 		if (!is.getType().equals(Material.WRITTEN_BOOK)) return;
 		readFromBook(is);

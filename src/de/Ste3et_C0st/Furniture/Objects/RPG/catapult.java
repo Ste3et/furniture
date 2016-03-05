@@ -19,6 +19,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -84,28 +85,28 @@ public class catapult  extends Furniture implements Listener {
 		
 		Location loc = getRelative(getCenter(), getBlockFace(), .15, -.2).add(0, -1.6, 0);
 		fArmorStand stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setMarker(false);
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80,0,90)));
 		asList.add(stand);
 		
 		loc = getRelative(getCenter(), getBlockFace(), 2.8-.12, -.2).add(0, -1.6, 0);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setMarker(false);
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80,0,90)));
 		asList.add(stand);
 		
 		loc = getRelative(getCenter(), getBlockFace(), 1.5-.12, -.2).add(0, -1.6, 0);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setMarker(false);
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80,0,90)));
 		asList.add(stand);
 		
 		loc = getRelative(getCenter(), getBlockFace(), 1.5-.12, -.2).add(0, 0, 0);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setMarker(false);
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(80,0,90)));
 		asList.add(stand);
@@ -113,7 +114,7 @@ public class catapult  extends Furniture implements Listener {
 		loc = getRelative(getCenter(), getBlockFace(), 1.5-.3, -1.4).add(0, -1.1, 0);
 		loc.setYaw(getYaw()+180);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setMarker(false);
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(335,0,0)));
 		asList.add(stand);
@@ -121,7 +122,7 @@ public class catapult  extends Furniture implements Listener {
 		loc = getRelative(getCenter(), getBlockFace(), .4, -1.4).add(0, -.9, 0);
 		loc.setYaw(getYaw()+180);
 		stand = spawnArmorStand(loc);
-		stand.setItemInHand(new ItemStack(Material.STICK));
+		stand.setItemInMainHand(new ItemStack(Material.STICK));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(335,0,0)));
 		stand.setMarker(false);
 		asList.add(stand);
@@ -165,6 +166,25 @@ public class catapult  extends Furniture implements Listener {
 				Block b = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
 				if(!FurnitureLib.getInstance().getPermManager().canBuild(p, b.getLocation())){
 					e.setCancelled(true);
+					e.getEntity().remove();
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPrimedTnt(EntityExplodeEvent e){
+		if(e.getEntity()==null) return;
+		if(e.getEntity() instanceof TNTPrimed){
+			if(fallingSandList.containsKey(e.getEntity())){
+				Entity entity = e.getEntity();
+				Player p = fallingSandList.get(e.getEntity());
+				fallingSandList.remove(e.getEntity());
+				Block b = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
+				if(!FurnitureLib.getInstance().getPermManager().canBuild(p, b.getLocation())){
+					e.setCancelled(true);
+					e.blockList().clear();
+					e.getEntity().remove();
 				}
 			}
 		}
@@ -196,6 +216,7 @@ public class catapult  extends Furniture implements Listener {
 			}
 			tnt.playEffect(EntityEffect.WITCH_MAGIC);
 			tnt.setVelocity(v.multiply(1));
+			fallingSandList.put(tnt, e.getPlayer());
 		}else{
 			FallingBlock block = getWorld().spawnFallingBlock(loc, stack.getType().getId(), (byte) stack.getDurability());
 			Vector v=null;

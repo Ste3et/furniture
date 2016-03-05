@@ -116,22 +116,22 @@ public class largeTable extends Furniture implements Listener{
 		
 		fArmorStand as = getManager().createArmorStand(getObjID(), feet1);
 		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInHand(new ItemStack(Material.BONE));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		armorlist.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet2);
 		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInHand(new ItemStack(Material.BONE));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		armorlist.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet3);
 		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInHand(new ItemStack(Material.BONE));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		armorlist.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), feet4);
 		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInHand(new ItemStack(Material.BONE));
+		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		armorlist.add(as);
 		
 		
@@ -168,7 +168,7 @@ public class largeTable extends Furniture implements Listener{
 		int i = 0;
 		for(Integer id : tellerIDs){
 			fArmorStand as = getManager().getfArmorStandByID(id);
-			as.getInventory().setItemInHand(itemList.get(i));
+			as.getInventory().setItemInMainHand(itemList.get(i));
 			i++;
 		}
 	}
@@ -178,14 +178,15 @@ public class largeTable extends Furniture implements Listener{
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID()==null){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		for(Integer id : tellerIDs){
 			fArmorStand asp = getManager().getfArmorStandByID(id);
-			if(asp!=null&&asp.getInventory().getItemInHand()!=null){
+			if(asp!=null&&asp.getInventory().getItemInMainHand()!=null){
 				if(asp.getName().startsWith("#TELLER")){
 					fArmorStand packet = asp;
-					e.getLocation().getWorld().dropItem(e.getLocation(), packet.getInventory().getItemInHand());
+					e.getLocation().getWorld().dropItem(e.getLocation(), packet.getInventory().getItemInMainHand());
 				}
 			}
 		}
@@ -202,12 +203,12 @@ public class largeTable extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Player p = e.getPlayer();
-		if(p.getItemInHand().getType().equals(Material.INK_SACK)){
+		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.STAINED_GLASS_PANE, getObjID(), ColorType.BLOCK, 3);
 			update();
 			return;
 		}else{
-			setTeller(p, p.getInventory().getItemInHand());
+			setTeller(p, p.getInventory().getItemInMainHand());
 		}
 	}
 	
@@ -228,17 +229,17 @@ public class largeTable extends Furniture implements Listener{
 			}
 		}
 		
-		if(as!=null&&as.getInventory().getItemInHand()!= null && as.getInventory().getItemInHand().equals(is)){return;}
-		if(as.getInventory().getItemInHand()!=null&&!as.getInventory().getItemInHand().getType().equals(Material.AIR)){
+		if(as!=null&&as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
+		if(as.getInventory().getItemInMainHand()!=null&&!as.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 			fArmorStand asp = as;
-			ItemStack item = asp.getInventory().getItemInHand();
+			ItemStack item = asp.getInventory().getItemInMainHand();
 			item.setAmount(1);
 			asp.getLocation().getWorld().dropItem(asp.getLocation(), item);
 		}
 		
 		ItemStack IS = is.clone();
 		IS.setAmount(1);
-		as.getInventory().setItemInHand(IS);
+		as.getInventory().setItemInMainHand(IS);
 		
 		update();
 		
@@ -255,7 +256,7 @@ public class largeTable extends Furniture implements Listener{
 		for(Integer id : tellerIDs){
 			try{
 				fArmorStand as = getManager().getfArmorStandByID(id);
-				teller.put(teller.size(), as.getInventory().getItemInHand());
+				teller.put(teller.size(), as.getInventory().getItemInMainHand());
 			}catch(Exception e){
 				teller.put(teller.size(), new ItemStack(Material.AIR));
 			}

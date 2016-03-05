@@ -65,13 +65,13 @@ public class campchair extends Furniture implements Listener {
 		
 		Location l1 = getLutil().getRelativ(middle, getBlockFace(), .25, .4);
 		fArmorStand packet = getManager().createArmorStand(getObjID(), l1);
-		packet.getInventory().setItemInHand(new ItemStack(Material.LADDER));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.LADDER));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(50, 0, 0)), BodyPart.RIGHT_ARM);
 		aspList.add(packet);
 		
 		l1 = getLutil().getRelativ(middle, getBlockFace().getOppositeFace(), .25, .4);
 	    packet = getManager().createArmorStand(getObjID(), l1);
-		packet.getInventory().setItemInHand(new ItemStack(Material.LADDER));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.LADDER));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(50, 0, 0)), BodyPart.RIGHT_ARM);
 		aspList.add(packet);
 		

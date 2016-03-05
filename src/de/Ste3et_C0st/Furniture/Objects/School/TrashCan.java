@@ -48,7 +48,7 @@ public class TrashCan extends Furniture implements Listener  {
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
-		ItemStack is = e.getPlayer().getItemInHand();
+		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		fArmorStand stand = null;
 		for(fArmorStand s : getfAsList()){
 			if(s.getName().equalsIgnoreCase("#TRASH#")){
@@ -57,14 +57,14 @@ public class TrashCan extends Furniture implements Listener  {
 		}
 		if(stand==null){return;}
 		if(is==null||is.getType()==null||is.getType().equals(Material.AIR)){
-			if(stand.getItemInHand()!=null&&!stand.getItemInHand().getType().equals(Material.AIR)){
-				getWorld().dropItem(getCenter(), stand.getItemInHand());
-				stand.setItemInHand(new ItemStack(Material.AIR));
+			if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
+				getWorld().dropItem(getCenter(), stand.getItemInMainHand());
+				stand.setItemInMainHand(new ItemStack(Material.AIR));
 				update();
 				return;
 			}
 		}
-		stand.setItemInHand(is);
+		stand.setItemInMainHand(is);
 		e.getPlayer().getInventory().clear(e.getPlayer().getInventory().getHeldItemSlot());
 		e.getPlayer().updateInventory();
 		update();

@@ -67,7 +67,7 @@ public class RenderClass extends MapRenderer {
 				}
 			}
 			
-			//mapCanvas.drawText(10, 10, font, "§18;TESTPHASE");
+			//mapCanvas.drawText(10, 10, font, "ï¿½18;TESTPHASE");
 			
 			hasRendered = false;
 		}catch(Exception e){e.printStackTrace();}

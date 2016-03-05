@@ -105,7 +105,7 @@ public class hammock extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();
-		ItemStack stack = p.getItemInHand();
+		ItemStack stack = p.getInventory().getItemInMainHand();
 
 		if(stack!=null){
 			if(isMaterial(stack.getType())){
@@ -127,7 +127,7 @@ public class hammock extends Furniture implements Listener{
 		Boolean useGameMode = FurnitureLib.getInstance().useGamemode();
 		if(useGameMode&&p.getGameMode().equals(GameMode.CREATIVE)){return;}
 		Integer slot = p.getInventory().getHeldItemSlot();
-		ItemStack itemStack = p.getItemInHand().clone();
+		ItemStack itemStack = p.getInventory().getItemInMainHand().clone();
 		itemStack.setAmount(itemStack.getAmount()-1);
 		p.getInventory().setItem(slot, itemStack);
 		p.updateInventory();
@@ -141,7 +141,7 @@ public class hammock extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();
-		ItemStack stack = p.getItemInHand();
+		ItemStack stack = p.getInventory().getItemInMainHand();
 		if(stack!=null){
 			if(isMaterial(stack.getType())){
 				if(setColor(p,stack, e.canBuild(), aspList)){return;}
@@ -264,7 +264,7 @@ public class hammock extends Furniture implements Listener{
 		stick = stick.add(0, 1.7, 0);
 		stick.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		packet = getManager().createArmorStand(getObjID(), stick);
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(-40f,110f,0f)), BodyPart.RIGHT_ARM);
 		aspList.add(packet);
 		
@@ -272,7 +272,7 @@ public class hammock extends Furniture implements Listener{
 		stick = stick.add(0, 1.7, 0);
 		stick.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		packet = getManager().createArmorStand(getObjID(), stick);
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(-40f,73f,0f)), BodyPart.RIGHT_ARM);
 		packet.setArms(true);
 		aspList.add(packet);
@@ -281,7 +281,7 @@ public class hammock extends Furniture implements Listener{
 		stick = stick.add(0, 1.7, 0);
 		stick.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 		packet = getManager().createArmorStand(getObjID(), stick);
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(-40f,73f,0f)), BodyPart.RIGHT_ARM);
 		packet.setArms(true);
 		aspList.add(packet);
@@ -290,7 +290,7 @@ public class hammock extends Furniture implements Listener{
 		stick = stick.add(0, 1.7, 0);
 		stick.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 		packet = getManager().createArmorStand(getObjID(), stick);
-		packet.getInventory().setItemInHand(new ItemStack(Material.STICK));
+		packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(-40f,110f,0f)), BodyPart.RIGHT_ARM);
 		packet.setArms(true);
 		aspList.add(packet);

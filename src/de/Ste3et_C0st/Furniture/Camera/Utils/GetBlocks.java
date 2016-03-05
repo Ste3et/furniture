@@ -1,19 +1,21 @@
 package de.Ste3et_C0st.Furniture.Camera.Utils;
 
+import java.awt.Color;
 import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.map.MapPalette;
 
 import de.Ste3et_C0st.Furniture.Main.main;
 
 public class GetBlocks {	
-	public HashMap<Integer, HashMap<Integer, Byte>> returnBlocks(Location location, int höhe, int links){
+	public HashMap<Integer, HashMap<Integer, Byte>> returnBlocks(Location location, int hÃ¶he, int links){
 		HashMap<Integer, HashMap<Integer, Byte>> blockList = new HashMap<Integer, HashMap<Integer, Byte>>();
 		BlockFace b = main.getLocationUtil().yawToFace(location.getYaw());
-		höhe = höhe/2;
+		hÃ¶he = hÃ¶he/2;
 		//links = links/2;
 		location = main.getLocationUtil().getRelativ(location, b, 0D,- (double) (links/2));
 		Integer tiefe = 24;
@@ -22,7 +24,7 @@ public class GetBlocks {
 			HashMap<Integer, Byte> layerlist = new HashMap<Integer, Byte>();
 			Integer blockindex = 0;
 			for(int y = 0;y<=links;y++){
-				for(int z = 0;z<=höhe;z++){
+				for(int z = 0;z<=hÃ¶he;z++){
 					Block b1 = main.getLocationUtil().getRelativ(location, b,(double) x, (double) y).add(0,z,0).getBlock();
 					byte byte1 = getByteFromBlock(b1);
 					layerlist.put(blockindex, byte1);
@@ -35,6 +37,11 @@ public class GetBlocks {
 			layer++;
 		}
 		return blockList;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Color getRedByte(Block b){
+		return MapPalette.getColor((byte) b.getTypeId());
 	}
 	
 	@SuppressWarnings("deprecation")
