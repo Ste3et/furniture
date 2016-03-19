@@ -105,11 +105,11 @@ public class WaterBottle extends Furniture implements Listener {
 			i-=.54;
 		}
 		List<fArmorStand> stand = new ArrayList<fArmorStand>();
-		Location loc1 = getCenter().add(0, i-1.2, 0);
-		loc1.setYaw(45);
-		Location loc2 = getCenter().add(0, i-1.2, 0);
-		loc2.setYaw(loc1.getYaw()+90);
-		Location loc3 = getLutil().getRelativ(getCenter(), getBlockFace(), .15, 0).add(0, i-0.8, 0);
+		Location loc1 = getRelative(getCenter(), getBlockFace(), .125, -.125).add(0, i-1.5, 0);
+		loc1.setYaw(getYaw()+45);
+		Location loc2 = getRelative(getCenter(), getBlockFace(), -.125, -.125).add(0, i-1.5, 0);
+		loc2.setYaw(getYaw()*2+45);
+		Location loc3 = getLutil().getRelativ(getCenter(), getBlockFace(), .45, 0).add(0, i-1, 0);
 		loc3.setYaw(getYaw()+180);
 		Location loc4 = getLutil().getRelativ(getCenter(), getBlockFace(), -.29, .2).add(0, i-0.88, 0);
 		loc4.setYaw(getYaw());
@@ -158,7 +158,6 @@ public class WaterBottle extends Furniture implements Listener {
 		stand.add(as);
 		
 		for(fArmorStand asp : stand){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
@@ -166,7 +165,4 @@ public class WaterBottle extends Furniture implements Listener {
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-	
-	
-	
 }

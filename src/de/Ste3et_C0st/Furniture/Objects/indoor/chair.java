@@ -37,15 +37,17 @@ public class chair extends Furniture implements Listener{
 		BlockFace b = getLutil().yawToFace(loc.getYaw()).getOppositeFace();
 		Location center = getLutil().getCenter(loc).add(0, -.05, 0);
 		Location sitz = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-		Location feet1 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-		Location feet2 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-		Location feet3 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-		Location feet4 = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 		Location lehne = getLutil().getRelativ(center.add(0,-1.1,0), b, -.25, .0);
-		feet1.add(-.25,-1.8,-.25);
-		feet2.add(.25,-1.8,-.25);
-		feet3.add(.25,-1.8,.25);
-		feet4.add(-.25,-1.8,.25);
+		double offsetX = -.25;
+		Location feet1 = getRelative(center.clone(), getBlockFace(), -.24-offsetX, -.24).subtract(0, 1.2, 0);
+		Location feet2 = getRelative(center.clone(), getBlockFace(), .24-offsetX, -.24).subtract(0, 1.2, 0);
+		Location feet3 = getRelative(center.clone(), getBlockFace(), .24-offsetX, .24).subtract(0, 1.2, 0);
+		Location feet4 = getRelative(center.clone(), getBlockFace(), -.24-offsetX, .24).subtract(0, 1.2, 0);
+		
+		feet1.setYaw(getYaw());
+		feet2.setYaw(getYaw());
+		feet3.setYaw(getYaw());
+		feet4.setYaw(getYaw());
 		
 		sitz.add(0,-1.45,0);
 		sitz.setYaw(getLutil().FaceToYaw(b));
@@ -82,7 +84,6 @@ public class chair extends Furniture implements Listener{
 		aspList.add(as);
 		
 		for(fArmorStand asp : aspList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}

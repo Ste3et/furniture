@@ -95,7 +95,6 @@ public class Crossbow extends Furniture implements Listener  {
 		asList.add(stand);
 		
 		for(fArmorStand asp : asList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}

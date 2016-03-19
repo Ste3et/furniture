@@ -60,7 +60,6 @@ public class TFlowerPot extends Furniture implements Listener {
 		}
 		
 		for(fArmorStand asp : packetList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 			asp.setMarker(false);

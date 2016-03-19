@@ -80,11 +80,11 @@ public class SnowGolem extends Furniture implements Listener{
 		stand.setSmall(true);
 		asList.add(stand);
 		
-		Location loc = getRelative(getCenter().add(0, -.25, 0), -.18, -.54);
+		Location loc = getRelative(getCenter().add(0, -.75, 0), -.18, -.54);
 		loc.setYaw(getYaw()+90);
 		stand = spawnArmorStand(loc);
 		stand.setItemInMainHand(new ItemStack(Material.CARROT_ITEM));
-		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90, 0, -40)));
+		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(90, 0, -150)));
 		stand.setMarker(false);
 		asList.add(stand);
 		
@@ -136,12 +136,10 @@ public class SnowGolem extends Furniture implements Listener{
 		
 		for(fArmorStand pack : asList){
 			pack.setInvisible(true);
-			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
 		
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
 }

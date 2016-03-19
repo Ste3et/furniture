@@ -150,6 +150,7 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setHelmet(new ItemStack(Material.STAINED_CLAY, 1, (short) 13));
 			asList.add(stand);
 			
+			
 			stand = spawnArmorStand(loc.clone().add(0, .4, 0));
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-41,-37.5f,18)));
 			stand.setSmall(true);
@@ -191,7 +192,6 @@ public class AdventWreath extends Furniture implements Listener  {
 		
 		for(fArmorStand pack : asList){
 			pack.setInvisible(true);
-			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
 		
@@ -204,12 +204,13 @@ public class AdventWreath extends Furniture implements Listener  {
 		double l = 0;
 		double o = getDegress(j);
 		loc = loc.add(0, -sub, 0);
+		loc.subtract(0, .5, 0);
+		
 		for(int i = 0; i<j;i++){
 			loc.setYaw((float) l);
 			fArmorStand stand = spawnArmorStand(loc);
 			stand.setHelmet(stack);
 			stand.setInvisible(true);
-			stand.setGravity(false);
 			stand.setBasePlate(false);
 			l+=o;
 		}

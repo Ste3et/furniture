@@ -110,11 +110,9 @@ public class Trunk extends Furniture implements Listener {
 		
 		for(fArmorStand stand : asList){
 			stand.setInvisible(true);
-			stand.setGravity(false);
 		}
 		
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-	
 }

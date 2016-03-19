@@ -61,35 +61,22 @@ public class tent_1 extends Furniture implements Listener{
 		}
 		getObjID().addBlock(Arrays.asList(block));
 	}
-	
-	
-	private Location getNew(Location loc, BlockFace b){
-		if(b.equals(BlockFace.WEST)){loc=getLutil().getRelativ(loc, b, -1D, 0D);}
-		if(b.equals(BlockFace.NORTH)){loc=getLutil().getRelativ(loc, b, -1D, -1D);}
-		if(b.equals(BlockFace.EAST)){loc=getLutil().getRelativ(loc, b, 0D, -1D);}
-		return loc;
-	}
-	
+
 	public void spawn(Location loc){
 		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
 		Location loc_1 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		Location loc_2 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		Location loc_3 = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		
-		Location karabine1 = getNew(getLutil().getRelativ(loc, getBlockFace(), 0D, 0D), getBlockFace());
-		Location karabine2 = getNew(getLutil().getRelativ(loc, getBlockFace(), 3D, 0D), getBlockFace());
-		Location karabine3 = getNew(getLutil().getRelativ(loc, getBlockFace(), 3D, -4D), getBlockFace());
-		Location karabine4 = getNew(getLutil().getRelativ(loc, getBlockFace(), 0D, -4D), getBlockFace());
+		Location karabine1 = getLutil().getRelativ(loc, getBlockFace(), -.5D, -.7D);
+		Location karabine2 = getLutil().getRelativ(loc, getBlockFace(), 2.5D, -.7D);
+		Location karabine3 = getLutil().getRelativ(loc, getBlockFace(), 2.5D, -4.8D);
+		Location karabine4 = getLutil().getRelativ(loc, getBlockFace(), -.5D, -4.8D);
 		
-		
-		karabine1 = getLutil().getCenter(karabine1);
-		karabine2 = getLutil().getCenter(karabine2);
-		karabine3 = getLutil().getCenter(karabine3);
-		karabine4 = getLutil().getCenter(karabine4);
-		karabine1.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
-		karabine2.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
-		karabine3.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
-		karabine4.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+		karabine1.setYaw(getYaw()+90);
+		karabine2.setYaw(getYaw()+90);
+		karabine3.setYaw(getYaw()+90);
+		karabine4.setYaw(getYaw()+90);
 		
 		Location saveLoc = getLutil().getRelativ(loc_1, getBlockFace(), -.55D, -0.6);
 		saveLoc.add(0,-1.25,0);
@@ -106,6 +93,8 @@ public class tent_1 extends Furniture implements Listener{
 
 		setblock();
 		
+		double offsetY = .02;
+		
 		for(int i = 0; i<=5;i++){
 			Location loc1= getLutil().getRelativ(saveLoc, getBlockFace(), d, 0D);
 			Location loc2= getLutil().getRelativ(saveLoc, getBlockFace(), d, -.48).add(0,.3,0);
@@ -121,9 +110,9 @@ public class tent_1 extends Furniture implements Listener{
 			
 			loc.add(loc1);
 			loc.add(loc2);
-			loc.add(loc3);
-			loc.add(loc4);
-			loc.add(loc5);
+			loc.add(loc3.subtract(0,offsetY,0));
+			loc.add(loc4.subtract(0,offsetY,0));
+			loc.add(loc5.subtract(0,offsetY,0));
 			
 			fArmorStand asp = getManager().createArmorStand(getObjID(), loc1);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
@@ -163,9 +152,9 @@ public class tent_1 extends Furniture implements Listener{
 			
 			loc.add(loc1);
 			loc.add(loc2);
-			loc.add(loc3);
-			loc.add(loc4);
-			loc.add(loc5);
+			loc.add(loc3.subtract(0,offsetY,0));
+			loc.add(loc4.subtract(0,offsetY,0));
+			loc.add(loc5.subtract(0,offsetY,0));
 			
 			fArmorStand asp = getManager().createArmorStand(getObjID(), loc1);
 			asp.getInventory().setHelmet(new ItemStack(Material.CARPET));
@@ -216,8 +205,8 @@ public class tent_1 extends Furniture implements Listener{
 		asp.getInventory().setHelmet(new ItemStack(Material.TRIPWIRE_HOOK));
 		aspList.add(asp);
 		
-		Location crafting = getLutil().getCenter(block.getLocation());
-		crafting.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+		Location crafting = getRelative(getLutil().getCenter(block.getLocation()), getBlockFace(), 0, -.27).add(0, -.5, 0);
+		crafting.setYaw(getYaw()+90);
 		
 		asp = getManager().createArmorStand(getObjID(), crafting.add(0,-1,0).clone());
 		asp.getInventory().setHelmet(new ItemStack(Material.LADDER));
@@ -229,7 +218,6 @@ public class tent_1 extends Furniture implements Listener{
 		
 		for(fArmorStand packet : aspList){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

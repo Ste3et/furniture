@@ -52,9 +52,11 @@ public class largeTable extends Furniture implements Listener{
 		location.add(0,.2,0);
 		Double winkel = 1.57;
 		ItemStack iTemStack_1 = new ItemStack(Material.STAINED_GLASS_PANE);
+		double off = .46;
+		double off2 = off*2+.1;
 		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 0.0, x*-.63);
-			l.add(0,-1.2,0);
+			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), -off, x*-.62);
+			l.add(0,-1.48,0);
 			l.setYaw(yaw);
 			
 			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
@@ -64,8 +66,8 @@ public class largeTable extends Furniture implements Listener{
 		}
 		
 		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 0.63, x*-.63);
-			l.add(0,-1.2,0);
+			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 0.62-off, x*-.62);
+			l.add(0,-1.48,0);
 			l.setYaw(yaw);
 			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
 			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
@@ -74,8 +76,8 @@ public class largeTable extends Furniture implements Listener{
 		}
 		
 		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 1.26, x*-.63);
-			l.add(0,-1.2,0);
+			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 1.24-off, x*-.62);
+			l.add(0,-1.48,0);
 			l.setYaw(yaw);
 			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
 			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
@@ -94,10 +96,10 @@ public class largeTable extends Furniture implements Listener{
 		
 		double hight = .67;
 		
-		Location t1 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.95, .4).add(0,hight,0);
-		Location t2 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.4, -.92).add(0,hight,0);
-		Location t3 = getLutil().getRelativ(mitteTisch, getBlockFace(), .92, -.36).add(0,hight,0);
-		Location t4 = getLutil().getRelativ(mitteTisch, getBlockFace(), .4, .92).add(0,hight,0);
+		Location t1 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.95+off2, .4).add(0,hight,0);
+		Location t2 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.4+off2, -.92).add(0,hight,0);
+		Location t3 = getLutil().getRelativ(mitteTisch, getBlockFace(), .92+off2, -.36).add(0,hight,0);
+		Location t4 = getLutil().getRelativ(mitteTisch, getBlockFace(), .4+off2, .92).add(0,hight,0);
 		
 		float yaw1 = yaw;
 		float yaw2 = yaw1-90;
@@ -158,7 +160,6 @@ public class largeTable extends Furniture implements Listener{
 		
 		for(fArmorStand packet : armorlist){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

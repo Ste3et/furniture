@@ -71,7 +71,6 @@ public class HumanSkeleton extends Furniture implements Listener {
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90,13,-5)));
 		asList.add(stand);
 		for(fArmorStand asp : asList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
@@ -92,5 +91,4 @@ public class HumanSkeleton extends Furniture implements Listener {
 
 	@Override
 	public void onFurnitureClick(FurnitureClickEvent paramFurnitureClickEvent) {}
-	
 }

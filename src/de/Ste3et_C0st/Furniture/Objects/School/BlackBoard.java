@@ -45,9 +45,14 @@ public class BlackBoard extends Furniture implements Listener {
 		}
 		d = -.235;
 		for(int i = 0; i<6;i++){
-			Location loc1 = getRelative(getCenter(), getBlockFace(), -.27, d).add(0, -2.5, 0);
+			Location loc1 = getRelative(getCenter(), getBlockFace(), -.27, d).add(0, -2.2, 0);
 			fArmorStand stand = spawnArmorStand(loc1.clone().add(0, .4, 0));
 			stand.setHelmet(new ItemStack(Material.WOOD_PLATE));
+			stand.setHeadPose(new EulerAngle(0, 0, 0));
+			aspList.add(stand);
+			
+			stand = spawnArmorStand(loc1.clone().add(0, .32, 0));
+			stand.setHelmet(new ItemStack(Material.TRAP_DOOR));
 			stand.setHeadPose(new EulerAngle(0, 0, 0));
 			aspList.add(stand);
 			d+=.49;
@@ -62,7 +67,6 @@ public class BlackBoard extends Furniture implements Listener {
 		aspList.add(stand);
 		for(fArmorStand as : aspList){
 			as.setInvisible(true);
-			as.setGravity(false);
 		}
 		
 		send();

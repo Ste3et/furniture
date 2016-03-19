@@ -81,8 +81,7 @@ public class campfire_1 extends Furniture implements Listener{
 			Location location = getLutil().getCenter(loc);
 			location.add(0,-1.9,0);
 			location.setYaw(i*60);
-			fArmorStand packet = getManager().createArmorStand(getObjID(), location);
-			packet.setGravity(false);
+			getManager().createArmorStand(getObjID(), location);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

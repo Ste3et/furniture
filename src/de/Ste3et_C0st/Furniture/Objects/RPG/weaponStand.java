@@ -201,24 +201,24 @@ public class weaponStand extends Furniture {
 		
 		Location center2 = center;
 		Location center3 = center.clone();
-		
-		fArmorStand as = getManager().createArmorStand(getObjID(), center2);
+		double offsety = 0.4;
+		fArmorStand as = getManager().createArmorStand(getObjID(), center2.add(0, offsety, 0));
 		as.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
 		packList.add(as);
 		
-		as = getManager().createArmorStand(getObjID(), center3.add(0, .2, 0));
+		as = getManager().createArmorStand(getObjID(), center3.add(0, .2, 0).add(0, offsety, 0));
 		as.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
 		packList.add(as);
 		
 		Location location = center;
-		location = location.add(0, 0, 0);
+		location = location.add(0, -offsety, 0);
 		
 		float yaw = 0;
 		for(int i = 0; i<4;i++){
 			BlockFace face = getLutil().yawToFace(yaw);
-			Location locat = getLutil().getRelativ(location, face, .185D, .185D);
+			Location locat = getLutil().getRelativ(location, face, -.0D, -.0D);
 			
 			as = getManager().createArmorStand(getObjID(), locat.clone());
 			as.getInventory().setHelmet(new ItemStack(Material.FENCE_GATE, 1, (short) 0));
@@ -259,11 +259,9 @@ public class weaponStand extends Furniture {
 		packList.add(as);
 		
 		for(fArmorStand asp : packList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
 }

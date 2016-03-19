@@ -20,11 +20,12 @@ import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class BearTrap extends Furniture implements Listener{
 	
-	fArmorStand stand1, stand2;
+	fArmorStand stand1, stand2, stand3, stand4;
 	boolean b;
 	
 	public BearTrap(ObjectID id){
@@ -34,6 +35,10 @@ public class BearTrap extends Furniture implements Listener{
 				if(stand.getName().equalsIgnoreCase("#IRON1#")){
 					stand1 = stand;
 				}else if(stand.getName().equalsIgnoreCase("#IRON2#")){
+					stand2 = stand;
+				}else if(stand.getName().equalsIgnoreCase("#IRON3#")){
+					stand2 = stand;
+				}else if(stand.getName().equalsIgnoreCase("#IRON4#")){
 					stand2 = stand;
 				}
 			}
@@ -51,7 +56,8 @@ public class BearTrap extends Furniture implements Listener{
 		stand.setHelmet(new ItemStack(Material.IRON_TRAPDOOR));
 		asList.add(stand);
 		
-		Location location = getRelative(getCenter(), 0, .04).add(0, -1.8, 0);
+		double offset = .35;
+		Location location = getRelative(getCenter(), 0, .04+offset).add(0, -2.1, 0);
 		location.setYaw(getYaw()+90);
 		stand = spawnArmorStand(location);
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
@@ -60,18 +66,38 @@ public class BearTrap extends Furniture implements Listener{
 		stand1 = stand;
 		asList.add(stand);
 		
-		location = getRelative(getCenter(), 0, -.04).add(0, -1.8, 0);
-		location.setYaw(getYaw()+90);
+		location = getRelative(getCenter(), 0, -.04-offset).add(0, -2.1, 0);
+		location.setYaw(getYaw()-90);
 		stand = spawnArmorStand(location);
-		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90, 0, 0)));
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
 		stand.setHelmet(new ItemStack(Material.IRON_FENCE));
 		stand.setName("#IRON2#");
 		stand2 = stand;
 		asList.add(stand);
+		offset = -.25;
+		
+		location = getRelative(getCenter(), 0, .04+offset).add(0, -2.25, 0);
+		location.setYaw(getYaw()+90);
+		stand = spawnArmorStand(location);
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
+		stand.setName("#IRON3#");
+		stand3 = stand;
+		asList.add(stand);
+		
+		location = getRelative(getCenter(), 0, -.04-offset).add(0, -2.25, 0);
+		location.setYaw(getYaw()-90);
+		stand = spawnArmorStand(location);
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
+		stand.setName("#IRON4#");
+		stand4 = stand;
+		asList.add(stand);
+		
+		fArmorStand testStand = stand.clone(new Relative(getCenter(), 0, 2, 0, getBlockFace()));
+		testStand.setGlowing(true);
+		asList.add(testStand);
 		
 		for(fArmorStand packet : asList){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
@@ -103,13 +129,17 @@ public class BearTrap extends Furniture implements Listener{
 	}
 	
 	private void setStatus(boolean b){
-		if(b){
-			stand1.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
-			stand2.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
-			getWorld().playSound(getLocation(), Sound.ENTITY_ITEM_BREAK, 5, 1);
+		if(!b){
+			stand1.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand2.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand3.setHelmet(new ItemStack(Material.AIR));
+			stand4.setHelmet(new ItemStack(Material.AIR));
 		}else{
-			stand1.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
-			stand2.setHeadPose(getLutil().degresstoRad(new EulerAngle(-90, 0, 0)));
+			stand3.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand4.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand1.setHelmet(new ItemStack(Material.AIR));
+			stand2.setHelmet(new ItemStack(Material.AIR));
+			getWorld().playSound(getLocation(), Sound.ENTITY_ITEM_BREAK, 5, 1);
 		}
 		this.b = b;
 		update();
@@ -137,5 +167,4 @@ public class BearTrap extends Furniture implements Listener{
 			player.damage(main.damage);
 		}
 	}
-	
 }

@@ -140,7 +140,6 @@ public class tent_3 extends Furniture implements Listener{
 		
 		for(fArmorStand packet : aspL){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

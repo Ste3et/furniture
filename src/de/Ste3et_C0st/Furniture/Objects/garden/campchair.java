@@ -76,12 +76,12 @@ public class campchair extends Furniture implements Listener {
 		aspList.add(packet);
 		
 		l1 = middle.clone();
-		l1.add(0, -.65, 0);
+		l1.add(0, -.39, 0);
 		packet = getManager().createArmorStand(getObjID(), l1);
 		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
 		aspList.add(packet);
 		
-		middle.add(0,-0.6,0);
+		middle.add(0,-0.6-.26,0);
 		middle.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 		packet = getManager().createArmorStand(getObjID(), middle);
 		packet.setName("#SITZ#");
@@ -90,11 +90,9 @@ public class campchair extends Furniture implements Listener {
 		for(fArmorStand as : aspList){
 			as.setInvisible(true);
 			as.setBasePlate(false);
-			as.setGravity(false);
 		}
 		
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
 }

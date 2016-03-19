@@ -80,10 +80,8 @@ public class SleepingBag extends Furniture implements Listener {
 		asList.add(stand);
 		for(fArmorStand as : asList){
 			as.setInvisible(true);
-			as.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
 }

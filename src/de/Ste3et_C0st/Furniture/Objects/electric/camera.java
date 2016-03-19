@@ -43,7 +43,7 @@ public class camera extends Furniture implements Listener{
 		Location gehäuse = getLutil().getRelativ(center, b, 0D, 0D).add(0,-1.0,0);
 		Location gehäuse2 = getLutil().getRelativ(center, b, 0D, 0D).add(0,-0.4,0);
 		Location fokus = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.24,0);
-		Location search = getLutil().getRelativ(center, b, .15D, 0D).add(0,-.7,0);
+		Location search = getLutil().getRelativ(center, b, .5D, 0D).add(0,-1.2,0);
 		Location button = getLutil().getRelativ(center, b, -.15D, -.15D).add(0,.08,0);
 		
 		Location feet1 = getLutil().getRelativ(center, b, .5D, .4D).add(0,-.9,0);
@@ -98,7 +98,6 @@ public class camera extends Furniture implements Listener{
 		
 		for(fArmorStand asp : aspList){
 			asp.setInvisible(true);
-			asp.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
@@ -146,5 +145,4 @@ public class camera extends Furniture implements Listener{
 			}
 		}
 	}
-	
 }

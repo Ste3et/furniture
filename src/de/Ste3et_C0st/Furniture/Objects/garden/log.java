@@ -112,7 +112,6 @@ public class log extends Furniture {
 		lStand.add(stand);
 		
 		for(fArmorStand asp : lStand){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 			asp.setMarker(false);
@@ -327,5 +326,4 @@ public class log extends Furniture {
 		b.setType(Material.AIR);
 		b=null;
 	}
-
 }

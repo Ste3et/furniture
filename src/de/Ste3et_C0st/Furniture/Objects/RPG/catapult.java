@@ -34,7 +34,6 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
 public class catapult  extends Furniture implements Listener {
-
 	public catapult(ObjectID id) {
 		super(id);
 		if(isFinish()){
@@ -68,7 +67,7 @@ public class catapult  extends Furniture implements Listener {
 		}
 		
 		for(int i =0;i<4;i++){
-			Location loc = getRelative(getCenter(), .9 , -.26-d).add(0, -.9+i*.44, 0);
+			Location loc = getRelative(getCenter(), .9 , -.26-d).add(0, -.9+i*.43, 0);
 			fArmorStand stand = spawnArmorStand(loc);
 			stand.setHelmet(new ItemStack(Material.LOG));
 			stand.setSmall(true);
@@ -76,7 +75,7 @@ public class catapult  extends Furniture implements Listener {
 		}
 		
 		for(int i =0;i<4;i++){
-			Location loc = getRelative(getCenter(), .9 , -2+.28+d).add(0, -.9+i*.44, 0);
+			Location loc = getRelative(getCenter(), .9 , -2+.28+d).add(0, -.9+i*.43, 0);
 			fArmorStand stand = spawnArmorStand(loc);
 			stand.setHelmet(new ItemStack(Material.LOG));
 			stand.setSmall(true);
@@ -135,7 +134,6 @@ public class catapult  extends Furniture implements Listener {
 		asList.add(stand);
 		
 		for(fArmorStand asp : asList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 		}
 		
@@ -240,5 +238,4 @@ public class catapult  extends Furniture implements Listener {
 		e.getPlayer().getInventory().setItem(i, is);
 		e.getPlayer().updateInventory();
 	}
-
 }

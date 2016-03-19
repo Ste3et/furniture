@@ -297,7 +297,6 @@ public class hammock extends Furniture implements Listener{
 		
 		for(fArmorStand pack : aspList){
 			pack.setInvisible(true);
-			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
 		

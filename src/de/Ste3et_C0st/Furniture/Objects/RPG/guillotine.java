@@ -186,13 +186,13 @@ public class guillotine extends Furniture implements Listener{
 		Location loc6 = getLutil().getRelativ(center.clone(), getBlockFace(), 0d, -.75d).add(0, 4.2, 0);
 		Location loc7 = getLutil().getRelativ(center.clone(), getBlockFace(), -.43d, 0d).add(0, 4.5, 0);
 		
-		Location loc8 = getLutil().getRelativ(center.clone(), getBlockFace(), -.32d, -.22d).add(0, 3.6, 0);
-		Location loc9 = getLutil().getRelativ(center.clone(), getBlockFace(), -.32d, -.75d).add(0, 3.6, 0);
-		Location loc10 = getLutil().getRelativ(center.clone(), getBlockFace(), -.32d, -.33d).add(0, 3.5, 0);
-		Location loc11 = getLutil().getRelativ(center.clone(), getBlockFace(), -.32d, -.82d).add(0, 3.3, 0);
+		Location loc8 = getLutil().getRelativ(center.clone(), getBlockFace(), -.01d, -.22d).add(0, 3.6, 0);
+		Location loc9 = getLutil().getRelativ(center.clone(), getBlockFace(), -.01d, -.75d).add(0, 3.6, 0);
+		Location loc10 = getLutil().getRelativ(center.clone(), getBlockFace(), -.01d, -.33d).add(0, 3.5, 0);
+		Location loc11 = getLutil().getRelativ(center.clone(), getBlockFace(), -.01d, -.82d).add(0, 3.3, 0);
 		
-		loc1.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-		loc2.setYaw(getLutil().FaceToYaw(getBlockFace()));
+		loc1.setYaw(getYaw()+90);
+		loc2.setYaw(getYaw()-90);
 		loc3.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 		loc4.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		loc5.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
@@ -290,7 +290,6 @@ public class guillotine extends Furniture implements Listener{
 		packList.add(packet3);
 
 		for(fArmorStand packets : packList){
-			packets.setGravity(false);
 			packets.setInvisible(true);
 			packets.setBasePlate(false);
 		}
@@ -658,5 +657,4 @@ public class guillotine extends Furniture implements Listener{
 			invIII = inv;
 		}
 	}
-
 }

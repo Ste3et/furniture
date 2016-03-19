@@ -57,10 +57,10 @@ public class sofa extends Furniture implements Listener {
 		if(b.equals(BlockFace.SOUTH)){loc = getLutil().getRelativ(loc, b, -1.0, -1.0);}
 		if(b.equals(BlockFace.EAST)){loc = getLutil().getRelativ(loc, b, -1.0, .0);}
 			Location looking = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() -1.4 , loc.getBlockZ());
-			Location feet1 = getLutil().getRelativ(looking, b, place, .2D);
-			Location feet2 = getLutil().getRelativ(looking, b, place, lengt.doubleValue()-.2D);
-			Location feet3 = getLutil().getRelativ(looking, b, place + .5, .2D);
-			Location feet4 = getLutil().getRelativ(looking, b, place + .5, lengt.doubleValue()-.2D);
+			Location feet1 = getLutil().getRelativ(looking, b, place + .3, .2D).add(0, -.47, 0);
+			Location feet2 = getLutil().getRelativ(looking, b, place + .3, lengt.doubleValue()-.2D).add(0, -.47, 0);
+			Location feet3 = getLutil().getRelativ(looking, b, place + .8, .2D).add(0, -.47, 0);
+			Location feet4 = getLutil().getRelativ(looking, b, place + .8, lengt.doubleValue()-.2D).add(0, -.47, 0);
 			
 			fArmorStand asp = getManager().createArmorStand(getObjID(), feet1);
 			asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
@@ -143,7 +143,6 @@ public class sofa extends Furniture implements Listener {
 			
 			for(fArmorStand asps : aspList){
 				asps.setInvisible(true);
-				asps.setGravity(false);
 				asps.setBasePlate(false);
 			}
 			send();

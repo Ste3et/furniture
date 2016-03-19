@@ -103,7 +103,6 @@ public class sunshade extends Furniture implements Listener{
 		
 		for(fArmorStand packet : asList){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 			packet.setBasePlate(false);
 		}
 		send();

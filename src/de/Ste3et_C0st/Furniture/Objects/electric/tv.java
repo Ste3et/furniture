@@ -35,31 +35,31 @@ public class tv extends Furniture implements Listener{
 		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
 		BlockFace b = getLutil().yawToFace(location.getYaw()).getOppositeFace();
 		Location center = getLutil().getCenter(location);
-		center.add(0, -1.38, 0);
+		double d = .2;
+		center.add(0, -1.38+d, 0);
 		center.setYaw(getLutil().FaceToYaw(b));
 		Location iron = center.clone();
 		fArmorStand as = getManager().createArmorStand(getObjID(), iron);
 		as.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
 		as.setSmall(true);
 		aspList.add(as);
-		center.add(0, -.45, 0);
+		center.add(0, -1.0, 0);
 		center.setYaw(getLutil().FaceToYaw(b));
 
-		as = getManager().createArmorStand(getObjID(), center);
+		as = getManager().createArmorStand(getObjID(), getRelative(center, getBlockFace(), .3, 0).subtract(0, d, 0));
 		as.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(as);
 		
-		Location tv = getLutil().getRelativ(center.clone(), b, -.38, -.2);
+		Location tv = getLutil().getRelativ(center.clone().add(0, .55, 0), b, -.38, -.2);
 		tv.add(0, -.1, 0);
 		tv.setYaw(getLutil().FaceToYaw(b));
-		Double l = .63;
+		Double l = .62-d;
 		for(int i = 0;i<=1;i++){
-			setRow(tv, .63, l, -.35,2,getLutil().degresstoRad(new EulerAngle(90, 0, 0)), aspList);
-			l+=.63;
+			setRow(tv, .62, l, -.35,2,getLutil().degresstoRad(new EulerAngle(90, 0, 0)), aspList);
+			l+=.62;
 		}
 		
 		for(fArmorStand asp : aspList){
-			asp.setGravity(false);
 			asp.setBasePlate(false);
 			asp.setInvisible(true);
 		}

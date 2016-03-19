@@ -67,22 +67,21 @@ public class SchoolChair extends Furniture implements Listener {
 		stand.setMarker(false);
 		asList.add(stand);
 		
-		stand = spawnArmorStand(getCenter().subtract(0, 1.6, 0));
+		stand = spawnArmorStand(getCenter().subtract(0, 1.35, 0));
 		stand.setHelmet(new ItemStack(Material.IRON_PLATE));
 		asList.add(stand);
 		
-		stand = spawnArmorStand(getCenter().subtract(0, 1.5, 0));
+		stand = spawnArmorStand(getCenter().subtract(0, 1.3, 0));
 		stand.setName("#SITZ#");
 		asList.add(stand);
 		
-		stand = spawnArmorStand(getCenter().subtract(0, 1, 0));
+		stand = spawnArmorStand(getRelative(getCenter().subtract(0, 1.1, 0), getBlockFace(), .25, 0));
 		stand.setHelmet(new ItemStack(Material.IRON_PLATE));
-		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-100, 0, 0)));
+		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(-89, 0, 0)));
 		asList.add(stand);
 		
 		for(fArmorStand as : asList){
 			as.setInvisible(true);
-			as.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

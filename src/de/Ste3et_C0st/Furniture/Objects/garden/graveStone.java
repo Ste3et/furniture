@@ -96,26 +96,21 @@ public class graveStone extends Furniture implements Listener{
 		
 		Double l = .3;
 		for(int i = 0;i<=2;i++){
-			setRow(center, .38, l, -.35,2,getLutil().degresstoRad(new EulerAngle(90, 0, 0)), aspList);
-			if(i!=1){
-				l+=.4;
-			}else{
-				l+=.35;
-			}
+			setRow(center, .38, l, -.15,2,getLutil().degresstoRad(new EulerAngle(90, 0, 0)), aspList);
+			l+=.35;
 			
 		}
 		
-		fArmorStand as = getManager().createArmorStand(getObjID(), kreutz1);
+		fArmorStand as = getManager().createArmorStand(getObjID(), kreutz1.add(0, -.15, 0));
 		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
 		aspList.add(as);
-		as = getManager().createArmorStand(getObjID(), kreutz2);
+		as = getManager().createArmorStand(getObjID(), kreutz2.add(0, -.15, 0));
 		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
 		as.setPose(new EulerAngle(1.38,1.57,1.57), BodyPart.RIGHT_ARM);
 		aspList.add(as);
 		
 		for(fArmorStand asp : aspList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}
@@ -253,5 +248,4 @@ public class graveStone extends Furniture implements Listener{
 			d+=x;
 		}
 	}
-	
 }

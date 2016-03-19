@@ -142,7 +142,6 @@ public class campfire_2 extends Furniture implements Listener{
 		
 		for(fArmorStand packet : packetList){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		getManager().send(getObjID());
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

@@ -117,7 +117,6 @@ public class tent_2 extends Furniture implements Listener{
 		int i = 0;
 		for(fArmorStand packet : aspl){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 			if(i>44&&i<57){
 				packet.setMarker(false);
 			}

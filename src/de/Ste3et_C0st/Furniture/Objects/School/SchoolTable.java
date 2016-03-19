@@ -98,7 +98,7 @@ public class SchoolTable extends Furniture implements Listener {
 		Location loc4 = getRelative(getCenter(), getBlockFace(), .16+.41, .67-.36).subtract(0, 1.9, 0);
 		loc4.setYaw(getYaw()+90);
 		
-		Location loc5 = getRelative(getCenter(), getBlockFace(), .37, .33).subtract(0, .22, 0);
+		Location loc5 = getRelative(getCenter(), getBlockFace(), .37, .33).subtract(0, .35, 0);
 		loc5.setYaw(getYaw()+90);
 		
 		fArmorStand stand = spawnArmorStand(loc1);
@@ -125,7 +125,7 @@ public class SchoolTable extends Furniture implements Listener {
 		stand.setMarker(false);
 		asList.add(stand);
 		
-		stand = spawnArmorStand(getCenter().subtract(0, 1.2, 0));
+		stand = spawnArmorStand(getCenter().subtract(0, .95, 0));
 		stand.setHelmet(new ItemStack(Material.WOOD_PLATE));
 		asList.add(stand);
 		
@@ -137,10 +137,8 @@ public class SchoolTable extends Furniture implements Listener {
 		
 		for(fArmorStand as : asList){
 			as.setInvisible(true);
-			as.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-	
 }

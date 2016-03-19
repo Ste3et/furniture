@@ -83,8 +83,8 @@ public class TrashCan extends Furniture implements Listener  {
 		
 		float yaw = 0;
 		for(int i = 0; i<4;i++){
-			Location location = getLutil().getRelativ(getCenter(), getLutil().yawToFace(yaw), .25, 0);
-			location.add(0,-1.88,0);
+			Location location = getLutil().getRelativ(getCenter(), getLutil().yawToFace(yaw), .43, 0);
+			location.add(0,-2.45,0);
 			location.setYaw(yaw);
 			stand = spawnArmorStand(location);
 			stand.setHelmet(new ItemStack(Material.IRON_FENCE));
@@ -102,10 +102,8 @@ public class TrashCan extends Furniture implements Listener  {
 		
 		for(fArmorStand as : asList){
 			as.setInvisible(true);
-			as.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-	
 }

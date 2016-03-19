@@ -133,7 +133,6 @@ public class mailBox extends Furniture implements Listener {
 		
 		
 		for(fArmorStand asp : aspList){
-			asp.setGravity(false);
 			asp.setInvisible(true);
 			asp.setBasePlate(false);
 		}

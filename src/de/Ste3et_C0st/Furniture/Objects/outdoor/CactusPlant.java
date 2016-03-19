@@ -100,12 +100,10 @@ public class CactusPlant extends Furniture implements Listener {
 		
 		for(fArmorStand as : aspList){
 			as.setInvisible(true);
-			as.setGravity(false);
 			as.setBasePlate(false);
 		}
 		
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
 }

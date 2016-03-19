@@ -51,38 +51,43 @@ public class lantern extends Furniture implements Listener{
 		Location obsidian = center;
 		Location l = new Location(center.getWorld(), center.getX(), center.getY() -1.43, center.getZ());
 		obsidian.add(0D, -2.2, 0D);
-		Location left_down = new Location(obsidian.getWorld(), obsidian.getX()+.21, obsidian.getY() + .62, obsidian.getZ()+.21);
-		Location left_upper = new Location(obsidian.getWorld(), obsidian.getX() -.21, obsidian.getY() + .62, obsidian.getZ() +.21);
-		Location right_upper = new Location(obsidian.getWorld(), obsidian.getX()-.21, obsidian.getY()+.62, obsidian.getZ()-.21);
-		Location right_down = new Location(obsidian.getWorld(), obsidian.getX()+.21, obsidian.getY() + .62, obsidian.getZ() -.21);
+		Location l1 = getRelative(center, getBlockFace(), +.05, +.21).add(0, .11, 0);
+		Location l2 = getRelative(center, getBlockFace(), +.5, +.21).add(0, .11, 0);
+		Location l3 = getRelative(center, getBlockFace(), +.5, -.21).add(0, .11, 0);
+		Location l4 = getRelative(center, getBlockFace(), +.05, -.21).add(0, .11, 0);
+		
+		
+		l1.setYaw(getYaw());
+		l2.setYaw(getYaw());
+		l3.setYaw(getYaw());
+		l4.setYaw(getYaw());
 		
 		fArmorStand asp = getManager().createArmorStand(getObjID(), obsidian);
 		asp.getInventory().setHelmet(new ItemStack(Material.OBSIDIAN));
 		aspList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), getLutil().getRelativ(l.clone(), getBlockFace(), 0D, 0.01D));
+		asp = getManager().createArmorStand(getObjID(), getLutil().getRelativ(l.clone(), getBlockFace(), 0D, 0.01D).add(0, .23, 0));
 		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
 		aspList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), left_down);
+		asp = getManager().createArmorStand(getObjID(), l1);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), left_upper);
+		asp = getManager().createArmorStand(getObjID(), l2);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), right_upper);
+		asp = getManager().createArmorStand(getObjID(), l3);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), right_down);
+		asp = getManager().createArmorStand(getObjID(), l4);
 		asp.getInventory().setHelmet(new ItemStack(Material.LEVER));
 		aspList.add(asp);
 		
 		for(fArmorStand packet : aspList){
 			packet.setBasePlate(false);
-			packet.setGravity(false);
 			packet.setInvisible(true);
 		}
 		send();

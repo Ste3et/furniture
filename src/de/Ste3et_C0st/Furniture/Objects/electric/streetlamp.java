@@ -99,7 +99,6 @@ public class streetlamp extends Furniture implements Listener{
 		
 		for(fArmorStand pack : asList){
 			pack.setInvisible(true);
-			pack.setGravity(false);
 			pack.setBasePlate(false);
 		}
 		getManager().send(getObjID());

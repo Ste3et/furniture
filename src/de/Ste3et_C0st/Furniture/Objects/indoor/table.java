@@ -39,7 +39,7 @@ public class table extends Furniture implements Listener {
 		Location l = loc;
 		l.setYaw(0);
 		
-		fArmorStand asp = getManager().createArmorStand(getObjID(), middle1.add(0, -2.1, 0));
+		fArmorStand asp = getManager().createArmorStand(getObjID(), middle1.add(0, -1.9, 0));
 		asp.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE));
 		packetL.add(asp);
 		asp = getManager().createArmorStand(getObjID(), middle2.add(0,-1.05,0));
@@ -58,7 +58,6 @@ public class table extends Furniture implements Listener {
 		
 		for(fArmorStand packet : packetL){
 			packet.setInvisible(true);
-			packet.setGravity(false);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());

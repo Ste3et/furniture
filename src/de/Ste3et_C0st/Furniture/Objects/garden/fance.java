@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
@@ -57,11 +58,10 @@ public class fance extends Furniture implements Listener{
 			Location loc = locat.clone();
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setHelmet(new ItemStack(m,0,(short) 0));
-			packet.setGravity(false);
 			packet.setInvisible(true);
 			packet.setBasePlate(false);
 			packet.setSmall(true);
-			locat.add(0, .44, 0);
+			locat.add(0, .43, 0);
 		}
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
@@ -165,6 +165,4 @@ public class fance extends Furniture implements Listener{
 		}
 		getObjID().addBlock(Arrays.asList(this.block));
 	}
-	
-	
 }
