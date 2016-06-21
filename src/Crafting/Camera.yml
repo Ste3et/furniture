@@ -1,4 +1,5 @@
 Camera:
+  system-ID: 'Camera'
   name: '&cCamera'
   material: 383
   glow: false

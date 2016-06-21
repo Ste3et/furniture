@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,7 @@ import org.bukkit.util.EulerAngle;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -33,11 +35,12 @@ public class graveStone extends Furniture implements Listener{
 	public graveStone(ObjectID id){
 		super(id);
 		if(isFinish()){
-			setBlock();
 			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
+			setBlock();
 			return;
 		}
 		spawn(id.getStartLocation());
+		Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 		setBlock();
 	}
 	
@@ -45,6 +48,7 @@ public class graveStone extends Furniture implements Listener{
 	Block sign;
 	String[] lines = new String[4];
 	
+	@SuppressWarnings("deprecation")
 	private void setBlock(){
 		Location location = getLocation().clone();
 		if(getBlockFace().equals(BlockFace.WEST)){location = getLutil().getRelativ(location, getBlockFace(), .0, -1.02);}
@@ -57,7 +61,12 @@ public class graveStone extends Furniture implements Listener{
 		this.signLoc = sign;
 		
 		if(!sign.getBlock().getType().equals(Material.WALL_SIGN)){
-			this.sign = getLutil().setSign(getBlockFace(), sign);
+			sign.getBlock().setType(Material.WALL_SIGN);
+			this.sign = sign.getBlock();
+			BlockState state = this.sign.getState();
+			LocationUtil util = getLutil();
+			state.setRawData(util.getFacebyte(util.yawToFace(getYaw() + 90)));
+			state.update();
 		}else{
 			this.sign = sign.getBlock();
 		}
@@ -115,7 +124,6 @@ public class graveStone extends Furniture implements Listener{
 			asp.setBasePlate(false);
 		}
 		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@EventHandler(priority=EventPriority.LOW)

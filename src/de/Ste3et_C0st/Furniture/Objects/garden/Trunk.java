@@ -20,6 +20,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class Trunk extends Furniture implements Listener {
 
@@ -55,7 +56,7 @@ public class Trunk extends Furniture implements Listener {
 		if(!e.canBuild()){return;}
 		ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
 		stack.setAmount(1);
-		for(fArmorStand stand : getfAsList()){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().startsWith("#TO")){
 				stand.setHelmet(stack);
 			}
@@ -72,7 +73,7 @@ public class Trunk extends Furniture implements Listener {
 	
 	private void setPassanger(fArmorStand stand, Player p){
 		int i = Integer.parseInt(stand.getName().split(":")[1]);
-		for(fArmorStand as : getfAsList()){
+		for(fEntity as : getfAsList()){
 			if(as.getName().equalsIgnoreCase("#Sitz:" + i)){
 				if(as.getPassanger()==null){
 					as.setPassanger(p);

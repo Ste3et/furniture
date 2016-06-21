@@ -1,4 +1,5 @@
 SnowGolem:
+    system-ID: 'SnowGolem'
     name: '&cSnowGolem'
     material: 383
     glow: false

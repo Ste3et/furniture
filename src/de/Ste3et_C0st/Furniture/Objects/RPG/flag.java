@@ -24,6 +24,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class flag extends Furniture implements Listener {
 
@@ -83,7 +84,7 @@ public class flag extends Furniture implements Listener {
 	}
 	
 	public int getState(){
-		for(fArmorStand stand : getfAsList()){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().startsWith("#FLAG")){
 				return Integer.parseInt(stand.getName().split(":")[1]);
 			}
@@ -91,8 +92,8 @@ public class flag extends Furniture implements Listener {
 		return 1;
 	}
 	
-	public fArmorStand getStand(){
-		for(fArmorStand stand : getfAsList()){
+	public fEntity getStand(){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().startsWith("#FLAG")){
 				return stand;
 			}
@@ -100,7 +101,7 @@ public class flag extends Furniture implements Listener {
 		return null;
 	}
 	
-	public void setState(int i, fArmorStand stand){
+	public void setState(int i, fEntity stand){
 		if(i<1||i>3){return;}
 		if(stand==null){return;}
 		switch (i) {

@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class Crossbow extends Furniture implements Listener  {
 
@@ -131,7 +132,7 @@ public class Crossbow extends Furniture implements Listener  {
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
-		fArmorStand stand = getArmorStand();
+		fEntity stand = getArmorStand();
 		if(stand==null){return;}
 		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(!hasArrow()||(is!=null&&is.getType()!=null&&is.getType().equals(Material.ARROW))){
@@ -152,7 +153,7 @@ public class Crossbow extends Furniture implements Listener  {
 		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
-		fArmorStand stand = getArmorStand();
+		fEntity stand = getArmorStand();
 		if(stand==null){return;}
 		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(!hasArrow()||(is!=null&&is.getType()!=null&&is.getType().equals(Material.ARROW))){
@@ -198,7 +199,7 @@ public class Crossbow extends Furniture implements Listener  {
 	    return entities;
 	}
 	
-	private void removeArrow(fArmorStand stand){
+	private void removeArrow(fEntity stand){
 		ItemStack is = stand.getItemInMainHand();
 		if(is.getAmount()-1<=0){
 			stand.setItemInMainHand(new ItemStack(Material.AIR));
@@ -210,7 +211,7 @@ public class Crossbow extends Furniture implements Listener  {
 		update();
 	}
 	
-	private void addArmor(ItemStack is, fArmorStand stand){
+	private void addArmor(ItemStack is, fEntity stand){
 		if(getArrow()!=null){is.setAmount(getArrow().getAmount());}
 		stand.setItemInMainHand(is);
 		update();
@@ -218,8 +219,8 @@ public class Crossbow extends Furniture implements Listener  {
 	
 	
 	
-	private fArmorStand getArmorStand(){
-		for(fArmorStand stand : getfAsList()){
+	private fEntity getArmorStand(){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ARROW#")){
 				return stand;
 			}
@@ -228,7 +229,7 @@ public class Crossbow extends Furniture implements Listener  {
 	}
 	
 	private ItemStack getArrow(){
-		for(fArmorStand stand : getfAsList()){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ARROW#")){
 				if(!(stand.getItemInMainHand()==null||stand.getItemInMainHand().getType()==null||stand.getItemInMainHand().getType().equals(Material.AIR))){
 					return stand.getItemInMainHand();
@@ -239,7 +240,7 @@ public class Crossbow extends Furniture implements Listener  {
 	}
 
 	private boolean hasArrow(){
-		for(fArmorStand stand : getfAsList()){
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ARROW#")){
 				if(stand.getItemInMainHand()==null||stand.getItemInMainHand().getType()==null||stand.getItemInMainHand().getType().equals(Material.AIR)){
 					return false;

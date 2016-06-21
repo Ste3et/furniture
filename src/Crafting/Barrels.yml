@@ -1,4 +1,5 @@
 Barrels:
+    systemID: 'Barrels'
     name: '&cBarrels'
     material: 383
     glow: true

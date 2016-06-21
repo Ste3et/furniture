@@ -1,4 +1,5 @@
 Hammock:
+    system-ID: 'Hammock'
     name: '&cHammock'
     material: 383
     glow: false

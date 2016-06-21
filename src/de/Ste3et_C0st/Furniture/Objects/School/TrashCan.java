@@ -18,6 +18,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class TrashCan extends Furniture implements Listener  {
 
@@ -49,8 +50,8 @@ public class TrashCan extends Furniture implements Listener  {
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		fArmorStand stand = null;
-		for(fArmorStand s : getfAsList()){
+		fEntity stand = null;
+		for(fEntity s : getfAsList()){
 			if(s.getName().equalsIgnoreCase("#TRASH#")){
 				stand = s;break;
 			}

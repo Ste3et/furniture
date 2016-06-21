@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<!-- Configuration of the Ant build system to generate a Jar file -->
+<project name="DiceFurniture" default="CreateJar">
+  <target name="CreateJar" description="Create Jar file">
+        <jar jarfile="C:/Plugins/BuildServer/plugins/DiceFurniture.jar" basedir="./target/classes/" includes="**/*" />
+  </target>
+</project>

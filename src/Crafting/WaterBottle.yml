@@ -1,4 +1,5 @@
 WaterBottle:
+    system-ID: 'WaterBottle'
     name: '&cWaterBottle'
     material: 383
     glow: false

@@ -30,6 +30,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class guillotine extends Furniture implements Listener{
 
@@ -83,10 +84,10 @@ public class guillotine extends Furniture implements Listener{
 	}
 	
 	private fArmorStand getByName(String s){
-		for(fArmorStand packets : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packets : getManager().getfArmorStandByObjectID(getObjID())){
 			if(!packets.getName().equalsIgnoreCase("")){
 				if(packets.getName().startsWith("#Oblation#")){
-					return packets;
+					return (fArmorStand) packets;
 				}
 			}
 		}
@@ -97,15 +98,18 @@ public class guillotine extends Furniture implements Listener{
 		armorStandList.clear();
 		if(packet2==null){packet2 = getByName("#Oblation#");}
 		if(packet3==null){packet3 = getByName("#Head#");}
-		for(fArmorStand packets : getManager().getfArmorStandByObjectID(getObjID())){
-			if(!packets.getName().equalsIgnoreCase("")){
-				if(!(packets.getName().startsWith("#Oblation#") && packets.getName().startsWith("#Head#"))){
-					if(packets.getName().startsWith("iron")){
-						armorStandList.add(packets);
-						Location loc = getStartLocation(packets.getName());
-						packets.teleport(loc);
-					}else{
-						packet1 = packets;
+		for(fEntity packets : getManager().getfArmorStandByObjectID(getObjID())){
+			if(packets instanceof fArmorStand){
+				fArmorStand stand = (fArmorStand) packets;
+				if(!packets.getName().equalsIgnoreCase("")){
+					if(!(packets.getName().startsWith("#Oblation#") && packets.getName().startsWith("#Head#"))){
+						if(packets.getName().startsWith("iron")){
+							armorStandList.add(stand);
+							Location loc = getStartLocation(packets.getName());
+							packets.teleport(loc);
+						}else{
+							packet1 = stand;
+						}
 					}
 				}
 			}
@@ -447,8 +451,8 @@ public class guillotine extends Furniture implements Listener{
 	private boolean canStart(){
 		if(isRunning()) return false;
 		boolean a = false,b = false,c = false;
-		a = !packet1.isVisible();
-		b = !packet2.isVisible();
+		a = !packet1.isInvisible();
+		b = !packet2.isInvisible();
 		if(packet1.getItemInMainHand()!=null&&!packet1.getItemInMainHand().equals(Material.AIR)){
 			c = true;
 		}

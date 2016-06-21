@@ -16,12 +16,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.EulerAngle;
+
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class FireworkLauncher extends Furniture implements Listener {
 
@@ -42,7 +44,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#FIREWORK#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 					ItemStack is = packet.getInventory().getItemInMainHand();
@@ -63,8 +65,8 @@ public class FireworkLauncher extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
 		Player p = e.getPlayer();
-		fArmorStand stand = null;
-		for(fArmorStand st : getfAsList()){
+		fEntity stand = null;
+		for(fEntity st : getfAsList()){
 			if(st.getName().equalsIgnoreCase("#FIREWORK#")){
 				stand = st;
 				break;
@@ -109,7 +111,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 		return ThreadLocalRandom.current().nextDouble(min, max);
 	}
 	
-	public boolean canLaunch(fArmorStand stand){
+	public boolean canLaunch(fEntity stand){
 		if(stand.getItemInMainHand()!=null){
 			if(stand.getItemInMainHand().getType().equals(Material.FIREWORK)){
 				return true;
@@ -118,14 +120,14 @@ public class FireworkLauncher extends Furniture implements Listener {
 		return false;
 	}
 	
-	public void setItem(fArmorStand stand, ItemStack is){
+	public void setItem(fEntity stand, ItemStack is){
 		ItemStack stack = is.clone();
 		stack.setAmount(1);
 		stand.setItemInMainHand(stack);
 		update();
 	}
 	
-	public void drop(fArmorStand stand){
+	public void drop(fEntity stand){
 		if(stand.getItemInMainHand()!=null){
 			getWorld().dropItem(getCenter(), stand.getItemInMainHand());
 			stand.setItemInMainHand(new ItemStack(Material.AIR));

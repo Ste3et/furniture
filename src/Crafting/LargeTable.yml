@@ -1,4 +1,5 @@
 LargeTable:
+    system-ID: 'LargeTable'
     name: '&cLarge Table'
     material: 383
     glow: false

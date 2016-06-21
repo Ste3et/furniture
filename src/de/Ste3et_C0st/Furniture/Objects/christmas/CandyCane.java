@@ -50,7 +50,7 @@ public class CandyCane extends Furniture implements Listener {
         GameProfile profile = new GameProfile(UUID.randomUUID(), generateSessionKey(10));
         Property textures = new Property(
             "textures",
-            "eyJ0aW1lc3RhbXAiOjE0NDc5NDgyNDcwODQsInByb2ZpbGVJZCI6IjBlNGUzZmIwMTY4ZjRmMWI4NDM3ZjM5ZWYxNTdhZjk0IiwicHJvZmlsZU5hbWUiOiJDb29raWVNYWtlcjIwMDAiLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMDgxYWI4MDdjZDRhZTcxZWYyYjI2MzdiNWQ3MWM1ZDZjYTRjNzdjNWQ1YTQ1Mjc1MjRlNzYzZWM5ZWVlIn19fQ=="
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNjM2Y3ODFjOTIzYTI4ODdmMTRjMWVlYTExMDUwMTY2OTY2ZjI2MDI1Nzg0MDFmMTQ1MWU2MDk3Yjk3OWRmIn19fQ"
         );
         profile.getProperties().put(textures.getName(), textures);
         

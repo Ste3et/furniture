@@ -64,18 +64,18 @@ public class mailBox extends Furniture implements Listener {
 			aspList.add(packet);
 		}
 		
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), -.21, 0D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.25, 0), getBlockFace(), -.21, -.0D));
 		as.getInventory().setHelmet(new ItemStack(Material.SMOOTH_BRICK, 1, (short) 0));
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.2, 0), getBlockFace(), .21, 0D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.25, 0), getBlockFace(), .21, 0D));
 		as.getInventory().setHelmet(new ItemStack(Material.SMOOTH_BRICK, 1, (short) 0));
 		as.setSmall(true);
 		aspList.add(as);
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace(), -.44+.165*i, .43D);
+			Location loc = getLutil().getRelativ(middle.clone().add(0, 1.898, 0), getBlockFace(), -.44+.165*i, .462D);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.setSmall(true);
 			//x z y
@@ -106,7 +106,7 @@ public class mailBox extends Furniture implements Listener {
 		
 		BlockFace face = getBlockFace();
 		face = getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 90);
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.5, 0), face, -.21, -.32D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.5, 0), face, -.04, -.55D));
 		as.getInventory().setHelmet(new ItemStack(Material.REDSTONE_TORCH_ON, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
 		as.setName("#ELEMENT#");
@@ -119,7 +119,7 @@ public class mailBox extends Furniture implements Listener {
 		as.setSmall(true);
 		aspList.add(as);
 		
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.40, 0), face.getOppositeFace(), -.1, .34D));
+		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(middle.clone().add(0, 1.40, 0), face.getOppositeFace(), -.15, .33D));
 		as.getInventory().setItemInMainHand(new ItemStack(Material.WOOD_BUTTON, 1, (short) 0));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(-15,-67, -90)), BodyPart.RIGHT_ARM);
 		as.setSmall(true);

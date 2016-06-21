@@ -15,7 +15,7 @@ import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class campfire_1 extends Furniture implements Listener{
 
@@ -30,12 +30,13 @@ public class campfire_1 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(getObjID()==null||e.getID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			packet.setFire(false);
 			Location location = getLocation().clone();
 			location.add(0, 1.2, 0);
@@ -54,10 +55,10 @@ public class campfire_1 extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.WATER_BUCKET)){
-			for(fArmorStand packet : aspList){
+			for(fEntity packet : aspList){
 				packet.setFire(false);
 				Location location = getLocation().clone();
 				location.add(0, 1.2, 0);
@@ -65,7 +66,7 @@ public class campfire_1 extends Furniture implements Listener{
 			}
 			getManager().updateFurniture(getObjID());
 		}else if(is.getType().equals(Material.FLINT_AND_STEEL)){
-			for(fArmorStand packet : aspList){
+			for(fEntity packet : aspList){
 				packet.setFire(true);
 				Location location = getLocation().clone();
 				location.add(0, 1.2, 0);

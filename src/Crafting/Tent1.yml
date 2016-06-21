@@ -1,4 +1,5 @@
 Tent1:
+    system-ID: 'Tent1'
     name: '&cTent #1'
     material: 383
     glow: false

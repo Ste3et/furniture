@@ -1,4 +1,5 @@
 AdventWreath:
+  system-ID: 'AdventWreath'
   name: '&cAdventWreath'
   material: 383
   glow: true

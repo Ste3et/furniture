@@ -1,4 +1,5 @@
 Crossbow:
+    system-ID: 'Crossbow'
     name: '&cCrossbow'
     material: 383
     glow: false

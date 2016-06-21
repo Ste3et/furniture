@@ -23,6 +23,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class sofa extends Furniture implements Listener {
 
@@ -175,7 +176,7 @@ public class sofa extends Furniture implements Listener {
 	}
 	
 	private void sit(String s, Player p){
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase(s) && packet.getPassanger() == null){
 				packet.setPassanger(p);
 				packet.update();
@@ -192,7 +193,7 @@ public class sofa extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.BREAK)){return;}
 		e.setCancelled(true);
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getPassanger()!=null){
 				packet.eject();
 				packet.update();

@@ -1,4 +1,5 @@
 SchoolTable:
+    system-ID: 'SchoolTable'
     name: '&cSchoolTable'
     material: 383
     glow: false

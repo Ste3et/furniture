@@ -1,4 +1,5 @@
 CandyCane:
+    system-ID: 'CandyCane'
     name: '&cCandyCane'
     material: 383
     glow: false

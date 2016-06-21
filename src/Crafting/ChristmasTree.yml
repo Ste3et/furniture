@@ -1,4 +1,5 @@
 ChristmasTree:
+    system-ID: 'ChristmasTree'
     name: '&cChristmasTree'
     material: 383
     glow: false

@@ -20,8 +20,8 @@ import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class BearTrap extends Furniture implements Listener{
 	
@@ -31,19 +31,23 @@ public class BearTrap extends Furniture implements Listener{
 	public BearTrap(ObjectID id){
 		super(id);
 		if(isFinish()){
-			for(fArmorStand stand : getfAsList()){
+			for(fEntity stand : getfAsList()){
 				if(stand.getName().equalsIgnoreCase("#IRON1#")){
-					stand1 = stand;
+					stand1 = (fArmorStand) stand;
 				}else if(stand.getName().equalsIgnoreCase("#IRON2#")){
-					stand2 = stand;
+					stand2 = (fArmorStand) stand;
 				}else if(stand.getName().equalsIgnoreCase("#IRON3#")){
-					stand2 = stand;
+					stand3 = (fArmorStand) stand;
 				}else if(stand.getName().equalsIgnoreCase("#IRON4#")){
-					stand2 = stand;
+					stand4 = (fArmorStand) stand;
 				}
 			}
-			setStatus(false);
 			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
+			if(stand1==null) return;
+			if(stand2==null) return;
+			if(stand3==null) return;
+			if(stand4==null) return;
+			setStatus(false);
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -59,7 +63,7 @@ public class BearTrap extends Furniture implements Listener{
 		double offset = .35;
 		Location location = getRelative(getCenter(), 0, .04+offset).add(0, -2.1, 0);
 		location.setYaw(getYaw()+90);
-		stand = spawnArmorStand(location);
+		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
 		stand.setHelmet(new ItemStack(Material.IRON_FENCE));
 		stand.setName("#IRON1#");
@@ -68,7 +72,7 @@ public class BearTrap extends Furniture implements Listener{
 		
 		location = getRelative(getCenter(), 0, -.04-offset).add(0, -2.1, 0);
 		location.setYaw(getYaw()-90);
-		stand = spawnArmorStand(location);
+		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
 		stand.setHelmet(new ItemStack(Material.IRON_FENCE));
 		stand.setName("#IRON2#");
@@ -78,7 +82,7 @@ public class BearTrap extends Furniture implements Listener{
 		
 		location = getRelative(getCenter(), 0, .04+offset).add(0, -2.25, 0);
 		location.setYaw(getYaw()+90);
-		stand = spawnArmorStand(location);
+		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
 		stand.setName("#IRON3#");
 		stand3 = stand;
@@ -86,16 +90,11 @@ public class BearTrap extends Furniture implements Listener{
 		
 		location = getRelative(getCenter(), 0, -.04-offset).add(0, -2.25, 0);
 		location.setYaw(getYaw()-90);
-		stand = spawnArmorStand(location);
+		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 0)));
 		stand.setName("#IRON4#");
 		stand4 = stand;
 		asList.add(stand);
-		
-		fArmorStand testStand = stand.clone(new Relative(getCenter(), 0, 2, 0, getBlockFace()));
-		testStand.setGlowing(true);
-		asList.add(testStand);
-		
 		for(fArmorStand packet : asList){
 			packet.setInvisible(true);
 		}

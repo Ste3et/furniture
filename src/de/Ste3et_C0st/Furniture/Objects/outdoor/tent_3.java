@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class tent_3 extends Furniture implements Listener{
 	public tent_3(ObjectID id){
@@ -177,7 +178,7 @@ public class tent_3 extends Furniture implements Listener{
 		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.BANNER, getObjID(), ColorType.BANNER, 1);
 		}else{
-			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().equalsIgnoreCase("#SITZ#")){
 					packet.setPassanger(p);
 					packet.update();

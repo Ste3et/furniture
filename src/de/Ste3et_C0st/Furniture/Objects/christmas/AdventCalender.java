@@ -50,6 +50,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class AdventCalender extends Furniture implements Listener {
 	double sub = .9;
@@ -228,7 +229,7 @@ public class AdventCalender extends Furniture implements Listener {
     
     public void load(){
     	config conf = new config();
-    	FileConfiguration file = conf.getConfig(getObjID().getID(), "plugin/AdventCalender/Data/");
+    	FileConfiguration file = conf.getConfig(getObjID().getSerial(), "plugin/AdventCalender/Data/");
     	if(file == null) return;
     	for(int i = 1; i<32;i++){
     		if(file.isSet(i+"")){
@@ -241,7 +242,7 @@ public class AdventCalender extends Furniture implements Listener {
     	}
     	
 		conf = new config();
-	    file = conf.getConfig(getObjID().getID() + ":Players", "plugin/AdventCalender/Data/");
+	    file = conf.getConfig(getObjID().getSerial() + "_Players", "plugin/AdventCalender/Data/");
 	    if(file == null) return;
 	    if(!file.isSet("Players")) return;
 	    for(String s : file.getConfigurationSection("Players").getKeys(false)){
@@ -253,17 +254,17 @@ public class AdventCalender extends Furniture implements Listener {
     
     public void save(int i){
     	config conf = new config();
-    	FileConfiguration file = conf.getConfig(getObjID().getID(), "plugin/AdventCalender/Data/");
+    	FileConfiguration file = conf.getConfig(getObjID().getSerial(), "plugin/AdventCalender/Data/");
     	file.set(i + "", getSerialze(i));
-		conf.saveConfig(getObjID().getID(), file, "plugin/AdventCalender/Data/");
+		conf.saveConfig(getObjID().getSerial(), file, "plugin/AdventCalender/Data/");
     }
     
     public void savePlayer(UUID uuid){
 		if(uuid != null){
 			config conf = new config();
-	    	FileConfiguration file = conf.getConfig(getObjID().getID() + ":Players", "plugin/AdventCalender/Data/");
+	    	FileConfiguration file = conf.getConfig(getObjID().getSerial() + "_Players", "plugin/AdventCalender/Data/");
 	    	file.set("Players." + uuid.toString(), i);
-			conf.saveConfig(getObjID().getID() + ":Players", file, "plugin/AdventCalender/Data/");
+			conf.saveConfig(getObjID().getSerial() + "_Players", file, "plugin/AdventCalender/Data/");
 		}
     }
 	
@@ -295,7 +296,7 @@ public class AdventCalender extends Furniture implements Listener {
 	}
 	
 	private void openInventory(ItemStack[] is){
-		inv = Bukkit.createInventory(null, 54, "�8Christmas Reward [�c" + i + "�8]");
+		inv = Bukkit.createInventory(null, 54, "§8Christmas Reward [§c" + i + "§8]");
 		if(is!=null) inv.setContents(is);
 		p.openInventory(inv);
 	}
@@ -397,9 +398,9 @@ public class AdventCalender extends Furniture implements Listener {
 		if(currentDay==getDay()){return;}
 		if(getfAsList()==null) return;
 		ItemStack[] is = getStack();
-		fArmorStand stand1= null;
-		fArmorStand stand2 = null;
-		for(fArmorStand stand : getfAsList()){
+		fEntity stand1= null;
+		fEntity stand2 = null;
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#Advent1#")){
 				stand1 = stand;
 			}else if(stand.getName().equalsIgnoreCase("#Advent2#")){

@@ -1,4 +1,5 @@
 GraveStone:
+    system-ID: 'GraveStone'
     name: '&cGrave Stone'
     material: 383
     glow: false

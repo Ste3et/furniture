@@ -1,4 +1,5 @@
 BlackBoard:
+    system-Name: 'BlackBoard'
     name: '&cBlackBoard'
     material: 383
     glow: false

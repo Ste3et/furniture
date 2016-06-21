@@ -1,4 +1,5 @@
 WeaponStand:
+    system-ID: 'WeaponStand'
     name: '&cWeaponStand'
     material: 383
     glow: false

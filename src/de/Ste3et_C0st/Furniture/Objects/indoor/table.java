@@ -21,6 +21,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class table extends Furniture implements Listener {
 	
@@ -71,7 +72,7 @@ public class table extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 					ItemStack is = packet.getInventory().getItemInMainHand();
@@ -93,7 +94,7 @@ public class table extends Furniture implements Listener {
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				ItemStack Itemstack = p.getInventory().getItemInMainHand().clone();
 				Itemstack.setAmount(1);

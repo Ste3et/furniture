@@ -18,6 +18,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class campchair extends Furniture implements Listener {
 	public campchair(ObjectID id){
@@ -47,7 +48,7 @@ public class campchair extends Furniture implements Listener {
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#SITZ#")){
 				if(packet.getPassanger()==null){
 					packet.setPassanger(e.getPlayer());

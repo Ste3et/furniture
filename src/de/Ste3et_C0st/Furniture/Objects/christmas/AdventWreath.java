@@ -18,6 +18,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class AdventWreath extends Furniture implements Listener  {
 	double sub = .9;
@@ -64,7 +65,7 @@ public class AdventWreath extends Furniture implements Listener  {
 		String str = stand.getName();
 		if(str.startsWith("Fire") || str.startsWith("Torch")){
 			int i = Integer.parseInt(str.split(":")[1]);
-			for(fArmorStand fstand : getfAsList()){
+			for(fEntity fstand : getfAsList()){
 				if(fstand.getName().equalsIgnoreCase("Fire:" + i)){
 					if(!fstand.getName().endsWith("Burn")){
 						fstand.sendParticle(fstand.getLocation().clone().add(0, .93, 0), 26, true);
@@ -77,7 +78,7 @@ public class AdventWreath extends Furniture implements Listener  {
 	}
 	
 	private void load(){
-		for(fArmorStand fstand : getfAsList()){
+		for(fEntity fstand : getfAsList()){
 			if(fstand.getName().startsWith("Fire:")){
 				if(fstand.getName().endsWith("Burn")){
 					if(!fstand.isParticlePlayed()){
@@ -207,7 +208,7 @@ public class AdventWreath extends Furniture implements Listener  {
 		loc.subtract(0, .5, 0);
 		
 		for(int i = 0; i<j;i++){
-			loc.setYaw((float) l);
+			loc.setYaw((float) l + 180);
 			fArmorStand stand = spawnArmorStand(loc);
 			stand.setHelmet(stack);
 			stand.setInvisible(true);

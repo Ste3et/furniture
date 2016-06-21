@@ -1,4 +1,5 @@
 Fence:
+    system-ID: 'Fence'
     name: '&cFence'
     material: 383
     glow: false

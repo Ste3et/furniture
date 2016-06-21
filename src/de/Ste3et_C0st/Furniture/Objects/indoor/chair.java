@@ -20,6 +20,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class chair extends Furniture implements Listener{
 
@@ -110,8 +111,8 @@ public class chair extends Furniture implements Listener{
 		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
-		fArmorStand packet = null;
-		for(fArmorStand as : getManager().getfArmorStandByObjectID(getObjID())){
+		fEntity packet = null;
+		for(fEntity as : getManager().getfArmorStandByObjectID(getObjID())){
 			if(as.getName().equalsIgnoreCase("#SITZ#")){
 				packet=as;
 				break;

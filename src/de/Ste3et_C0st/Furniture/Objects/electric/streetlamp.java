@@ -26,6 +26,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class streetlamp extends Furniture implements Listener{
 	
@@ -180,14 +181,14 @@ public class streetlamp extends Furniture implements Listener{
 	
 	private void setLight(Boolean b){
 		if(!b){
-			fArmorStand packet = getPacket();
+			fEntity packet = getPacket();
 			if(packet==null) return;
 			packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_LAMP_OFF));
 			getManager().updateFurniture(getObjID());
 			FurnitureLib.getInstance().getLightManager().removeLight(light);
 			return;
 		}else{
-			fArmorStand packet = getPacket();
+			fEntity packet = getPacket();
 			if(packet==null) return;
 			packet.getInventory().setHelmet(new ItemStack(Material.GLOWSTONE));
 			getManager().updateFurniture(getObjID());
@@ -196,8 +197,8 @@ public class streetlamp extends Furniture implements Listener{
 		}
 	}
 	
-	private fArmorStand getPacket(){
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+	private fEntity getPacket(){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#LAMP#")){
 				return packet;
 			}
@@ -206,7 +207,7 @@ public class streetlamp extends Furniture implements Listener{
 	}
 	
 	private boolean isOn(){
-		for(fArmorStand as : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity as : getManager().getfArmorStandByObjectID(getObjID())){
 			if(as.getName().equalsIgnoreCase("#LAMP#")){
 				switch (as.getInventory().getHelmet().getType()) {
 				case REDSTONE_LAMP_OFF: return false;
@@ -239,7 +240,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		Boolean isOn = isOn();
-		fArmorStand packet = getPacket();
+		fEntity packet = getPacket();
 		if(packet==null) return;
 		if(redstone) return;
 		if(isOn){

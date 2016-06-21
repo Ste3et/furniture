@@ -29,12 +29,13 @@ import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class log extends Furniture {
 
 	Block b;
 	int mode = 0;
-	Inventory inv = Bukkit.createInventory(null, 9, "�2Settings");
+	Inventory inv = Bukkit.createInventory(null, 9, "$2Settings");
 	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
 	ItemStack permissions = new ItemStack(Material.ARROW);
 	List<ItemStack> isList = new ArrayList<ItemStack>();
@@ -45,7 +46,7 @@ public class log extends Furniture {
 		b = getLocation().getBlock();
 		getObjID().addBlock(Arrays.asList(b));
 		ItemMeta meta = pane.getItemMeta();
-		meta.setDisplayName("�c");
+		meta.setDisplayName("$c");
 		pane.setItemMeta(meta);
 		pane.setDurability((short) 15);
 		pane.setItemMeta(meta);
@@ -61,24 +62,24 @@ public class log extends Furniture {
 		ItemStack stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 1);
 		ItemMeta meta = stack.getItemMeta();
-		meta.setDisplayName("�6Mode: �cTop");
+		meta.setDisplayName("$6Mode: $cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 2);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("�6Mode: �cFront I");
+		meta.setDisplayName("$6Mode: $cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 11);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("�6Mode: �cFront II");
+		meta.setDisplayName("$6Mode: $cFront II");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		
 		meta = permissions.getItemMeta();
-		meta.setDisplayName("�cChange Permissions (Owner Only)");
+		meta.setDisplayName("$cChange Permissions (Owner Only)");
 		permissions.setItemMeta(meta);
 	}
 	
@@ -186,9 +187,9 @@ public class log extends Furniture {
 			break;
 		}
 		
-		fArmorStand standOld = null;
-		fArmorStand standCurrent = null;
-		for(fArmorStand s : getObjID().getPacketList()){
+		fEntity standOld = null;
+		fEntity standCurrent = null;
+		for(fEntity s : getObjID().getPacketList()){
 			if(s.getName().equalsIgnoreCase(oldArmorStand+"")){
 				standOld=s;
 			}else if(s.getName().equalsIgnoreCase(currentArmorStand+"")){
@@ -235,8 +236,8 @@ public class log extends Furniture {
 				removeItem(p);
 				return;
 			}else if(!p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-				fArmorStand stand = null;
-				for(fArmorStand s : getObjID().getPacketList()){
+				fEntity stand = null;
+				for(fEntity s : getObjID().getPacketList()){
 					if(s.getName().equalsIgnoreCase(mode+"")){
 						stand = s;
 						break;
@@ -245,6 +246,11 @@ public class log extends Furniture {
 				
 				if(stand==null){return;}
 				if(stand.getInventory().getItemInMainHand()!=null&&!stand.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					if(p.getInventory().getItemInMainHand()!=null){
+						if(p.getInventory().getItemInMainHand().equals(stand.getItemInMainHand())){
+							return;
+						}
+					}
 					ItemStack is = stand.getInventory().getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
@@ -257,8 +263,8 @@ public class log extends Furniture {
 				removeItem(p);
 				return;
 			}else{
-				fArmorStand stand = null;
-				for(fArmorStand s : getObjID().getPacketList()){
+				fEntity stand = null;
+				for(fEntity s : getObjID().getPacketList()){
 					if(s.getName().equalsIgnoreCase(mode+"")){
 						stand = s;
 						break;
@@ -268,6 +274,13 @@ public class log extends Furniture {
 				if(stand==null){return;}
 				
 				if(stand.getInventory().getItemInMainHand()!=null&&!stand.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					for(fEntity s : getObjID().getPacketList()){
+						if(s.getName().equalsIgnoreCase(mode+"")){
+							stand = s;
+							break;
+						}
+					}
+					
 					ItemStack is = stand.getInventory().getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);
@@ -306,8 +319,8 @@ public class log extends Furniture {
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		
-		fArmorStand stand = null;
-		for(fArmorStand s : getObjID().getPacketList()){
+		fEntity stand = null;
+		for(fEntity s : getObjID().getPacketList()){
 			if(s.getName().equalsIgnoreCase(mode+"")){
 				stand = s;
 				break;

@@ -1,4 +1,5 @@
 Chair:
+    system-ID: 'Chair'
     name: '&cChair'
     material: 383
     glow: false

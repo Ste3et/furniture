@@ -1,4 +1,5 @@
 CampChair:
+  system-ID: 'CampChair'
   name: '&cCampChair'
   material: 383
   glow: false

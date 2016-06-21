@@ -1,4 +1,5 @@
 CactusPlant:
+    system-ID: 'CactusPlant'
     name: '&cCactusPlant'
     material: 383
     glow: true

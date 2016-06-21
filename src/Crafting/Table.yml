@@ -1,4 +1,5 @@
 Table:
+    system-ID: 'Table'
     name: '&cTable'
     material: 383
     glow: false

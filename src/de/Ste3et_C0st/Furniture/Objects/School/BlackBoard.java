@@ -20,6 +20,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class BlackBoard extends Furniture implements Listener {
 	public BlackBoard(ObjectID id){
@@ -94,7 +95,7 @@ public class BlackBoard extends Furniture implements Listener {
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				ItemStack Itemstack = p.getInventory().getItemInMainHand().clone();
 				Itemstack.setAmount(1);

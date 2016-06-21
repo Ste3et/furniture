@@ -24,13 +24,14 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class largeTable extends Furniture implements Listener{
 
 	public largeTable(ObjectID id){
 		super(id);
 		if(isFinish()){
-			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().startsWith("#TELLER")){
 					tellerIDs.add(packet.getEntityID());
 				}
@@ -168,7 +169,7 @@ public class largeTable extends Furniture implements Listener{
 	public void setTeller(HashMap<Integer, ItemStack> itemList){
 		int i = 0;
 		for(Integer id : tellerIDs){
-			fArmorStand as = getManager().getfArmorStandByID(id);
+			fEntity as = getManager().getfArmorStandByID(id);
 			as.getInventory().setItemInMainHand(itemList.get(i));
 			i++;
 		}
@@ -183,10 +184,10 @@ public class largeTable extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		for(Integer id : tellerIDs){
-			fArmorStand asp = getManager().getfArmorStandByID(id);
+			fEntity asp = getManager().getfArmorStandByID(id);
 			if(asp!=null&&asp.getInventory().getItemInMainHand()!=null){
 				if(asp.getName().startsWith("#TELLER")){
-					fArmorStand packet = asp;
+					fEntity packet = asp;
 					e.getLocation().getWorld().dropItem(e.getLocation(), packet.getInventory().getItemInMainHand());
 				}
 			}
@@ -200,6 +201,7 @@ public class largeTable extends Furniture implements Listener{
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
+		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
@@ -215,11 +217,11 @@ public class largeTable extends Furniture implements Listener{
 	
 	public void setTeller(Player player, ItemStack is){
 		BlockFace b = getLutil().yawToFace(player.getLocation().getYaw());
-		fArmorStand as = null;
+		fEntity as = null;
 		if(tellerIDs == null || tellerIDs.isEmpty()){return;}
 		for(Integer id : this.tellerIDs){
 			if(id!=null){
-				fArmorStand armorStand = getManager().getfArmorStandByID(id);
+				fEntity armorStand = getManager().getfArmorStandByID(id);
 				if(armorStand!=null){
 					BlockFace b2 = getLutil().yawToFace(armorStand.getLocation().getYaw());
 					if(b2.equals(b)){
@@ -232,7 +234,7 @@ public class largeTable extends Furniture implements Listener{
 		
 		if(as!=null&&as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
 		if(as.getInventory().getItemInMainHand()!=null&&!as.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-			fArmorStand asp = as;
+			fEntity asp = as;
 			ItemStack item = asp.getInventory().getItemInMainHand();
 			item.setAmount(1);
 			asp.getLocation().getWorld().dropItem(asp.getLocation(), item);
@@ -256,7 +258,7 @@ public class largeTable extends Furniture implements Listener{
 		HashMap<Integer, ItemStack> teller = new HashMap<Integer, ItemStack>();
 		for(Integer id : tellerIDs){
 			try{
-				fArmorStand as = getManager().getfArmorStandByID(id);
+				fEntity as = getManager().getfArmorStandByID(id);
 				teller.put(teller.size(), as.getInventory().getItemInMainHand());
 			}catch(Exception e){
 				teller.put(teller.size(), new ItemStack(Material.AIR));

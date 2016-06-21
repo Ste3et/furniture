@@ -1,4 +1,5 @@
 TrashCan:
+    system-ID: 'TrashCan'
     name: '&cTrashCan'
     material: 383
     glow: false

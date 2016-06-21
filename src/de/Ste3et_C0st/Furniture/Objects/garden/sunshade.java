@@ -31,6 +31,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class sunshade extends Furniture implements Listener{
 	List<Material> matList = Arrays.asList(
@@ -123,7 +124,7 @@ public class sunshade extends Furniture implements Listener{
 		if(is.getType().equals(Material.BANNER)){
 			e.setCancelled(true);
 			if(isRunning()){return;}
-			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
 					packet.getInventory().setHelmet(is);
 				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.CARPET)){
@@ -158,7 +159,7 @@ public class sunshade extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		stopTimer();
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 					ItemStack is = packet.getInventory().getItemInMainHand();
@@ -183,7 +184,7 @@ public class sunshade extends Furniture implements Listener{
 		if(is.getType().equals(Material.BANNER)){
 			e.setCancelled(true);
 			if(isRunning()){return;}
-			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
 					packet.getInventory().setHelmet(is);
 				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.CARPET)){
@@ -223,7 +224,7 @@ public class sunshade extends Furniture implements Listener{
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
 		stopTimer();
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 					ItemStack is = packet.getInventory().getItemInMainHand();
@@ -243,11 +244,11 @@ public class sunshade extends Furniture implements Listener{
 			@Override
 			public void run() {
 				try{
-					for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+					for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 						if(packet.getName().startsWith("#ELEMENT#")){
-							if(!isClose(packet)){
-								Double x = packet.getPose(BodyPart.HEAD).getX();
-								packet.setPose(new EulerAngle(x-.32, 0, 0), BodyPart.HEAD);
+							if(!isClose((fArmorStand) packet)){
+								Double x = ((fArmorStand) packet).getPose(BodyPart.HEAD).getX();
+								((fArmorStand) packet).setPose(new EulerAngle(x-.32, 0, 0), BodyPart.HEAD);
 							}else{
 								stopTimer();
 								return;
@@ -269,11 +270,11 @@ public class sunshade extends Furniture implements Listener{
 			@Override
 			public void run() {
 				try{
-					for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+					for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 						if(packet.getName().startsWith("#ELEMENT#")){
-							if(!isOpen(packet)){
-								Double x = packet.getPose(BodyPart.HEAD).getX();
-								packet.setPose(new EulerAngle(x+.32, 0, 0), BodyPart.HEAD);
+							if(!isOpen((fArmorStand) packet)){
+								Double x = ((fArmorStand) packet).getPose(BodyPart.HEAD).getX();
+								((fArmorStand) packet).setPose(new EulerAngle(x+.32, 0, 0), BodyPart.HEAD);
 							}else{
 								stopTimer();
 								return;
@@ -291,9 +292,9 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	private void reset(){
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
-			if(!isOpen(packet)){
-				packet.setPose(new EulerAngle(-3.054, 0, 0), BodyPart.HEAD);
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
+			if(!isOpen((fArmorStand) packet)){
+				((fArmorStand) packet).setPose(new EulerAngle(-3.054, 0, 0), BodyPart.HEAD);
 			}
 		}
 		update();
@@ -312,9 +313,9 @@ public class sunshade extends Furniture implements Listener{
 	}
 	
 	private boolean isOpen(){
-		for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().startsWith("#ELEMENT#")){
-				if(packet.getPose(BodyPart.HEAD).getX()< -1.85){
+				if(((fArmorStand) packet).getPose(BodyPart.HEAD).getX()< -1.85){
 					return false;
 				}
 			}

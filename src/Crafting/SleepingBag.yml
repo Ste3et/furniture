@@ -1,4 +1,5 @@
 SleepingBag:
+    system-ID: 'SleepingBag'
     name: '&cSleepingBag'
     material: 383
     glow: false

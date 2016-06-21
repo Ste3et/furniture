@@ -1,4 +1,5 @@
 Flag:
+    system-ID: 'Flag'
     name: '&cFlag'
     material: 383
     glow: false

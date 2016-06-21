@@ -1,4 +1,5 @@
 FlowerPot:
+    system-ID: 'FlowerPot'
     name: '&cFlowerPot'
     material: 383
     glow: false

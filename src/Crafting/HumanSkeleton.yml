@@ -1,4 +1,5 @@
 HumanSkeleton:
+    system-ID: 'HumanSkeleton'
     name: '&cHumanSkeleton'
     material: 383
     glow: false

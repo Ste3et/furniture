@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -21,6 +22,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class campfire_2 extends Furniture implements Listener{
 	List<Material> items = new ArrayList<Material>(
@@ -155,12 +157,15 @@ public class campfire_2 extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.setCancelled(true);
-		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		final ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
 		fArmorStand packet = null;
-		for(fArmorStand pack : aspList){
-			if(pack.isSmall() && pack.isVisible()){
-				packet = pack;
+		for(fEntity pack : aspList){
+			if(pack instanceof fArmorStand){
+				fArmorStand stand = (fArmorStand) pack;
+				if(stand.isSmall() && pack.isInvisible()){
+					packet = stand;
+				}
 			}
 		}
 		if(itemStack.getType().equals(Material.WATER_BUCKET) && packet.isFire()){
@@ -184,19 +189,22 @@ public class campfire_2 extends Furniture implements Listener{
 	}
 	
 	private void setfire(boolean b){
-		for(fArmorStand pack : getManager().getfArmorStandByObjectID(getObjID())){
-			if(pack.isSmall() && pack.isVisible()){
-				if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
-				   (pack.getInventory().getItemInMainHand() == null || pack.getInventory().getItemInMainHand().getType().equals(Material.AIR))){					
-					pack.setFire(b);
-					Location loc = middle.clone();
-					loc.add(0, 1.3, 0);
-					if(b) getLib().getLightManager().addLight(loc, 15);
-					if(!b) getLib().getLightManager().removeLight(loc);
-					getManager().updateFurniture(getObjID());
-					return;
-				}
+		for(fEntity pack : getManager().getfArmorStandByObjectID(getObjID())){
+			if(pack instanceof fArmorStand){
+				fArmorStand stand = (fArmorStand) pack;
+				if(stand.isSmall() && pack.isInvisible()){
+					if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
+					   (pack.getInventory().getItemInMainHand() == null || pack.getInventory().getItemInMainHand().getType().equals(Material.AIR))){					
+						pack.setFire(b);
+						Location loc = middle.clone();
+						loc.add(0, 1.3, 0);
+						if(b) getLib().getLightManager().addLight(loc, 15);
+						if(!b) getLib().getLightManager().removeLight(loc);
+						getManager().updateFurniture(getObjID());
+						return;
+					}
 
+				}
 			}
 		}
 	}
@@ -212,7 +220,7 @@ public class campfire_2 extends Furniture implements Listener{
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
-			getWorld().dropItem(middle.clone().add(0, .5, 0), is);
+			getWorld().dropItemNaturally(middle.clone().add(0, 1, 0), is).setVelocity(new Vector().zero());
 		}
 		setfire(false);
 		e.remove();
@@ -224,18 +232,21 @@ public class campfire_2 extends Furniture implements Listener{
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;
 			if(armorS!=null&&armorS.getInventory().getItemInMainHand()!=null&&getItem(armorS.getInventory().getItemInMainHand())!=null){
-				getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));
+				getWorld().dropItemNaturally(middle.clone().add(0, 1, 0), getCooked(is)).setVelocity(new Vector().zero());
+				getObjID().getPacketList().remove(this.armorS);
 				armorS.kill();
 				armorS.delete();
 				armorS=null;
 			}
 		}
 		if(armorS!=null){
-			if(armorS.getInventory().getItemInMainHand()!=null){getWorld().dropItem(middle.clone().add(0, .5, 0), getCooked(is));}
+			if(armorS.getInventory().getItemInMainHand()!=null){getWorld().dropItemNaturally(middle.clone().add(0, 1, 0), getCooked(is)).setVelocity(new Vector().zero());}
+			getObjID().getPacketList().remove(this.armorS);
 			armorS.kill();
 			armorS.delete();
 			armorS=null;
 		}
+		update();
 	}
 	
 	public ItemStack getItem(ItemStack is){
@@ -265,7 +276,8 @@ public class campfire_2 extends Furniture implements Listener{
 		this.armorS = getManager().createArmorStand(getObjID(), grill);
 		this.armorS.setInvisible(true);
 		this.armorS.getInventory().setItemInMainHand(is);
-		getManager().send(getObjID());
+		getObjID().getPlayerList().clear();
+		send();
 		this.timer = main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(main.getInstance(), new Runnable() {
 			Integer rounds = getLutil().randInt(15, 30);
 			Integer labs = 0;
@@ -276,7 +288,7 @@ public class campfire_2 extends Furniture implements Listener{
 				if(position>3){position=0;}
 				if(armorS!=null){
 					armorS.setPose(angle[position], BodyPart.RIGHT_ARM);
-					armorS.update();
+					update();
 				}
 				position++;
 				labs++;

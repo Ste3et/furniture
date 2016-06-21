@@ -1,4 +1,5 @@
 Streetlamp:
+    system-ID: 'Streetlamp'
     name: '&cStreetlamp'
     material: 383
     glow: false

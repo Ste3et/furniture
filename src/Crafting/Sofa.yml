@@ -1,4 +1,5 @@
 Sofa:
+    system-ID: 'Sofa'
     name: '&cSofa'
     material: 383
     glow: false

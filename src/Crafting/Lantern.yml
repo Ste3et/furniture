@@ -1,4 +1,5 @@
 Lantern:
+    system-ID: 'Lantern'
     name: '&cLantern'
     material: 383
     glow: false

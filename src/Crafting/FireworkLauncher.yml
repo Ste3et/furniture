@@ -1,4 +1,5 @@
 FireworkLauncher:
+    system-ID: 'FireworkLauncher'
     name: '&cFireworkLauncher'
     material: 383
     glow: false

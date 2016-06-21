@@ -1,6 +1,6 @@
-BearTrap:
-    system-ID: 'BearTrap'
-    name: '&cBearTrap'
+WaxCandle:
+    system-ID: 'WaxCandle'
+    name: '&cWaxCandle'
     material: 383
     glow: false
     lore: ''

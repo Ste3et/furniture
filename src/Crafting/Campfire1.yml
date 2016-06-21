@@ -1,4 +1,5 @@
 Campfire1:
+    system-ID: 'Campfire1'
     name: '&cCampfire #1'
     material: 383
     glow: false

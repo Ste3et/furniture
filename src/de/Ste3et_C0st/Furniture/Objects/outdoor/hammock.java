@@ -28,6 +28,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.EventType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class hammock extends Furniture implements Listener{
 	
@@ -103,7 +104,7 @@ public class hammock extends Furniture implements Listener{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();
 		ItemStack stack = p.getInventory().getItemInMainHand();
 
@@ -113,7 +114,7 @@ public class hammock extends Furniture implements Listener{
 			}
 		}
 		
-		for(fArmorStand packet : aspList){
+		for(fEntity packet : aspList){
 			if(packet.getName().equalsIgnoreCase("#SITZ#")){
 				if(packet.getPassanger()==null){
 					packet.setPassanger(e.getPlayer());
@@ -139,7 +140,7 @@ public class hammock extends Furniture implements Listener{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		List<fArmorStand> aspList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();
 		ItemStack stack = p.getInventory().getItemInMainHand();
 		if(stack!=null){
@@ -148,7 +149,7 @@ public class hammock extends Furniture implements Listener{
 			}
 		}
 		
-		for(fArmorStand packet : aspList){
+		for(fEntity packet : aspList){
 			if(packet.getName().equalsIgnoreCase("#SITZ#")){
 				if(packet.getPassanger()==null){
 					packet.setPassanger(e.getPlayer());
@@ -158,12 +159,12 @@ public class hammock extends Furniture implements Listener{
 		}
 	}
 	
-	private boolean setColor(Player p,ItemStack stack, Boolean canbuild, List<fArmorStand> aspList){
+	private boolean setColor(Player p,ItemStack stack, Boolean canbuild, List<fEntity> aspList){
 		if(!canbuild){return true;}
 		if(stack!=null){
 			switch (stack.getType()) {
 			case BANNER:
-				for(fArmorStand packet : aspList){
+				for(fEntity packet : aspList){
 					if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
 						packet.getInventory().setHelmet(stack);
 					}
@@ -172,7 +173,7 @@ public class hammock extends Furniture implements Listener{
 				getManager().updateFurniture(getObjID());
 				return true;
 			case LOG:
-				for(fArmorStand packet : aspList){
+				for(fEntity packet : aspList){
 					if(packet.getName().equalsIgnoreCase("#PILLAR#")){
 						packet.getInventory().setHelmet(stack);
 					}
@@ -182,7 +183,7 @@ public class hammock extends Furniture implements Listener{
 				getManager().updateFurniture(getObjID());
 				return true;
 			case LOG_2:
-				for(fArmorStand packet : aspList){
+				for(fEntity packet : aspList){
 					if(packet.getName().equalsIgnoreCase("#PILLAR#")){
 						packet.getInventory().setHelmet(stack);
 					}

@@ -22,10 +22,11 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class fance extends Furniture implements Listener{
 	
-	private void setTypes(ItemStack is){for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){packet.getInventory().setHelmet(is);}}
+	private void setTypes(ItemStack is){for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){packet.getInventory().setHelmet(is);}}
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,

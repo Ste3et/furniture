@@ -20,6 +20,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class WaterBottle extends Furniture implements Listener {
 
@@ -62,7 +63,7 @@ public class WaterBottle extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canInteract(e.getPlayer())){return;}
 		Material data = e.getPlayer().getInventory().getItemInMainHand().getType();
-		fArmorStand stand = removeItem();
+		fEntity stand = removeItem();
 		if(matList.contains(data)){
 			ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 			is.setAmount(1);
@@ -71,9 +72,9 @@ public class WaterBottle extends Furniture implements Listener {
 		}
 	}
 	
-	private fArmorStand removeItem(){
-		fArmorStand fstand = null;
-		for(fArmorStand stand : getfAsList()){
+	private fEntity removeItem(){
+		fEntity fstand = null;
+		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ITEM#")){
 				fstand = stand;
 				if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().equals(Material.AIR)){

@@ -25,6 +25,7 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class weaponStand extends Furniture {
 
@@ -59,8 +60,8 @@ public class weaponStand extends Furniture {
 		if(p!=null){
 			p.closeInventory();
 		}
-		List<fArmorStand> asList = getManager().getfArmorStandByObjectID(getObjID());
-		for(fArmorStand packet : asList){
+		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+		for(fEntity packet : asList){
 			if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
 				if(packet.getInventory().getItemInMainHand()!=null){
 					if(!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
@@ -86,7 +87,7 @@ public class weaponStand extends Furniture {
 		
 		ItemStack itemstack = p.getInventory().getItemInMainHand();
 		if(itemstack!=null&&matList.contains(itemstack.getType())){
-			for(fArmorStand packet : getManager().getfArmorStandByObjectID(getObjID())){
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null){
 					if(packet.getInventory().getHelmet().getType().name().toLowerCase().endsWith("gate")){
 						ItemStack itemStack = new ItemStack(itemstack.getType(), 1, (short) 0);
@@ -110,7 +111,7 @@ public class weaponStand extends Furniture {
 		is3.setItemMeta(im3);
 		
 		inv = Bukkit.createInventory(null, 45, "�cWeaponBox");
-		List<fArmorStand> asList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
 		
 		int j = 1;
 		for(int i = 0; i<inv.getSize();i++){
@@ -118,7 +119,7 @@ public class weaponStand extends Furniture {
 			if(slotList1.contains(i)){
 				inv.setItem(i, is3);
 			}else if(slotList2.contains(i)){
-				for(fArmorStand packet : asList){
+				for(fEntity packet : asList){
 					if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
 						if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
 							ItemStack is = new ItemStack(Material.AIR);
@@ -169,11 +170,11 @@ public class weaponStand extends Furniture {
 		if(inv==null){return;}
 		if(!e.getInventory().getTitle().equalsIgnoreCase(inv.getTitle())){return;}
 		
-		List<fArmorStand> asList = getManager().getfArmorStandByObjectID(getObjID());
+		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
 		int j = 1;
 		for(int i = 0; i<inv.getSize();i++){
 			if(slotList2.contains(i)){
-				for(fArmorStand packet : asList){
+				for(fEntity packet : asList){
 					if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
 						if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
 							ItemStack is = inv.getItem(i);

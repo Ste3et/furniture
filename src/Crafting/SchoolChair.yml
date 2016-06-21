@@ -1,4 +1,5 @@
 SchoolChair:
+    system-ID: 'SchoolChair'
     name: '&cSchoolChair'
     material: 383
     glow: false

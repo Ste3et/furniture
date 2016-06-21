@@ -1,4 +1,5 @@
-Mailbox:
+MailBox:
+    system-ID: 'MailBox'
     name: '&cMailBox'
     material: 383
     glow: false
