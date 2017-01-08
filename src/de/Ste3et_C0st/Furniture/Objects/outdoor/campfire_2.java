@@ -151,12 +151,10 @@ public class campfire_2 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		final ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
 		fArmorStand packet = null;
@@ -211,12 +209,10 @@ public class campfire_2 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		if(isRunning()){
 			Bukkit.getScheduler().cancelTask(timer);
 			timer=null;

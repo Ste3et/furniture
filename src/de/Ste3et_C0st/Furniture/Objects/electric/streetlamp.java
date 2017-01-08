@@ -127,7 +127,6 @@ public class streetlamp extends Furniture implements Listener{
 	
 	@EventHandler
 	private void onBlockBreak(FurnitureBlockBreakEvent e){
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
@@ -139,7 +138,6 @@ public class streetlamp extends Furniture implements Listener{
 	
 	@EventHandler
 	private void onBlockClick(FurnitureBlockClickEvent e){
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
@@ -221,7 +219,6 @@ public class streetlamp extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
@@ -235,10 +232,8 @@ public class streetlamp extends Furniture implements Listener{
 	public void onFurnitureClick(FurnitureClickEvent e) {
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Boolean isOn = isOn();
 		fEntity packet = getPacket();
 		if(packet==null) return;

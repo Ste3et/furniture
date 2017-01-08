@@ -177,9 +177,8 @@ public class largeTable extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID()==null){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
@@ -198,13 +197,11 @@ public class largeTable extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.STAINED_GLASS_PANE, getObjID(), ColorType.BLOCK, 3);
@@ -231,8 +228,8 @@ public class largeTable extends Furniture implements Listener{
 				}
 			}
 		}
-		
-		if(as!=null&&as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
+		if(as==null) return;
+		if(as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
 		if(as.getInventory().getItemInMainHand()!=null&&!as.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 			fEntity asp = as;
 			ItemStack item = asp.getInventory().getItemInMainHand();

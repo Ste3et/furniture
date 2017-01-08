@@ -50,11 +50,9 @@ public class barrels extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
-		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(!p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
@@ -78,11 +76,9 @@ public class barrels extends Furniture implements Listener {
 	
 	@EventHandler
 	private void onBlockBreak(FurnitureBlockBreakEvent e){
-		if(getObjID()==null){return;}
-		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();
@@ -95,12 +91,10 @@ public class barrels extends Furniture implements Listener {
 	
 	@EventHandler
 	private void onBlockClick(FurnitureBlockClickEvent e){
-		if(getObjID()==null){return;}
-		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()&&!e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
-		e.setCancelled(true);
 		ItemStack Itemstack = e.getPlayer().getInventory().getItemInMainHand().clone();
 		Itemstack.setAmount(1);
 		fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
@@ -125,11 +119,9 @@ public class barrels extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
-		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
 		if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
 			ItemStack is = packet.getInventory().getHelmet();

@@ -130,7 +130,6 @@ public class graveStone extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().getPlugin().equalsIgnoreCase(main.getInstance().getName())){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
@@ -156,7 +155,6 @@ public class graveStone extends Furniture implements Listener{
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(!e.getID().getPlugin().equalsIgnoreCase(getPlugin().getName())){return;}
-		if(e.isCancelled()){return;}
 		Player p = e.getPlayer();
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}

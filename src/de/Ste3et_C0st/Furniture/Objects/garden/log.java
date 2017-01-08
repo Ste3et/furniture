@@ -19,10 +19,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.HiddenStringUtils;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.ManageInv;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
@@ -35,7 +37,7 @@ public class log extends Furniture {
 
 	Block b;
 	int mode = 0;
-	Inventory inv = Bukkit.createInventory(null, 9, "$2Settings");
+	Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
 	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
 	ItemStack permissions = new ItemStack(Material.ARROW);
 	List<ItemStack> isList = new ArrayList<ItemStack>();
@@ -46,7 +48,7 @@ public class log extends Furniture {
 		b = getLocation().getBlock();
 		getObjID().addBlock(Arrays.asList(b));
 		ItemMeta meta = pane.getItemMeta();
-		meta.setDisplayName("$c");
+		meta.setDisplayName("§c");
 		pane.setItemMeta(meta);
 		pane.setDurability((short) 15);
 		pane.setItemMeta(meta);
@@ -62,24 +64,24 @@ public class log extends Furniture {
 		ItemStack stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 1);
 		ItemMeta meta = stack.getItemMeta();
-		meta.setDisplayName("$6Mode: $cTop");
+		meta.setDisplayName("§6Mode: §cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 2);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("$6Mode: $cFront I");
+		meta.setDisplayName("§6Mode: §cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		stack = new ItemStack(Material.BANNER);
 		stack.setDurability((short) 11);
 		meta = stack.getItemMeta();
-		meta.setDisplayName("$6Mode: $cFront II");
+		meta.setDisplayName("§6Mode: §cFront II");
 		stack.setItemMeta(meta);
 		isList.add(stack);
 		
 		meta = permissions.getItemMeta();
-		meta.setDisplayName("$cChange Permissions (Owner Only)");
+		meta.setDisplayName("§cChange Permissions (Owner Only)");
 		permissions.setItemMeta(meta);
 	}
 	
@@ -237,6 +239,7 @@ public class log extends Furniture {
 				return;
 			}else if(!p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 				fEntity stand = null;
+				if(getProjectByItem(p.getInventory().getItemInMainHand()) != null){return;}
 				for(fEntity s : getObjID().getPacketList()){
 					if(s.getName().equalsIgnoreCase(mode+"")){
 						stand = s;
@@ -313,10 +316,8 @@ public class log extends Furniture {
 	public void onBlockBreak(FurnitureBlockBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		
 		fEntity stand = null;
@@ -327,8 +328,6 @@ public class log extends Furniture {
 			}
 		}
 		
-		if(stand==null){p.sendMessage("test1");return;}
-		
 		if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
 			ItemStack is = stand.getItemInMainHand();
 			is.setAmount(1);
@@ -338,5 +337,34 @@ public class log extends Furniture {
 		destroy(p);
 		b.setType(Material.AIR);
 		b=null;
+	}
+	
+	private Project getProjectByItem(ItemStack is){
+		ItemStack stack = getItemStackCopy(is);
+		if(stack==null) return null;
+		String systemID = "";
+		if(stack.hasItemMeta()){
+			if(stack.getItemMeta().hasLore()){
+				List<String> s = stack.getItemMeta().getLore();
+				if(HiddenStringUtils.hasHiddenString(s.get(0))) systemID = HiddenStringUtils.extractHiddenString(s.get(0));
+			}
+		}
+		
+		for(Project pro : FurnitureLib.getInstance().getFurnitureManager().getProjects()){
+			if(pro==null) continue;
+			if(pro.getSystemID()==null) continue;
+			if(pro.getSystemID().equalsIgnoreCase(systemID)){
+				return pro;
+			}
+		}
+		return null;
+	}
+	
+	private ItemStack getItemStackCopy(ItemStack is){
+		ItemStack copy = new ItemStack(is.getType());
+		copy.setAmount(1);
+		copy.setDurability(is.getDurability());
+		copy.setItemMeta(is.getItemMeta());
+		return copy;
 	}
 }

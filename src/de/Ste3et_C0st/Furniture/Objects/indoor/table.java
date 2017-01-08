@@ -66,12 +66,10 @@ public class table extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
@@ -86,13 +84,11 @@ public class table extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -107,7 +103,9 @@ public class table extends Furniture implements Listener {
 				if(p.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) break;
 				Integer i = p.getInventory().getHeldItemSlot();
 				ItemStack is = p.getInventory().getItemInMainHand();
-				is.setAmount(is.getAmount()-1);
+				int amount = is.getAmount();
+				amount = amount - 1;
+				is.setAmount(amount);
 				p.getInventory().setItem(i, is);
 				p.updateInventory();
 				break;

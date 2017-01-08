@@ -76,13 +76,12 @@ public class TFlowerPot extends Furniture implements Listener {
 	
 	@EventHandler
 	private void BlockBreak(FurnitureBlockBreakEvent e){
-		if(getObjID()==null){return;}
+		  if(e.getID() == null || getObjID() == null) return;
 		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		  if (pot==null) return;
 		  if (e.getBlock() == null) return;
 		  if (e.getBlock().getLocation() == null) return;
 		  if(!e.getBlock().equals(pot)){return;}
-		  e.setCancelled(true);
 		  if(!canBuild(e.getPlayer())){return;}
 		  destroy(e.getPlayer());
 		  pot.setType(Material.AIR);

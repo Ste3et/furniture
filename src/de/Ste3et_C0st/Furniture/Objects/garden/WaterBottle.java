@@ -45,9 +45,8 @@ public class WaterBottle extends Furniture implements Listener {
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
@@ -57,9 +56,8 @@ public class WaterBottle extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canInteract(e.getPlayer())){return;}
 		Material data = e.getPlayer().getInventory().getItemInMainHand().getType();
@@ -77,7 +75,7 @@ public class WaterBottle extends Furniture implements Listener {
 		for(fEntity stand : getfAsList()){
 			if(stand.getName().equalsIgnoreCase("#ITEM#")){
 				fstand = stand;
-				if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().equals(Material.AIR)){
+				if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
 					ItemStack is = stand.getItemInMainHand();
 					is.setAmount(1);
 					getWorld().dropItem(getLocation(), is);

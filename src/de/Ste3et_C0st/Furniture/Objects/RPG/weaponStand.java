@@ -53,9 +53,8 @@ public class weaponStand extends Furniture {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
-		if(e.isCancelled()){return;}
 		if(!e.canBuild()){return;}
 		if(p!=null){
 			p.closeInventory();
@@ -77,10 +76,9 @@ public class weaponStand extends Furniture {
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(p!=null){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		this.p = e.getPlayer();
@@ -105,12 +103,12 @@ public class weaponStand extends Furniture {
 		
 		ItemMeta im1 = is1.getItemMeta();
 		ItemMeta im3 = is3.getItemMeta();
-		im1.setDisplayName("�c");
-		im3.setDisplayName("�c");
+		im1.setDisplayName("§c");
+		im3.setDisplayName("§c");
 		is1.setItemMeta(im1);
 		is3.setItemMeta(im3);
 		
-		inv = Bukkit.createInventory(null, 45, "�cWeaponBox");
+		inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
 		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
 		
 		int j = 1;

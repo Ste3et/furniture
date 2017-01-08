@@ -114,15 +114,12 @@ public class sunshade extends Furniture implements Listener{
 	public void onFurnitureClick(FurnitureClickEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getInventory().getItemInMainHand();
 		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.INTERACT)){return;}
 		if(is.getType().equals(Material.BANNER)){
-			e.setCancelled(true);
 			if(isRunning()){return;}
 			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
@@ -154,10 +151,8 @@ public class sunshade extends Furniture implements Listener{
 	public void onBlockBreak(FurnitureBlockBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		stopTimer();
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
@@ -175,14 +170,11 @@ public class sunshade extends Furniture implements Listener{
 	public void onBlockBreak(FurnitureBlockClickEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		ItemStack is = p.getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.BANNER)){
-			e.setCancelled(true);
 			if(isRunning()){return;}
 			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
@@ -219,10 +211,8 @@ public class sunshade extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		stopTimer();
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){

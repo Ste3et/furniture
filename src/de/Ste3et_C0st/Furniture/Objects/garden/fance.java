@@ -73,7 +73,6 @@ public class fance extends Furniture implements Listener{
 	private void onBlockBreak(FurnitureBlockBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -85,7 +84,6 @@ public class fance extends Furniture implements Listener{
 	private void onBlockBreak(FurnitureBlockClickEvent e){
 		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
@@ -109,13 +107,10 @@ public class fance extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
-		if(e.getID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		e.remove();
 		delete();
 	}
@@ -132,7 +127,7 @@ public class fance extends Furniture implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.isCancelled()){return;}
 		if(this.block==null) return;

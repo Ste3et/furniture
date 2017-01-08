@@ -36,12 +36,10 @@ public class SchoolTable extends Furniture implements Listener {
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
 				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
@@ -56,13 +54,11 @@ public class SchoolTable extends Furniture implements Listener {
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){

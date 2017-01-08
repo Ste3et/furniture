@@ -32,7 +32,6 @@ public class campfire_1 extends Furniture implements Listener{
 	public void onFurnitureBreak(FurnitureBreakEvent e){
 		if(getObjID()==null||e.getID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
@@ -49,12 +48,10 @@ public class campfire_1 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
 		if(is.getType().equals(Material.WATER_BUCKET)){

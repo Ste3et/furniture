@@ -156,7 +156,7 @@ public class tent_2 extends Furniture implements Listener{
 		
 		
 		bedLoc = getLutil().setBed(this.getBlockFace(), b1);
-		getObjID().addBlock(Arrays.asList(b1.getWorld().getBlockAt(b1)));
+		getObjID().addBlock(Arrays.asList(b1.getBlock(), b2.getBlock(), b1.getBlock().getRelative(getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 180))));
 		block.add(b1.getWorld().getBlockAt(b1));
 		block.add(b2.getWorld().getBlockAt(b2));
 	}
@@ -177,12 +177,10 @@ public class tent_2 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		for(Block bl : block){
 			bl.setType(Material.AIR);
 		}
@@ -192,11 +190,9 @@ public class tent_2 extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(final FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		e.setCancelled(true);
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
 		if(!p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){

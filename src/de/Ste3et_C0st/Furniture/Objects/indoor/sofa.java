@@ -152,11 +152,9 @@ public class sofa extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
-		e.setCancelled(true);
 		final Player p = e.getPlayer();
 		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
 			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 12);
@@ -187,12 +185,10 @@ public class sofa extends Furniture implements Listener {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null){return;}
-		if(e.isCancelled()){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(e.getID()==null){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.BREAK)){return;}
-		e.setCancelled(true);
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getPassanger()!=null){
 				packet.eject();

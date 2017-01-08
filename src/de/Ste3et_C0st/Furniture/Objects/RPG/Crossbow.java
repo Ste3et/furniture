@@ -105,9 +105,8 @@ public class Crossbow extends Furniture implements Listener  {
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -116,9 +115,8 @@ public class Crossbow extends Furniture implements Listener  {
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBlockBreakEvent e) {
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -127,9 +125,8 @@ public class Crossbow extends Furniture implements Listener  {
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		fEntity stand = getArmorStand();
@@ -148,9 +145,8 @@ public class Crossbow extends Furniture implements Listener  {
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureBlockClickEvent e) {
-		if(getObjID()==null){return;} 
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()) return;
 		if(!e.getID().equals(getObjID())) return;
 		if(!e.canBuild()){return;}
 		fEntity stand = getArmorStand();
@@ -178,6 +174,7 @@ public class Crossbow extends Furniture implements Listener  {
 		case WEST: v= new Vector(1.2, 0.5, 0);break;
 		default:break;
 		}
+		if(v == null) return;
 		getWorld().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 		Location start = getRelative(getCenter(), getBlockFace(), 0,0);
 		start.setYaw(getYaw());

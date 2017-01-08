@@ -77,9 +77,8 @@ public class hammock extends Furniture implements Listener{
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
@@ -89,9 +88,8 @@ public class hammock extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBlockBreakEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		e.remove();
@@ -100,9 +98,8 @@ public class hammock extends Furniture implements Listener{
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();
@@ -136,9 +133,8 @@ public class hammock extends Furniture implements Listener{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureBlockClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 		Player p = e.getPlayer();

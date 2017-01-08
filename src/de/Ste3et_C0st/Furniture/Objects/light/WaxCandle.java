@@ -55,9 +55,8 @@ public class WaxCandle extends Furniture{
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
@@ -67,9 +66,8 @@ public class WaxCandle extends Furniture{
 	
 	@EventHandler
 	public void onFurnitureBlockBreak(FurnitureBlockBreakEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
@@ -79,9 +77,8 @@ public class WaxCandle extends Furniture{
 	
 	@EventHandler
 	public void onFurnitureClick(FurnitureBlockClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}
@@ -98,9 +95,8 @@ public class WaxCandle extends Furniture{
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!canBuild(e.getPlayer())){return;}

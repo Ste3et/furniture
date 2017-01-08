@@ -61,7 +61,6 @@ public class BlackBoard extends Furniture implements Listener {
 		Location loc = getRelative(getCenter(), getBlockFace(),.25d, 1.2d).add(0, -1.63, 0);
 		loc.setYaw(getYaw()+180);
 		fArmorStand stand = spawnArmorStand(loc);
-		//stand.setItemInHand(new ItemStack(Material.BONE));
 		stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-110, 0, 270)));
 		stand.setMarker(false);
 		stand.setName("#ITEM#");
@@ -76,9 +75,8 @@ public class BlackBoard extends Furniture implements Listener {
 
 	@EventHandler
 	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		delete();
@@ -87,13 +85,11 @@ public class BlackBoard extends Furniture implements Listener {
 
 	@EventHandler
 	public void onFurnitureClick(FurnitureClickEvent e){
-		if(getObjID()==null){return;}
+		if(e.getID() == null || getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.isCancelled()){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		e.setCancelled(true);
 		if(p.getInventory().getItemInMainHand().getType().isBlock()&&!p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
 		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packet.getName().equalsIgnoreCase("#ITEM#")){
