@@ -1,0 +1,23 @@
+WaxCandle:
+  system-ID: WaxCandle
+  name: '&cWaxCandle'
+  creator: ff5f37d0-c1ea-4736-b6c3-ebbfdd67a810
+  material: 383
+  glow: false
+  lore: ''
+  PlaceAbleSide: TOP
+  crafting:
+    disable: true
+    recipe: xxx,xxx,xxx
+    index:
+      x: '7'
+  ProjectModels:
+    ArmorStands:
+      '0': H4sIAAAAAAAAAI1Su3KbQBS9smQZkyJt6kxazSCQkJXGQQaJ9QiQ9YbGs5JWMmhBHh628R+kTJXfyB940mRSpkifD8gPpMxiIduJJzOhuvfcc86y9ywPUIQXJvbJ2I3cGSUAGXLYwhHpURxnfaEI+wMfU7qdldpumNNKSuhHuQIFVw8OTFE2cLgm4bY56NDNtRusMioPvJZQEirBihIeuK7WHp53tU4ZCtO7Dz86r7+/O2e1DfnHameHM3FJ1xQ14z6Z/8Hd1bDzVvrGvfeXyauf73tXz7xzPPNuWar9n96HfdTRH82/fe59/Mq1/hYcP5rngvymx/+46Q6/P4KtlATxJkw52D/RtcEQSqZlavkSONhzF/DSdwMyD/EyfhutE0oLjLpJgrjAQzHGK7btQQZb1wEJmQIt4E29JtXEBpErDVmQKrVmfVZpNupiZXZUk+dH1cYMyywYvhduLkkYuyQ6BC4mN3ESkojPAmW/M8Y0IfCJpKeCM70QFtNTOk+RzPrhQKAW8i4bKBinsxMkI5/NdUXups0n3HqMJ3VqS6cXTnCWzPyx0JX6lOj96twfXZm3qxvDQ6LpjURHXaXmENWNCbpx1AU11ZFoe3PBmZhrWxylLDPJ8DTRGtqCMWGzW6Nqe21qeKZrTZBgqEgyOyN3Oa02ATi2Q/bagXf0RQtJZ+kiAdiDsop9vCLsIXNwYLXbumKq221zwBkKMp8CJRbi4KFpa1oezIP5/dvbzHHsboIycNOKtVxGJH4MmnOeQ3YO3f3aQvtQtPH1SS2rfwNfezpEpwMAAA==
+    Block:
+      '0':
+        X-Offset: 0.0
+        Y-Offset: 0.0
+        Z-Offset: 0.0
+        Type: TORCH
+        Data: 5

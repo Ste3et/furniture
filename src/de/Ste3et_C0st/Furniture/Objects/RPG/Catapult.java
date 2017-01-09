@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,7 +21,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -69,7 +68,7 @@ public class Catapult extends FurnitureHelper implements Listener{
 	}
 	
 	@EventHandler
-	public void FurnitureClickEvent(FurnitureClickEvent e){
+	public void FurnitureClickEvent(ProjectClickEvent e){
 		if(getObjID()==null) return;
 		if(e.getID()==null) return;
 		if(!e.getID().equals(getObjID())) return;
@@ -121,19 +120,12 @@ public class Catapult extends FurnitureHelper implements Listener{
 				if(block == null) return;
 				Vector v= getLaunchVector(getBlockFace());
 				if(v == null) return;
-				block.playEffect(EntityEffect.WITCH_MAGIC);
 				block.setDropItem(false);
 				block.setVelocity(v.multiply(1));
 				fallingSandList.put(block, e.getPlayer());
 			
 		}
-		
-		if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && FurnitureLib.getInstance().useGamemode()) return;
-		Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		is.setAmount(is.getAmount()-1);
-		e.getPlayer().getInventory().setItem(i, is);
-		e.getPlayer().updateInventory();
+		consumeItem(e.getPlayer());
 	}
 	
 	public Vector getLaunchVector(BlockFace face){
