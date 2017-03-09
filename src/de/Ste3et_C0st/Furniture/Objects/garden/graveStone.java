@@ -1,52 +1,37 @@
 package de.Ste3et_C0st.Furniture.Objects.garden;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
+import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
-import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
-import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class graveStone extends Furniture implements Listener{
-	public graveStone(ObjectID id){
-		super(id);
-		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
-			setBlock();
-			return;
-		}
-		spawn(id.getStartLocation());
-		Bukkit.getPluginManager().registerEvents(this, main.getInstance());
-		setBlock();
-	}
+public class graveStone extends FurnitureHelper implements Listener{
+
+	private Location signLoc;
+	private Block sign;
+	private String[] lines = new String[4];
 	
-	Location signLoc;
-	Block sign;
-	String[] lines = new String[4];
+	public graveStone(ObjectID id) {
+		super(id);
+		setBlock();
+		Bukkit.getPluginManager().registerEvents(this, main.instance);
+	}
 	
 	@SuppressWarnings("deprecation")
 	private void setBlock(){
@@ -74,94 +59,14 @@ public class graveStone extends Furniture implements Listener{
 		getObjID().addBlock(Arrays.asList(this.sign));
 	}
 	
-	public void spawn(Location location){
-		List<fArmorStand> aspList = new ArrayList<fArmorStand>();
-		if(getBlockFace().equals(BlockFace.WEST)){location = getLutil().getRelativ(location, getBlockFace(), .0, -1.02);}
-		if(getBlockFace().equals(BlockFace.SOUTH)){location = getLutil().getRelativ(location, getBlockFace(), -1.0, -1.02);}
-		if(getBlockFace().equals(BlockFace.EAST)){location = getLutil().getRelativ(location, getBlockFace(), -1.0, .0);}
-		Location center = getLutil().getRelativ(location, getBlockFace(), .18D, .955D);
-		center.add(0,-.8,0);
-		center.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()) + 90);
-		Location kreutz1 = getLutil().getRelativ(center, getBlockFace(), -.55, .0);
-		kreutz1.add(0, 1.5, 0);
-		kreutz1.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()) + 90);
-		
-		Location kreutz2 = getLutil().getRelativ(center, getBlockFace(), -.23, -1.27);
-		kreutz2.add(0, 1.6, 0);
-		kreutz2.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-
-		Location loc = center;
-		
-		for(int i = 0; i<=2;i++){
-			Location l = getLutil().getRelativ(loc, getBlockFace(), .0, -.44*i);
-			
-			l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()) + 90);
-			fArmorStand as = getManager().createArmorStand(getObjID(), l);
-			as.getInventory().setHelmet(new ItemStack(Material.COBBLESTONE));
-			as.setSmall(true);
-			as.setPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)), BodyPart.HEAD);
-			aspList.add(as);
-		}
-		
-		Double l = .3;
-		for(int i = 0;i<=2;i++){
-			setRow(center, .38, l, -.15,2,getLutil().degresstoRad(new EulerAngle(90, 0, 0)), aspList);
-			l+=.35;
-			
-		}
-		
-		fArmorStand as = getManager().createArmorStand(getObjID(), kreutz1.add(0, -.15, 0));
-		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-		as.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		aspList.add(as);
-		as = getManager().createArmorStand(getObjID(), kreutz2.add(0, -.15, 0));
-		as.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-		as.setPose(new EulerAngle(1.38,1.57,1.57), BodyPart.RIGHT_ARM);
-		aspList.add(as);
-		
-		for(fArmorStand asp : aspList){
-			asp.setInvisible(true);
-			asp.setBasePlate(false);
-		}
-		send();
-	}
-	
-	@EventHandler(priority=EventPriority.LOW)
-	public void onFurnitureBreak(FurnitureBreakEvent e){
+	@EventHandler
+	private void onBlockBreak(ProjectBreakEvent e){
 		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().getPlugin().equalsIgnoreCase(main.getInstance().getName())){return;}
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		e.remove();
-		sign.setType(Material.AIR);
-		sign = null;
-		delete();
-		removeSign();
-	}
-	
-	@EventHandler
-	private void onPhysiks(BlockPhysicsEvent e){
-		  if(getObjID() == null) return;
-		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		  if (sign==null) return;
-		  if (e.getBlock() == null) return;
-		  if (!e.getBlock().equals(sign)) return;
-		  e.setCancelled(true);
-	}
-	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().getPlugin().equalsIgnoreCase(getPlugin().getName())){return;}
-		Player p = e.getPlayer();
-		if(!e.getID().equals(getObjID())) return;
-		if(!e.canBuild()){return;}
-		ItemStack is = p.getInventory().getItemInMainHand();
-		if (is == null) return;
-		if (!is.getType().equals(Material.WRITTEN_BOOK)) return;
-		readFromBook(is);
+		if(sign!=null){
+			sign.setType(Material.AIR);
+		}
 	}
 
 	public void resetSign(){
@@ -173,6 +78,8 @@ public class graveStone extends Furniture implements Listener{
 			}
 		});
 	}
+	
+	public Location getSignLocation(){return this.signLoc;}
 	
 	public void removeSign(){
 		if(sign!=null){
@@ -238,20 +145,5 @@ public class graveStone extends Furniture implements Listener{
 		sign.setLine(line, text);
 		sign.update(true, false);
 		lines[line] = text;
-	}
-	
-	public void setRow(Location loc, double x,double y, double z, int replay, EulerAngle angle, List<fArmorStand> list){
-		Double d = .0;
-		for(int i = 0; i<=replay;i++){
-			Location loc1= getLutil().getRelativ(loc, getBlockFace(), z, d-.825);
-			loc1.setYaw(getLutil().FaceToYaw(getBlockFace()));
-			loc1.add(0, y,0);
-			fArmorStand packet = getManager().createArmorStand(getObjID(), loc1);
-			packet.getInventory().setHelmet(new ItemStack(Material.STONE_PLATE));
-			packet.setSmall(true);
-			packet.setPose(angle, BodyPart.HEAD);
-			list.add(packet);
-			d+=x;
-		}
 	}
 }

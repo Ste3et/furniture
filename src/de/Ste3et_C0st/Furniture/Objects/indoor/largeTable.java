@@ -238,7 +238,11 @@ public class largeTable extends Furniture implements Listener{
 		}
 		
 		ItemStack IS = is.clone();
-		IS.setAmount(1);
+		if(IS.getAmount()<=0){
+			IS.setAmount(0);
+		}else{
+			IS.setAmount(1);
+		}
 		as.getInventory().setItemInMainHand(IS);
 		
 		update();

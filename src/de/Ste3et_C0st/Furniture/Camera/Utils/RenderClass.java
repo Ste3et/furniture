@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Camera.Utils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,20 +11,20 @@ import org.bukkit.map.MapView;
 
 public class RenderClass extends MapRenderer {
 	private boolean hasRendered = false;
-	private HashMap<Integer, HashMap<Integer, Byte>> byteList = new HashMap<Integer, HashMap<Integer, Byte>>();
+	private List<Layer> layerList = new ArrayList<Layer>();
 	
 	Integer height = 55;
 	Integer width = 55;
+	
 	public RenderClass(Location loc){
         GetBlocks blocks = new GetBlocks();
         hasRendered = true;
-        this.byteList = blocks.returnBlocks(loc, height, width);
+        this.layerList = blocks.returnBlocks(loc, 56, 56, 29, 0);
     }
 	
 	@Override
 	public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
 		if(!hasRendered){return;}
-		if(this.byteList.isEmpty()){return;}
 		try {
 			mapView.setWorld(player.getWorld());
 			mapView.setCenterX(player.getLocation().getChunk().getX());
@@ -49,29 +50,14 @@ public class RenderClass extends MapRenderer {
 				}
 			}
 			
-
-			for(int layer = byteList.size()-1; layer>=0;layer--){
-				HashMap<Integer, Byte> colorList = this.byteList.get(layer);
-				Integer index = colorList.size()-1;
-				for(int y = 0; y<=width;y++){
-					for(int z = 0; z<=height;z++){
-							Integer Y = startX+y;
-							Integer Z = startY+z;
-							if(colorList.get(index)!=null&&colorList.get(index)!=0){
-								mapCanvas.setPixel(Y,Z,colorList.get(index));
-								mapCanvas.setPixel(Y,Z,colorList.get(index));
-							}
-							
-							index--;
-					}
+			for(Layer l : this.layerList){
+				for(Pixel p : l.getPixelList()){
+					Byte b = p.getColor();
+					if(b == 0) continue;
+					mapCanvas.setPixel(- 1 + startX + p.getX(),- 1 + startY + p.getZ(), b);
 				}
 			}
-			
-			//mapCanvas.drawText(10, 10, font, "�18;TESTPHASE");
-			
 			hasRendered = false;
 		}catch(Exception e){e.printStackTrace();}
 	}
-
-	
 }

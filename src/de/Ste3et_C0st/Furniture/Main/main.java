@@ -44,12 +44,12 @@ import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_3;
 import de.Ste3et_C0st.Furniture.Objects.trap.BearTrap;
 import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.ProjectLoader;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.CenterType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.PlaceableSide;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class main extends JavaPlugin implements Listener{
 	
@@ -68,52 +68,51 @@ public class main extends JavaPlugin implements Listener{
 		instance = this;
 		lib = (FurnitureLib) Bukkit.getPluginManager().getPlugin("FurnitureLib");
 		util = lib.getLocationUtil();
-		if(lib.getDescription().getVersion().startsWith("1.8")){
+		if(lib.getDescription().getVersion().startsWith("1.8") || lib.getDescription().getVersion().startsWith("1.9")){
 			new Project("Camera", this,getResource("Crafting/Camera.yml"),PlaceableSide.TOP, camera.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("GraveStone", this,getResource("Crafting/GraveStone.yml"),PlaceableSide.TOP, graveStone.class).setSize(1, 2, 3, CenterType.CENTER);
 			new Project("LargeTable", this,getResource("Crafting/LargeTable.yml"),PlaceableSide.TOP, largeTable.class).setSize(2, 1, 2, CenterType.RIGHT);
 			new Project("Sofa", this,getResource("Crafting/Sofa.yml"),PlaceableSide.TOP, sofa.class).setSize(1, 1, 3, CenterType.RIGHT);
 	        new Project("Campfire1", this,getResource("Crafting/Campfire1.yml"),PlaceableSide.TOP, campfire_1.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("Campfire2", this,getResource("Crafting/Campfire2.yml"),PlaceableSide.TOP, campfire_2.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Tent1", this,getResource("Crafting/Tent1.yml"),PlaceableSide.TOP, tent_1.class).setSize(4, 3, 5, CenterType.RIGHT);
 			new Project("Tent2", this,getResource("Crafting/Tent2.yml"),PlaceableSide.TOP, tent_2.class).setSize(4, 3, 5, CenterType.RIGHT);
 			new Project("Tent3", this,getResource("Crafting/Tent3.yml"),PlaceableSide.TOP, tent_3.class).setSize(3, 2, 3, CenterType.CENTER);
-			new Project("Sunshade", this, getResource("Crafting/Sunshade.yml"),PlaceableSide.TOP, sunshade.class).setSize(1, 3, 1, CenterType.RIGHT);
 			new Project("Streetlamp", this, getResource("Crafting/Streetlamp.yml"),PlaceableSide.TOP, streetlamp.class).setSize(2, 4, 1, CenterType.FRONT);
 			new Project("Billboard", this, getResource("Crafting/Billboard.yml"),PlaceableSide.TOP, billboard.class).setSize(1, 3, 3, CenterType.RIGHT);
 			new Project("WeaponStand", this, getResource("Crafting/WeaponStand.yml"),PlaceableSide.TOP, weaponStand.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Hammock", this, getResource("Crafting/Hammock.yml"),PlaceableSide.TOP, hammock.class).setSize(1, 2, 7, CenterType.RIGHT);
 			new Project("Guillotine", this, getResource("Crafting/guillotine.yml"),PlaceableSide.TOP, guillotine.class).setSize(1, 5, 2, CenterType.RIGHT);
 			new Project("Log", this, getResource("Crafting/log.yml"), PlaceableSide.TOP, log.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FlowerPot", this, getResource("Crafting/FlowerPot.yml"),PlaceableSide.BOTTOM, TFlowerPot.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("BearTrap", this, getResource("Crafting/BearTrap.yml"), PlaceableSide.TOP, BearTrap.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("TrashCan", this, getResource("Crafting/TrashCan.yml"), PlaceableSide.TOP, TrashCan.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Crossbow", this, getResource("Crafting/Crossbow.yml"), PlaceableSide.TOP, Crossbow.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("Flag", this, getResource("Crafting/flag.yml"), PlaceableSide.TOP, flag.class).setSize(1, 3, 1, CenterType.RIGHT);
 			new Project("AdventCalender", this, getResource("Crafting/AdventCalender.yml"), PlaceableSide.TOP, AdventCalender.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FireworkLauncher", this, getResource("Crafting/FireworkLauncher.yml"), PlaceableSide.TOP, FireworkLauncher.class).setSize(1, 1, 1, CenterType.CENTER);
-	
-			new Project("Catapult", this, getResource("Models/Catapult.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(3, 2, 3, CenterType.RIGHT).setEditorProject(false);
-			new Project("HumanSkeleton", this, getResource("Models/HumanSkeleton.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(3, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("CandyCane", this, getResource("Models/CandyCane.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(3, 4, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SnowGolem", this, getResource("Models/SnowGolem.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("TV", this, getResource("Models/TV.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
-			new Project("Chair", this, getResource("Models/Chair.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("CampChair", this, getResource("Models/CampChair.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("CactusPlant", this, getResource("Models/CactusPlant.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SleepingBag", this, getResource("Models/SleepingBag.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("ChristmasTree", this, getResource("Models/ChristmasTree.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("Table", this, getResource("Models/Table.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SchoolChair", this, getResource("Models/SchoolChair.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SchoolTable", this, getResource("Models/SchoolTable.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("BlackBoard", this, getResource("Models/BlackBoard.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 2, 3, CenterType.RIGHT).setEditorProject(false);
-			new Project("Barrels", this, getResource("Models/Barrels.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("WaxCandle", this, getResource("Models/WaxCandle.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Lantern", this, getResource("Models/Lantern.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Mailbox", this, getResource("Models/Mailbox.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Fence", this, getResource("Models/Fence.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Trunk", this, getResource("Models/Trunk.yml"), PlaceableSide.TOP, ProjectLoader.class).setSize(1, 1, 4, CenterType.RIGHT).setEditorProject(false);
-			
+
+			new Project("Catapult", this, getResource("Models/Catapult.yml")).setSize(3, 2, 3, CenterType.RIGHT).setEditorProject(false);
+			new Project("HumanSkeleton", this, getResource("Models/HumanSkeleton.yml")).setSize(3, 1, 2, CenterType.RIGHT).setEditorProject(false);
+			new Project("CandyCane", this, getResource("Models/CandyCane.yml")).setSize(3, 4, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("SnowGolem", this, getResource("Models/SnowGolem.yml")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("TV", this, getResource("Models/TV.yml")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
+			new Project("Chair", this, getResource("Models/Chair.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("CampChair", this, getResource("Models/CampChair.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("CactusPlant", this, getResource("Models/CactusPlant.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("SleepingBag", this, getResource("Models/SleepingBag.yml")).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
+			new Project("ChristmasTree", this, getResource("Models/ChristmasTree.yml")).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
+			new Project("Table", this, getResource("Models/Table.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("SchoolChair", this, getResource("Models/SchoolChair.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("SchoolTable", this, getResource("Models/SchoolTable.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("BlackBoard", this, getResource("Models/BlackBoard.yml")).setSize(1, 2, 3, CenterType.RIGHT).setEditorProject(false);
+			new Project("Barrels", this, getResource("Models/Barrels.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("WaxCandle", this, getResource("Models/WaxCandle.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Lantern", this, getResource("Models/Lantern.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Mailbox", this, getResource("Models/Mailbox.yml")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Fence", this, getResource("Models/Fence.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Trunk", this, getResource("Models/Trunk.yml")).setSize(1, 1, 4, CenterType.RIGHT).setEditorProject(false);
+			new Project("Sunshade", this, getResource("Models/Sunshade.yml")).setSize(1, 3, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Hammock", this, getResource("Models/Hammock.yml")).setSize(1, 2, 7, CenterType.RIGHT).setEditorProject(false);
+			new Project("Crossbow", this, getResource("Models/Crossbow.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Tent1", this,getResource("Models/Tent1.yml")).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
+			new Project("GraveStone", this,getResource("Models/GraveStone.yml")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
 			addDefault("fence", "whiteList", "config.yml");
 			addDefault("bearTrap", "damage", "damage.yml");
 			addDefault("catapult", "range", "range.yml");
@@ -176,7 +175,8 @@ public class main extends JavaPlugin implements Listener{
 	public void loadModels(){
 		for(ObjectID id : FurnitureLib.getInstance().getFurnitureManager().getObjectList()){
 			if(id==null) continue;
-			if(id.getProjectOBJ() == null) return;
+			if(id.getProjectOBJ() == null) continue;
+			if(id.getSQLAction().equals(SQLAction.REMOVE)) continue;
 			switch (id.getProjectOBJ().getName()) {
 			case "Catapult":new Catapult(id);break;
 			case "Barrels": new barrels(id);break;
@@ -184,6 +184,11 @@ public class main extends JavaPlugin implements Listener{
 			case "Lantern": new WaxCandle(id);break;
 			case "Fence": new fance(id);break;
 			case "Trunk": new Trunk(id);break;
+			case "Sunshade": new sunshade(id);break;
+			case "Hammock": new hammock(id);break;
+			case "Crossbow": new Crossbow(id);break;
+			case "Tent1": new tent_1(id);break;
+			case "GraveStone": new graveStone(id);break;
 			default:break;
 			}
 		}
@@ -193,6 +198,7 @@ public class main extends JavaPlugin implements Listener{
 	public void onFurnitureLateSpawn(FurnitureLateSpawnEvent event){
 		if(event.getProject()==null) return;
 		if(event.getProject().getName()==null) return;
+		if(event.getID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		switch (event.getProject().getName()) {
 		case "Catapult":new Catapult(event.getID());break;
 		case "Barrels": new barrels(event.getID());break;
@@ -200,6 +206,11 @@ public class main extends JavaPlugin implements Listener{
 		case "Lantern": new WaxCandle(event.getID());break;
 		case "Fence": new fance(event.getID());break;
 		case "Trunk": new Trunk(event.getID());break;
+		case "Sunshade": new sunshade(event.getID());break;
+		case "Hammock": new hammock(event.getID());break;
+		case "Crossbow": new Crossbow(event.getID());break;
+		case "Tent1": new tent_1(event.getID());break;
+		case "GraveStone": new graveStone(event.getID());break;
 		default:break;
 		}
 	}
