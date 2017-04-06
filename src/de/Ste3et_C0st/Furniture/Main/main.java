@@ -69,7 +69,11 @@ public class main extends JavaPlugin implements Listener{
 		lib = (FurnitureLib) Bukkit.getPluginManager().getPlugin("FurnitureLib");
 		util = lib.getLocationUtil();
 		if(lib.getDescription().getVersion().startsWith("1.8") || lib.getDescription().getVersion().startsWith("1.9")){
-			new Project("Camera", this,getResource("Crafting/Camera.yml"),PlaceableSide.TOP, camera.class).setSize(1, 1, 1, CenterType.RIGHT);
+			/*
+			 * Register a new Project wit only the crafting recipe the ArmorStands must be hardcode
+			 * new Project("PROJECTNAME", this, getResource("Folder/File.yml"), PlaceableSide.ENUM, ClassFile)
+			 */
+			
 			new Project("LargeTable", this,getResource("Crafting/LargeTable.yml"),PlaceableSide.TOP, largeTable.class).setSize(2, 1, 2, CenterType.RIGHT);
 			new Project("Sofa", this,getResource("Crafting/Sofa.yml"),PlaceableSide.TOP, sofa.class).setSize(1, 1, 3, CenterType.RIGHT);
 	        new Project("Campfire1", this,getResource("Crafting/Campfire1.yml"),PlaceableSide.TOP, campfire_1.class).setSize(1, 1, 1, CenterType.RIGHT);
@@ -88,6 +92,11 @@ public class main extends JavaPlugin implements Listener{
 			new Project("AdventCalender", this, getResource("Crafting/AdventCalender.yml"), PlaceableSide.TOP, AdventCalender.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FireworkLauncher", this, getResource("Crafting/FireworkLauncher.yml"), PlaceableSide.TOP, FireworkLauncher.class).setSize(1, 1, 1, CenterType.CENTER);
 
+			/*
+			 * Register a new Project with a FurnitureMaker Model
+			 * new Project("PROJECTNAME", this, getResource("Folder/File.yml"))
+			 */
+			
 			new Project("Catapult", this, getResource("Models/Catapult.yml")).setSize(3, 2, 3, CenterType.RIGHT).setEditorProject(false);
 			new Project("HumanSkeleton", this, getResource("Models/HumanSkeleton.yml")).setSize(3, 1, 2, CenterType.RIGHT).setEditorProject(false);
 			new Project("CandyCane", this, getResource("Models/CandyCane.yml")).setSize(3, 4, 1, CenterType.RIGHT).setEditorProject(false);
@@ -113,12 +122,16 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Crossbow", this, getResource("Models/Crossbow.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("Tent1", this,getResource("Models/Tent1.yml")).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
 			new Project("GraveStone", this,getResource("Models/GraveStone.yml")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
+			new Project("Camera", this, getResource("Models/Camera.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(true);
 			addDefault("fence", "whiteList", "config.yml");
 			addDefault("bearTrap", "damage", "damage.yml");
 			addDefault("catapult", "range", "range.yml");
 			
 			setDefaults();
 			setDefaults_2();
+			
+			//Register the plugin to load the Furnitures for the Hardcodet part
+			
 			lib.registerPluginFurnitures(this);
 			loadModels();
 			
@@ -173,6 +186,7 @@ public class main extends JavaPlugin implements Listener{
 	}
 	
 	public void loadModels(){
+		//Hook the class to the project
 		for(ObjectID id : FurnitureLib.getInstance().getFurnitureManager().getObjectList()){
 			if(id==null) continue;
 			if(id.getProjectOBJ() == null) continue;
@@ -189,6 +203,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Crossbow": new Crossbow(id);break;
 			case "Tent1": new tent_1(id);break;
 			case "GraveStone": new graveStone(id);break;
+			case "Camera": new camera(id);break;
 			default:break;
 			}
 		}
@@ -196,6 +211,7 @@ public class main extends JavaPlugin implements Listener{
 	
 	@EventHandler
 	public void onFurnitureLateSpawn(FurnitureLateSpawnEvent event){
+		//Hook the Furniture to the class then it will be placed
 		if(event.getProject()==null) return;
 		if(event.getProject().getName()==null) return;
 		if(event.getID().getSQLAction().equals(SQLAction.REMOVE)) return;
@@ -211,6 +227,7 @@ public class main extends JavaPlugin implements Listener{
 		case "Crossbow": new Crossbow(event.getID());break;
 		case "Tent1": new tent_1(event.getID());break;
 		case "GraveStone": new graveStone(event.getID());break;
+		case "Camera": new camera(event.getID());break;
 		default:break;
 		}
 	}

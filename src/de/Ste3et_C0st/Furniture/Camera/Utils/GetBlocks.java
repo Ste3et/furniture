@@ -1,8 +1,9 @@
 package de.Ste3et_C0st.Furniture.Camera.Utils;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -30,33 +31,37 @@ public class GetBlocks {
 				for(int z = 0; z < width; z++){
 					for(int y = 0; y < heigt; y++){
 						Location loc = new Relative(start, 0, y, - z, face).getSecondLocation();
-						l.addPixel(new Pixel(width - z, heigt - y, getByteFromBlock(loc.getBlock())));
+						Byte b = getByteFromBlock(loc.getBlock());
+						l.addPixel(new Pixel(width - z, heigt - y, b));
 					}
 				}
 				layerList.add(l);
 			}
 			return layerList;
 		}catch(Exception ex){
-			ex.printStackTrace();
 			return null;
 		}
 	}
 	
 	public Byte getByteFromBlock(Block b){
 		try {
-		Object obj = CraftBlockClass.cast(b);
-		Object NMSBlock = CraftMagicNumbersClass.getDeclaredMethod("getBlock", org.bukkit.block.Block.class).invoke(null, obj);
-		Object IBlockData = NMSBlock.getClass().getSuperclass().getMethod("getBlockData", null).invoke(NMSBlock);
-		java.lang.reflect.Method m = IBlockData.getClass().getMethod("g", null);
-		m.setAccessible(true);
-		Object o = m.invoke(IBlockData);
-        int baseColor = (int) o.getClass().getField("M").get(o);
-        int color = baseColor * 4 + 0;
-		return (byte) color;
-		} catch (IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
-			e.printStackTrace();
+			Object o = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.block.Block.class).invoke(null, b);
+			Object o2 = o.getClass().getMethod("getBlockData").invoke(o);
+			Method g = o2.getClass().getMethod("g");
+			g.setAccessible(true);
+			Object o3 = g.invoke(o2);
+	        int color = o3.getClass().getField("M").getInt(o3) * 4 + 0;
+	        if(color == 28){
+	        	color += randInt(0, 3);
+	        }
+			return (byte) color;
+		} catch (Exception e) {
 			return 0;
 		}
+	}
+	
+	public static int randInt(int min, int max) {
+	    int randomNum = new Random().nextInt((max - min) + 1) + min;
+	    return randomNum;
 	}
 }
