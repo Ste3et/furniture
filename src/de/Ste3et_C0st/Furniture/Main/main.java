@@ -32,7 +32,6 @@ import de.Ste3et_C0st.Furniture.Objects.garden.graveStone;
 import de.Ste3et_C0st.Furniture.Objects.garden.log;
 import de.Ste3et_C0st.Furniture.Objects.garden.sunshade;
 import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
-import de.Ste3et_C0st.Furniture.Objects.indoor.sofa;
 import de.Ste3et_C0st.Furniture.Objects.light.WaxCandle;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.barrels;
 import de.Ste3et_C0st.Furniture.Objects.outdoor.campfire_1;
@@ -75,7 +74,6 @@ public class main extends JavaPlugin implements Listener{
 			 */
 			
 			new Project("LargeTable", this,getResource("Crafting/LargeTable.yml"),PlaceableSide.TOP, largeTable.class).setSize(2, 1, 2, CenterType.RIGHT);
-			new Project("Sofa", this,getResource("Crafting/Sofa.yml"),PlaceableSide.TOP, sofa.class).setSize(1, 1, 3, CenterType.RIGHT);
 	        new Project("Campfire1", this,getResource("Crafting/Campfire1.yml"),PlaceableSide.TOP, campfire_1.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("Campfire2", this,getResource("Crafting/Campfire2.yml"),PlaceableSide.TOP, campfire_2.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("Tent2", this,getResource("Crafting/Tent2.yml"),PlaceableSide.TOP, tent_2.class).setSize(4, 3, 5, CenterType.RIGHT);
@@ -123,6 +121,7 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Tent1", this,getResource("Models/Tent1.yml")).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
 			new Project("GraveStone", this,getResource("Models/GraveStone.yml")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
 			new Project("Camera", this, getResource("Models/Camera.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(true);
+			new Project("Sofa", this, getResource("Models/Sofa.yml")).setSize(1, 1, 3, CenterType.RIGHT).setEditorProject(true);
 			addDefault("fence", "whiteList", "config.yml");
 			addDefault("bearTrap", "damage", "damage.yml");
 			addDefault("catapult", "range", "range.yml");
