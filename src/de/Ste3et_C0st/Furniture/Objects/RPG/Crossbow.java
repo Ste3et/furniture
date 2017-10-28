@@ -81,10 +81,10 @@ public class Crossbow extends FurnitureHelper implements Listener  {
 	}
 	
 	public Vector getLaunchVector(BlockFace face){
-		int j = random(75, 45), l =random(150, 80);
-		double k = ((double) j / 100), h = ((double) l / 100);
+		int l =random(300, 150);
+		double h = ((double) l / 100);
 		
-		Vector v = new Vector(0, k, h);
+		Vector v = new Vector(0, 0, h);
 		switch (face) {
 			case SOUTH:v= new Vector(-v.getY(), v.getY(), -v.getZ());break;
 			case EAST: v= new Vector(-v.getZ(), v.getY(), -v.getY());break;

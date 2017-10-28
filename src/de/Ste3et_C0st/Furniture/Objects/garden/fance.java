@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,7 @@ public class fance extends FurnitureHelper implements Listener{
 	@EventHandler
 	public void onClick(ProjectClickEvent e){
 		if(!e.getID().equals(getObjID())){return;}
-		Block b = getWorld().getBlockAt(e.getID().getBlockList().get(0));
+		Block b = getWorld().getBlockAt(getObjID().getBlockList().toArray(new Location[getObjID().getBlockList().size()])[0]);
 		ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
 		if(stack==null) return;
 		if(stack.getType().equals(Material.AIR)) return;

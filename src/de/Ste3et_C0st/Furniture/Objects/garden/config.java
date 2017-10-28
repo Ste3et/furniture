@@ -1,4 +1,4 @@
-package de.Ste3et_C0st.Furniture.Main;
+package de.Ste3et_C0st.Furniture.Objects.garden;
 
 import java.io.File;
 import java.io.IOException;

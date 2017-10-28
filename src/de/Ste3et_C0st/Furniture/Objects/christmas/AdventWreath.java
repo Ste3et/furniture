@@ -55,7 +55,7 @@ public class AdventWreath extends Furniture implements Listener  {
 		if(e.getID() == null || getObjID() == null) return;
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
-		fArmorStand stand = e.getfArmorStand();
+		fArmorStand stand = (fArmorStand) e.getfEntity();
 		String str = stand.getName();
 		if(str.startsWith("Fire") || str.startsWith("Torch")){
 			int i = Integer.parseInt(str.split(":")[1]);

@@ -1,10 +1,10 @@
 package de.Ste3et_C0st.Furniture.Camera.Utils;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,6 +39,7 @@ public class GetBlocks {
 			}
 			return layerList;
 		}catch(Exception ex){
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -46,16 +47,16 @@ public class GetBlocks {
 	public Byte getByteFromBlock(Block b){
 		try {
 			Object o = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.block.Block.class).invoke(null, b);
-			Object o2 = o.getClass().getMethod("getBlockData").invoke(o);
-			Method g = o2.getClass().getMethod("g");
-			g.setAccessible(true);
-			Object o3 = g.invoke(o2);
-	        int color = o3.getClass().getField("M").getInt(o3) * 4 + 0;
-	        if(color == 28){
-	        	color += randInt(0, 3);
-	        }
+			Object iBlockData = o.getClass().getMethod("getBlockData").invoke(o);
+			Object Material = MethodUtils.invokeMethod(iBlockData, "getMaterial", null);
+			Object MaterialMapColor = MethodUtils.invokeMethod(Material, "r", null);
+			int color = MaterialMapColor.getClass().getField("ad").getInt(MaterialMapColor) * 4;
+//		        if(color == 28){
+//		        color += randInt(0, 3);
+//		     }
 			return (byte) color;
 		} catch (Exception e) {
+			//e.printStackTrace();
 			return 0;
 		}
 	}

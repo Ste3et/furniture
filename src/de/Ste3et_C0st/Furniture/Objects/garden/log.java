@@ -46,13 +46,13 @@ public class log extends Furniture {
 	public log(ObjectID id){
 		super(id);
 		b = getLocation().getBlock();
-		getObjID().addBlock(Arrays.asList(b));
 		ItemMeta meta = pane.getItemMeta();
 		meta.setDisplayName("§c");
 		pane.setItemMeta(meta);
 		pane.setDurability((short) 15);
 		pane.setItemMeta(meta);
 		setList();
+		getObjID().addBlock(Arrays.asList(b));
 		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
@@ -115,7 +115,7 @@ public class log extends Furniture {
 		lStand.add(stand);
 		
 		for(fArmorStand asp : lStand){
-			asp.setInvisible(true);
+			asp.setInvisible(false);
 			asp.setBasePlate(false);
 			asp.setMarker(false);
 		}
@@ -161,7 +161,7 @@ public class log extends Furniture {
 			p.updateInventory();
 		}else if(e.getCurrentItem().getType().equals(Material.ARROW)){
 			if(!getObjID().getUUID().equals(p.getUniqueId())){
-				if(!getLib().hasPerm(p, "furniture.admin") && !p.isOp() && !getLib().hasPerm(p, "furniture.manage.other")){
+				if(!getLib().getPermission().hasPerm(p, "furniture.admin") && !p.isOp() && !getLib().getPermission().hasPerm(p, "furniture.manage.other")){
 					return;
 				}
 			}

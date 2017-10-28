@@ -107,7 +107,7 @@ public class camera extends FurnitureHelper implements Listener{
 				Location l = getLocation().clone();
 				l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 				view.getRenderers().clear();
-				try{view.addRenderer(new RenderClass(l, mode));}catch (Exception ex){}
+				try{view.addRenderer(new RenderClass(l, mode));}catch (Exception ex){ex.printStackTrace();}
 			}
 		}
 	}

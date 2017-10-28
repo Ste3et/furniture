@@ -1,5 +1,9 @@
 package de.Ste3et_C0st.Furniture.Main;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +31,7 @@ import de.Ste3et_C0st.Furniture.Objects.electric.camera;
 import de.Ste3et_C0st.Furniture.Objects.electric.streetlamp;
 import de.Ste3et_C0st.Furniture.Objects.garden.TFlowerPot;
 import de.Ste3et_C0st.Furniture.Objects.garden.Trunk;
+import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.Furniture.Objects.garden.fance;
 import de.Ste3et_C0st.Furniture.Objects.garden.graveStone;
 import de.Ste3et_C0st.Furniture.Objects.garden.log;
@@ -82,7 +87,6 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Billboard", this, getResource("Crafting/Billboard.yml"),PlaceableSide.TOP, billboard.class).setSize(1, 3, 3, CenterType.RIGHT);
 			new Project("WeaponStand", this, getResource("Crafting/WeaponStand.yml"),PlaceableSide.TOP, weaponStand.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("Guillotine", this, getResource("Crafting/guillotine.yml"),PlaceableSide.TOP, guillotine.class).setSize(1, 5, 2, CenterType.RIGHT);
-			new Project("Log", this, getResource("Crafting/log.yml"), PlaceableSide.TOP, log.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FlowerPot", this, getResource("Crafting/FlowerPot.yml"),PlaceableSide.BOTTOM, TFlowerPot.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("BearTrap", this, getResource("Crafting/BearTrap.yml"), PlaceableSide.TOP, BearTrap.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("TrashCan", this, getResource("Crafting/TrashCan.yml"), PlaceableSide.TOP, TrashCan.class).setSize(1, 1, 1, CenterType.RIGHT);
@@ -120,8 +124,10 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Crossbow", this, getResource("Models/Crossbow.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("Tent1", this,getResource("Models/Tent1.yml")).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
 			new Project("GraveStone", this,getResource("Models/GraveStone.yml")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
-			new Project("Camera", this, getResource("Models/Camera.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(true);
-			new Project("Sofa", this, getResource("Models/Sofa.yml")).setSize(1, 1, 3, CenterType.RIGHT).setEditorProject(true);
+			new Project("Camera", this, getResource("Models/Camera.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Sofa", this, getResource("Models/Sofa.yml")).setSize(1, 1, 3, CenterType.RIGHT).setEditorProject(false);
+			new Project("Log", this, getResource("Models/Log.yml")).setSize(1, 1, 1, CenterType.CENTER).setEditorProject(false);
+			
 			addDefault("fence", "whiteList", "config.yml");
 			addDefault("bearTrap", "damage", "damage.yml");
 			addDefault("catapult", "range", "range.yml");
@@ -141,13 +147,23 @@ public class main extends JavaPlugin implements Listener{
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void addDefault(String a, String b, String d){
 		c = new config();
 		this.file = c.getConfig(b, "plugin/"+a+"/");
-		this.file.addDefaults(YamlConfiguration.loadConfiguration(getResource(d)));
+		this.file.addDefaults(YamlConfiguration.loadConfiguration(loadStream(d)));
 		this.file.options().copyDefaults(true);
 		this.c.saveConfig(b, this.file, "plugin/"+a+"/");
+	}
+	
+	public BufferedReader loadStream(String str){
+		if(!str.startsWith("/")) str = "/" + str;
+		InputStream stream = getInstance().getClass().getResourceAsStream(str);
+		try {
+			return new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private void setDefaults_2(){
@@ -203,6 +219,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Tent1": new tent_1(id);break;
 			case "GraveStone": new graveStone(id);break;
 			case "Camera": new camera(id);break;
+			case "Log": new Log(id);break;
 			default:break;
 			}
 		}
@@ -227,6 +244,7 @@ public class main extends JavaPlugin implements Listener{
 		case "Tent1": new tent_1(event.getID());break;
 		case "GraveStone": new graveStone(event.getID());break;
 		case "Camera": new camera(event.getID());break;
+		case "Log": new Log(event.getID());break;
 		default:break;
 		}
 	}

@@ -5,7 +5,7 @@ AdventCalender:
   glow: true
   lore: ''
   crafting:
-    disable: false
+    disable: true
     recipe: XXX,XEX,AXA
     index:
       E: 126

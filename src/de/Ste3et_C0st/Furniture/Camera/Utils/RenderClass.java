@@ -77,8 +77,12 @@ public class RenderClass extends MapRenderer {
 				for(Pixel p : l.getPixelList()){
 					Byte b = p.getColor();
 					if(b == 0) continue;
-					Color c = MapPalette.getColor(p.getColor());
-					image.setRGB(p.getX(), p.getZ(), c.getRGB());
+					try{
+						Color c = MapPalette.getColor(p.getColor());
+						image.setRGB(p.getX(), p.getZ(), c.getRGB());
+					}catch(Exception ex){
+						
+					}
 				}
 			}
 			

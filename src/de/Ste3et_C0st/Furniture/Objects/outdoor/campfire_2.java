@@ -138,7 +138,7 @@ public class campfire_2 extends Furniture implements Listener{
 		asp.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
 		packetList.add(asp);
 		
-		asp = getManager().createArmorStand(getObjID(), middle.add(0,-1.3,0));
+		asp = getManager().createArmorStand(getObjID(), middle.add(0,.1,0));
 		asp.setSmall(true);
 		packetList.add(asp);
 		
@@ -187,24 +187,26 @@ public class campfire_2 extends Furniture implements Listener{
 	}
 	
 	private void setfire(boolean b){
-		for(fEntity pack : getManager().getfArmorStandByObjectID(getObjID())){
-			if(pack instanceof fArmorStand){
-				fArmorStand stand = (fArmorStand) pack;
-				if(stand.isSmall() && pack.isInvisible()){
-					if((pack.getInventory().getHelmet() == null || pack.getInventory().getHelmet().getType().equals(Material.AIR)) &&
-					   (pack.getInventory().getItemInMainHand() == null || pack.getInventory().getItemInMainHand().getType().equals(Material.AIR))){					
-						pack.setFire(b);
-						Location loc = middle.clone();
-						loc.add(0, 1.3, 0);
-						if(b) getLib().getLightManager().addLight(loc, 15);
-						if(!b) getLib().getLightManager().removeLight(loc);
-						getManager().updateFurniture(getObjID());
-						return;
+		Location loc = getCenter().clone();
+		loc.add(0, 1.3, 0);
+		if(b){
+			getLib().getLightManager().addLight(loc, 15);
+		}else{
+			getLib().getLightManager().removeLight(loc);
+		}
+		
+		for(fEntity entity : getfAsList()){
+			if(entity instanceof fArmorStand){
+				fArmorStand stand = (fArmorStand) entity;
+				if((stand.getInventory().getHelmet() == null || stand.getInventory().getHelmet().getType().equals(Material.AIR)) &&
+						   (stand.getInventory().getItemInMainHand() == null || stand.getInventory().getItemInMainHand().getType().equals(Material.AIR))){
+					if(stand.isSmall() && entity.isInvisible()){
+						stand.setFire(b);
 					}
-
 				}
 			}
 		}
+		update();
 	}
 	
 	@EventHandler

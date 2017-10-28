@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="C:/Plugins/jars/FurnitureLib.jar"/>
 	<classpathentry kind="lib" path="C:/Plugins/jars/PostalService-1.0.6.jar"/>
 	<classpathentry kind="lib" path="C:/Plugins/jars/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Plugins/jars/ProtocolLib.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

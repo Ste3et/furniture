@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectBreakEvent;
+import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -67,6 +69,20 @@ public class graveStone extends FurnitureHelper implements Listener{
 		if(sign!=null){
 			sign.setType(Material.AIR);
 		}
+	}
+	
+	@EventHandler
+	private void onBlockClick(ProjectClickEvent e){
+		if(e.getID() == null || getObjID() == null) return;
+		if(!e.getID().equals(getObjID())){return;}
+		if(!e.canBuild()){return;}
+		Player p = e.getPlayer();
+		if(!e.getID().equals(getObjID())) return;
+		if(!e.canBuild()){return;}
+		ItemStack is = p.getInventory().getItemInMainHand();
+		if (is == null) return;
+		if (!is.getType().equals(Material.WRITTEN_BOOK)) return;
+		readFromBook(is);
 	}
 
 	public void resetSign(){

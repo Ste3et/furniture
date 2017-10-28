@@ -48,6 +48,7 @@ public class tent_3 extends Furniture implements Listener{
 	
 	Block bed;
 	
+	@SuppressWarnings("deprecation")
 	public void spawn(Location loc){
 		List<fArmorStand> aspL = new ArrayList<fArmorStand>();
 		ItemStack banner = new ItemStack(Material.BANNER);

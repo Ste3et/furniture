@@ -43,7 +43,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import de.Ste3et_C0st.Furniture.Main.config;
+import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;

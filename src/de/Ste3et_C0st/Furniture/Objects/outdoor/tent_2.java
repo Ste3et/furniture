@@ -157,8 +157,10 @@ public class tent_2 extends Furniture implements Listener{
 		
 		bedLoc = getLutil().setBed(this.getBlockFace(), b1);
 		getObjID().addBlock(Arrays.asList(b1.getBlock(), b2.getBlock(), b1.getBlock().getRelative(getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 180))));
-		block.add(b1.getWorld().getBlockAt(b1));
+		block.add(b1.getWorld().getBlockAt(getRelative(b1, 1, 0)));
 		block.add(b2.getWorld().getBlockAt(b2));
+		block.add(b1.getWorld().getBlockAt(b1));
+		
 	}
 	
 	public void setRow(Location loc, double x,double y, double z, int replay, EulerAngle angle, List<fArmorStand> list){

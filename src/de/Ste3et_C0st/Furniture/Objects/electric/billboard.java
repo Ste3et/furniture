@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -72,7 +73,7 @@ public class billboard extends Furniture implements Listener{
 			packet.setPose(new EulerAngle(-.17, 0, 0), BodyPart.RIGHT_ARM);
 			asList.add(packet);
 		}
-		
+		List<Block> blockLocation = new ArrayList<Block>();
 		for(int x = 0; x<=1;x++){
 			for(int y = 0;y<=2;y++){
 				Location loc = getLutil().getRelativ(location, getBlockFace(),0D,(double) -y-1).add(0, x+1, 0);
@@ -80,9 +81,10 @@ public class billboard extends Furniture implements Listener{
 				loc.getBlock().setType(Material.BARRIER);
 				ItemFrame frame = (ItemFrame) getWorld().spawn(loc2, ItemFrame.class);
 				frame.setFacingDirection(getBlockFace());
+				blockLocation.add(loc.getBlock());
 			}
 		}
-		
+		getObjID().addBlock(blockLocation);
 		for(fArmorStand pack : asList){
 			pack.setInvisible(true);
 			pack.setBasePlate(false);
