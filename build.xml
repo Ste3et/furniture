@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<!-- Configuration of the Ant build system to generate a Jar file -->
+<project name="DiceFurniture" default="dist" basedir=".">
+	<property name="pluginname" value="DiceFurniture"/>
+	<property name="bukkit.jar" location="../Bukkit/dist/spigot.jar"/>
+	<property name="plugins" location="../Bukkit/plugins"/>
+
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="dist" location="dist"/>
+	
+	<target name="init">
+		<mkdir dir="${bin}"/>
+		<copy todir="${bin}/Crafting">
+		    <fileset dir="${src}/Crafting"/>
+		</copy>
+		<copy todir="${bin}/Models">
+			<fileset dir="${src}/Models"/>
+		</copy>
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+			<classpath>
+				<pathelement location="${bukkit.jar}"/>
+				<pathelement location="${plugins}/FurnitureLib.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist}"/>
+		<jar jarfile="${dist}/${pluginname}.jar">
+			<fileset dir="${bin}"/>
+			<fileset file="${src}/*.yml"/>
+		</jar>
+		<copy file="${dist}/${pluginname}.jar" tofile="${plugins}/${pluginname}.jar"/>
+	</target>
+</project>
