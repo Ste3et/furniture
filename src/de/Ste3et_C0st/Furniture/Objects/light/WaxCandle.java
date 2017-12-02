@@ -27,8 +27,10 @@ public class WaxCandle extends FurnitureHelper implements Listener{
 		if(getObjID()==null){return;}
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		Location locTo = e.getToBlock().getLocation();
-		if(getLocation()!=null && locTo.equals(getLocation().getBlock().getLocation())){
-			e.setCancelled(true);
+		if(getLocation()!=null && getLocation().getChunk().isLoaded()){
+			if(locTo.equals(getLocation().getBlock().getLocation())) {
+				e.setCancelled(true);
+			}
 		}
 	}
 	
