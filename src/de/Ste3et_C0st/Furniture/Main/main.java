@@ -140,7 +140,7 @@ public class main extends JavaPlugin implements Listener{
 		new Project("Barrels", this, getResource("Models/Barrels.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 		new Project("WaxCandle", this, getResource("Models/WaxCandle.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 		new Project("Lantern", this, getResource("Models/Lantern.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-		new Project("Mailbox", this, getResource("Models/Mailbox.yml")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
+		new Project("MailBox", this, getResource("Models/MailBox.yml")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
 		new Project("Fence", this, getResource("Models/Fence.yml")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 		new Project("Trunk", this, getResource("Models/Trunk.yml")).setSize(1, 1, 4, CenterType.RIGHT).setEditorProject(false);
 		new Project("Sunshade", this, getResource("Models/Sunshade.yml")).setSize(1, 3, 1, CenterType.RIGHT).setEditorProject(false);
