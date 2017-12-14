@@ -163,6 +163,9 @@ public class campfire_2 extends Furniture implements Listener{
 				fArmorStand stand = (fArmorStand) pack;
 				if(stand.isSmall() && pack.isInvisible()){
 					packet = stand;
+					if(packet.isFire()) {
+						break;
+					}
 				}
 			}
 		}
