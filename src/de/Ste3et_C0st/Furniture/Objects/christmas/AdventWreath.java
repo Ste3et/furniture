@@ -98,7 +98,7 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.GOLD_BLOCK));
-			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
 			asList.add(stand);
 			l+=o;
 			
@@ -111,8 +111,8 @@ public class AdventWreath extends Furniture implements Listener  {
 			fArmorStand stand = spawnArmorStand(loc.subtract(0, .3+sub, 0));
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
-			stand.setHelmet(new ItemStack(Material.LEAVES));
-			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
+			stand.setHelmet(new ItemStack(Material.OAK_LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
 			stand.setSmall(true);
 			asList.add(stand);
 			l+=o;
@@ -135,14 +135,14 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-41,-37.5f,18)));
 			stand.setSmall(true);
 			stand.setName("Torch:" + i);
-			stand.setHelmet(new ItemStack(Material.STAINED_CLAY, 1, (short) 14));
+			stand.setHelmet(new ItemStack(Material.RED_TERRACOTTA, 1));
 			asList.add(stand);
 			
 			stand = spawnArmorStand(loc.clone().subtract(0, .4, 0));
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-41,-37.5f,18)));
 			stand.setSmall(true);
 			stand.setName("Torch:" + i);
-			stand.setHelmet(new ItemStack(Material.STAINED_CLAY, 1, (short) 13));
+			stand.setHelmet(new ItemStack(Material.GREEN_TERRACOTTA, 1));
 			asList.add(stand);
 			
 			
@@ -155,13 +155,13 @@ public class AdventWreath extends Furniture implements Listener  {
 			y=y+90;
 		}
 		
-		ItemStack is = new ItemStack(Material.RED_ROSE, 1, (short) 8);
+		ItemStack is = new ItemStack(Material.POPPY, 1, (short) 8);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .5, .5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.5, -.5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.5, .5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .5, -.5), is);
 		
-		is = new ItemStack(Material.RED_ROSE, 1, (short) 4);
+		is = new ItemStack(Material.POPPY, 1, (short) 4);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .25, .25), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.25, -.25), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.25, .25), is);

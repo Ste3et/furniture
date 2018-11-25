@@ -76,7 +76,7 @@ public class TrashCan extends Furniture implements Listener  {
 		Location l = getLutil().getRelativ(getCenter(), getBlockFace(), -.29, .2).add(0, -1.1, 0);
 		l.setYaw(getYaw());
 		fArmorStand stand = spawnArmorStand(getCenter().add(0, -1.2, 0));
-		stand.setHelmet(new ItemStack(Material.CARPET, 1,(short) 15));
+		stand.setHelmet(new ItemStack(Material.BLACK_CARPET, 1));
 		stand.setSmall(true);
 		asList.add(stand);
 		
@@ -86,7 +86,7 @@ public class TrashCan extends Furniture implements Listener  {
 			location.add(0,-2.45,0);
 			location.setYaw(yaw);
 			stand = spawnArmorStand(location);
-			stand.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand.setHelmet(new ItemStack(Material.IRON_BARS));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(10, 0, 0)));
 			asList.add(stand);
 			yaw+=90;

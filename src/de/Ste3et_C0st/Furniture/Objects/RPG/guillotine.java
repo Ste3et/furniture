@@ -41,22 +41,22 @@ public class guillotine extends Furniture implements Listener{
 	Player p;
 	List<Integer> intList = Arrays.asList(10,16,19,28,37,43);
 	List<Material> matList = Arrays.asList(
-			Material.WOOD_SWORD,Material.WOOD_AXE,Material.WOOD_HOE,
+			Material.WOODEN_SWORD,Material.WOODEN_AXE,Material.WOODEN_HOE,
 			Material.STONE_SWORD, Material.STONE_AXE, Material.STONE_HOE,
 			Material.IRON_SWORD, Material.IRON_AXE, Material.IRON_HOE,
-			Material.GOLD_SWORD, Material.GOLD_AXE, Material.GOLD_HOE,
+			Material.GOLDEN_SWORD, Material.GOLDEN_AXE, Material.GOLDEN_HOE,
 			Material.DIAMOND_SWORD, Material.DIAMOND_AXE, Material.DIAMOND_HOE);
 	List<Material> matListI = Arrays.asList(
-			Material.LEATHER_CHESTPLATE,Material.IRON_CHESTPLATE,Material.GOLD_CHESTPLATE,
+			Material.LEATHER_CHESTPLATE,Material.IRON_CHESTPLATE,Material.GOLDEN_CHESTPLATE,
 			Material.DIAMOND_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE);
 	List<Material> matListII = Arrays.asList(
-			Material.LEATHER_LEGGINGS,Material.IRON_LEGGINGS,Material.GOLD_LEGGINGS,
+			Material.LEATHER_LEGGINGS,Material.IRON_LEGGINGS,Material.GOLDEN_LEGGINGS,
 			Material.DIAMOND_LEGGINGS, Material.CHAINMAIL_LEGGINGS);
 	List<Material> matListIII = Arrays.asList(
-			Material.LEATHER_BOOTS,Material.IRON_BOOTS,Material.GOLD_BOOTS,
+			Material.LEATHER_BOOTS,Material.IRON_BOOTS,Material.GOLDEN_BOOTS,
 			Material.DIAMOND_BOOTS, Material.CHAINMAIL_BOOTS);
 	List<fArmorStand> armorStandList = new ArrayList<fArmorStand>();
-	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
+	ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 	public guillotine(ObjectID id) {
 		super(id);
 		if(isFinish()){
@@ -70,10 +70,9 @@ public class guillotine extends Furniture implements Listener{
 	}
 	
 	private void initializeInventory(){
-		pane = new ItemStack(Material.STAINED_GLASS_PANE);
-		pane.setDurability((short) 15);
+		pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 		ItemMeta im = pane.getItemMeta();
-		im.setDisplayName("�c");
+		im.setDisplayName("§c");
 		pane.setItemMeta(im);
 		
 		
@@ -96,7 +95,7 @@ public class guillotine extends Furniture implements Listener{
 	
 	private void setDefault(){
 		armorStandList.clear();
-		if(packet2==null){packet2 = getByName("#Oblation#");}
+		if(packet1==null){packet2 = getByName("#Oblation#");}
 		if(packet3==null){packet3 = getByName("#Head#");}
 		for(fEntity packets : getManager().getfArmorStandByObjectID(getObjID())){
 			if(packets instanceof fArmorStand){
@@ -170,14 +169,14 @@ public class guillotine extends Furniture implements Listener{
 			Location location = getLutil().getRelativ(center, getBlockFace(), 0d, .2d).add(0, i*.62, 0);
 			location.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), location);
-			packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STEP));
+			packet.getInventory().setHelmet(new ItemStack(Material.OAK_SLAB));
 			packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)), BodyPart.HEAD);
 			packList.add(packet);
 			
 			location = getLutil().getRelativ(center, getBlockFace(), 0d, -1.2d).add(0, i*.62, 0);
 			location.setYaw(getLutil().FaceToYaw(getBlockFace())-90);
 			packet = getManager().createArmorStand(getObjID(), location);
-			packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STEP));
+			packet.getInventory().setHelmet(new ItemStack(Material.OAK_SLAB));
 			packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)), BodyPart.HEAD);
 			packList.add(packet);
 		}
@@ -208,27 +207,27 @@ public class guillotine extends Furniture implements Listener{
 		loc11.setYaw(getLutil().FaceToYaw(getBlockFace()));
 		
 		fArmorStand packet = getManager().createArmorStand(getObjID(), loc1);
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STAIRS));
+		packet.getInventory().setHelmet(new ItemStack(Material.OAK_STAIRS));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc2);
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STAIRS));
+		packet.getInventory().setHelmet(new ItemStack(Material.OAK_STAIRS));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc3);
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STEP));
+		packet.getInventory().setHelmet(new ItemStack(Material.OAK_SLAB));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc4);
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD_STEP));
+		packet.getInventory().setHelmet(new ItemStack(Material.OAK_SLAB));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc5);
-		packet.getInventory().setHelmet(new ItemStack(Material.STONE_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.STONE_PRESSURE_PLATE));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc6);
-		packet.getInventory().setHelmet(new ItemStack(Material.STONE_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.STONE_PRESSURE_PLATE));
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc7);
@@ -237,28 +236,28 @@ public class guillotine extends Furniture implements Listener{
 		packList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc8);
-		packet.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)), BodyPart.HEAD);
 		packet.setName("iron1:" + loc8.getX() + ":" + loc8.getY() + ":" + loc8.getZ());
 		packList.add(packet);
 		armorStandList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc9);
-		packet.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)), BodyPart.HEAD);
 		packet.setName("iron2:" + loc9.getX() + ":" + loc9.getY() + ":" + loc9.getZ());
 		packList.add(packet);
 		armorStandList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc10);
-		packet.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, -22)), BodyPart.HEAD);
 		packet.setName("iron3:" + loc10.getX() + ":" + loc10.getY() + ":" + loc10.getZ());
 		packList.add(packet);
 		armorStandList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), loc11);
-		packet.getInventory().setHelmet(new ItemStack(Material.IRON_PLATE));
+		packet.getInventory().setHelmet(new ItemStack(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		packet.setPose(getLutil().degresstoRad(new EulerAngle(90, 0, -22)), BodyPart.HEAD);
 		packet.setName("iron4:" + loc11.getX() + ":" + loc11.getY() + ":" + loc11.getZ());
 		packList.add(packet);
@@ -270,7 +269,7 @@ public class guillotine extends Furniture implements Listener{
 		packet1.setPose(getLutil().degresstoRad(new EulerAngle(190,0,329)), BodyPart.RIGHT_ARM);
 		packet1.setName("#Executioner#");
 		packet1.setArms(true);
-		packet1.setMarker(false);
+		packet1.setMarker(true);
 		packet1.setBasePlate(false);
 		packList.add(packet1);
 
@@ -282,14 +281,14 @@ public class guillotine extends Furniture implements Listener{
 		packet2.setPose(getLutil().degresstoRad(new EulerAngle(40,25,0)), BodyPart.HEAD);
 		packet2.setName("#Oblation#:" + loc13.getX() + ":" + loc13.getY() + ":" + loc13.getZ());
 		packet2.setArms(true);
-		packet2.setMarker(false);
+		packet2.setMarker(true);
 		packet2.setBasePlate(false);
 		packList.add(packet2);
 		
 		Location loc14 = getLutil().getRelativ(center, getBlockFace(), 1d, -1d).add(0, +.3, 0);
 		loc14.setYaw(getLutil().FaceToYaw(getBlockFace())+45);
 		packet3 = getManager().createArmorStand(getObjID(), loc14);
-		packet3.setMarker(false);
+		packet3.setMarker(true);
 		packet3.setName("#HEAD#");
 		packList.add(packet3);
 
@@ -351,17 +350,15 @@ public class guillotine extends Furniture implements Listener{
 			p.openInventory(invI);
 			for(int i = 0; i<9;i++){invI.setItem(i, pane);}	
 			
-			ItemStack is = new ItemStack(Material.SKULL_ITEM);
-			is.setDurability((short) 1);
+			ItemStack is = new ItemStack(Material.ZOMBIE_HEAD);
 			ItemMeta im = is.getItemMeta();
-			im.setDisplayName("�2Executioner");
+			im.setDisplayName("§2Executioner");
 			is.setItemMeta(im);
 			invI.setItem(2, is);
 			
-			is = new ItemStack(Material.SKULL_ITEM);
-			is.setDurability((short) 3);
+			is = new ItemStack(Material.PLAYER_HEAD);
 			im = is.getItemMeta();
-			im.setDisplayName("�cOblation");
+			im.setDisplayName("§cOblation");
 			is.setItemMeta(im);
 			invI.setItem(6, is);
 			this.p = p;
@@ -380,7 +377,7 @@ public class guillotine extends Furniture implements Listener{
 		if(e.getClickedInventory()==null){return;}
 		if(e.getCurrentItem()==null){return;}
 		Player p = (Player) e.getWhoClicked();
-		if(this.p!=null&&this.p.equals(p)){if(!e.getClick().equals(ClickType.LEFT)&&!e.getClick().equals(ClickType.RIGHT)){e.setCancelled(true);}}
+		if(p==null) return;
 		if(e.getClickedInventory().equals(invI)){
 			e.setCancelled(true);
 			if(e.getSlot() == 2){
@@ -396,11 +393,11 @@ public class guillotine extends Furniture implements Listener{
 			}
 		}else if(e.getClickedInventory().equals(invII)){
 			if(e.getCurrentItem().equals(pane)){e.setCancelled(true);}
-			Material m = e.getCursor().getType();
+			Material m = e.getCurrentItem().getType();
 			if(m==null||m.equals(Material.AIR)){return;}
 			switch (e.getSlot()) {
 			case 10:
-				if(!m.equals(Material.SKULL_ITEM)){e.setCancelled(true);}
+				if(!m.equals(Material.PLAYER_HEAD)){e.setCancelled(true);}
 				break;
 			case 16:
 				if(!matList.contains(m)){e.setCancelled(true);}
@@ -421,11 +418,11 @@ public class guillotine extends Furniture implements Listener{
 			
 		}else if(e.getClickedInventory().equals(invIII)){
 			if(e.getCurrentItem().equals(pane)){e.setCancelled(true);}
-			Material m = e.getCursor().getType();
+			Material m = e.getCurrentItem().getType();
 			if(m==null||m.equals(Material.AIR)){return;}
 			switch (e.getSlot()) {
 			case 10:
-				if(!m.equals(Material.SKULL_ITEM)){e.setCancelled(true);}
+				if(!m.equals(Material.PLAYER_HEAD)){e.setCancelled(true);}
 				break;
 			case 19:
 				if(!matListI.contains(m)){e.setCancelled(true);}
@@ -452,11 +449,28 @@ public class guillotine extends Furniture implements Listener{
 		b = !packet2.isInvisible();
 		if(packet1.getItemInMainHand()!=null&&!packet1.getItemInMainHand().getType().equals(Material.AIR)){
 			c = true;
+		}else {
+			
+			if(!packet1.getItemInMainHand().getType().equals(Material.AIR)) System.out.println("material");
+			System.out.println("false");
 		}
+		
+		if(packet1.getItemInMainHand()!=null) {
+			System.out.println("mainHand");
+			if(!packet1.getItemInMainHand().getType().equals(Material.AIR)) {
+				System.out.println("material");
+			}else {
+				System.out.println("material==null");
+			}
+		}else {
+			System.out.println("mainHand == null");
+		}
+		
 		
 		if(a&&b&&c){
 			return true;
 		}
+		System.out.println("test");
 		return false;
 	}
 	

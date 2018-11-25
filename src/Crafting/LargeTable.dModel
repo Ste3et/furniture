@@ -1,0 +1,19 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+LargeTable:
+  system-ID: LargeTable
+  displayName: '&cLarge Table'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: XXX,XXX,A0A
+    disable: false
+    index:
+      '0': AIR
+      X: WHITE_STAINED_GLASS_PANE
+      A: BONE

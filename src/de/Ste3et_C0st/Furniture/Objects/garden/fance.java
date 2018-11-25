@@ -24,8 +24,8 @@ public class fance extends FurnitureHelper implements Listener{
 			Material.JUNGLE_FENCE,
 			Material.DARK_OAK_FENCE,
 			Material.ACACIA_FENCE,
-			Material.COBBLE_WALL,
-			Material.NETHER_FENCE);
+			Material.COBBLESTONE_WALL,
+			Material.NETHER_BRICK_FENCE);
 	
 	public fance(ObjectID id){
 		super(id);

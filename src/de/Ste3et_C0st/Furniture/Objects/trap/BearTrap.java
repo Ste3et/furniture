@@ -65,7 +65,7 @@ public class BearTrap extends Furniture implements Listener{
 		location.setYaw(getYaw()+90);
 		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
-		stand.setHelmet(new ItemStack(Material.IRON_FENCE));
+		stand.setHelmet(new ItemStack(Material.IRON_BARS));
 		stand.setName("#IRON1#");
 		stand1 = stand;
 		asList.add(stand);
@@ -74,7 +74,7 @@ public class BearTrap extends Furniture implements Listener{
 		location.setYaw(getYaw()-90);
 		stand = spawnArmorStand(location.clone());
 		stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(90, 0, 0)));
-		stand.setHelmet(new ItemStack(Material.IRON_FENCE));
+		stand.setHelmet(new ItemStack(Material.IRON_BARS));
 		stand.setName("#IRON2#");
 		stand2 = stand;
 		asList.add(stand);
@@ -127,13 +127,13 @@ public class BearTrap extends Furniture implements Listener{
 	
 	private void setStatus(boolean b){
 		if(!b){
-			stand1.setHelmet(new ItemStack(Material.IRON_FENCE));
-			stand2.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand1.setHelmet(new ItemStack(Material.IRON_BARS));
+			stand2.setHelmet(new ItemStack(Material.IRON_BARS));
 			stand3.setHelmet(new ItemStack(Material.AIR));
 			stand4.setHelmet(new ItemStack(Material.AIR));
 		}else{
-			stand3.setHelmet(new ItemStack(Material.IRON_FENCE));
-			stand4.setHelmet(new ItemStack(Material.IRON_FENCE));
+			stand3.setHelmet(new ItemStack(Material.IRON_BARS));
+			stand4.setHelmet(new ItemStack(Material.IRON_BARS));
 			stand1.setHelmet(new ItemStack(Material.AIR));
 			stand2.setHelmet(new ItemStack(Material.AIR));
 			getWorld().playSound(getLocation(), Sound.ENTITY_ITEM_BREAK, 5, 1);

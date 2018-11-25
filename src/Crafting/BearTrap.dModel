@@ -1,0 +1,19 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+BearTrap:
+  system-ID: BearTrap
+  displayName: '&cBearTrap'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: XXX,AAA,XOX
+    disable: false
+    index:
+      X: AIR
+      A: IRON_BARS
+      O: IRON_TRAPDOOR

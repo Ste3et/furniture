@@ -31,10 +31,10 @@ public class hammock extends FurnitureHelper implements Listener{
 		ItemStack stack = p.getInventory().getItemInMainHand();
 		if(stack!=null){
 			if(isMaterial(stack.getType())){
-				if(stack.getType().equals(Material.BANNER)){
+				if(stack.getType().name().contains("BANNER")){
 					for(fEntity entity : getfAsList()){
 						if(entity.getHelmet()!=null){
-							if(entity.getHelmet().getType().equals(Material.BANNER)){
+							if(entity.getHelmet().getType().name().contains("BANNER")){
 								entity.setHelmet(stack.clone());
 							}
 						}

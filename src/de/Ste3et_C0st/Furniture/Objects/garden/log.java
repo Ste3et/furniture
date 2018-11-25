@@ -38,7 +38,7 @@ public class log extends Furniture {
 	Block b;
 	int mode = 0;
 	Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
-	ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
+	ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 	ItemStack permissions = new ItemStack(Material.ARROW);
 	List<ItemStack> isList = new ArrayList<ItemStack>();
 	Player p;
@@ -61,20 +61,17 @@ public class log extends Furniture {
 	}
 
 	private void setList(){
-		ItemStack stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 1);
+		ItemStack stack = new ItemStack(Material.ORANGE_WOOL);
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 2);
+		stack = new ItemStack(Material.MAGENTA_WOOL);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 11);
+		stack = new ItemStack(Material.BLUE_WOOL);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront II");
 		stack.setItemMeta(meta);
@@ -87,7 +84,7 @@ public class log extends Furniture {
 	
 	@Override
 	public void spawn(Location loc) {
-		b.setType(Material.LOG);
+		b.setType(Material.OAK_LOG);
 		List<fArmorStand> lStand = new ArrayList<fArmorStand>();
 		
 		Location loc1 = getLutil().getRelativ(getCenter(), getBlockFace(), .5, .35);
@@ -149,7 +146,7 @@ public class log extends Furniture {
 		if(e.getClickedInventory()==null||!e.getClickedInventory().equals(inv)){return;}
 		e.setCancelled(true);
 		if(e.getCurrentItem()==null){return;}
-		if(e.getCurrentItem().getType().equals(Material.BANNER)){
+		if(e.getCurrentItem().getType().equals(Material.WHITE_BANNER)){
 			Integer i = isList.indexOf(e.getCurrentItem());
 			ItemStack is = null;
 			if(i>=2){i = -1;}
@@ -234,7 +231,6 @@ public class log extends Furniture {
 		}else{
 			if(p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 				this.b.setType(p.getInventory().getItemInMainHand().getType());
-				this.b.setData((byte) p.getInventory().getItemInMainHand().getDurability());
 				removeItem(p);
 				return;
 			}else if(!p.getInventory().getItemInMainHand().getType().isBlock() && !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
@@ -261,7 +257,7 @@ public class log extends Furniture {
 				
 				ItemStack is = p.getInventory().getItemInMainHand().clone();
 				is.setAmount(1);
-				stand.setItemInHand(is);
+				stand.setItemInMainHand(is);
 				update();
 				removeItem(p);
 				return;
@@ -289,7 +285,7 @@ public class log extends Furniture {
 					getWorld().dropItem(getLocation(), is);
 				}
 				
-				stand.setItemInHand(new ItemStack(Material.AIR));
+				stand.setItemInMainHand(new ItemStack(Material.AIR));
 				update();
 				return;
 			}

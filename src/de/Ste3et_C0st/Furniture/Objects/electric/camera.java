@@ -12,9 +12,9 @@ import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.entity.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class camera extends FurnitureHelper implements Listener{
@@ -78,7 +78,7 @@ public class camera extends FurnitureHelper implements Listener{
 		if(pLocation.equals(locCopy)){
 			if(getLutil().yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
 				if(e.canBuild()){
-					if(!p.getInventory().getItemInMainHand().getType().equals(Material.MAP)){
+					if(!p.getInventory().getItemInMainHand().getType().equals(Material.FILLED_MAP)){
 						if(entity  == null || entity2 == null)return;
 						if(this.zoom.equalsIgnoreCase("#ZOOM0#")){
 							this.mode = ScaleMode.FAR;

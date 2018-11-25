@@ -24,6 +24,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
@@ -73,7 +74,7 @@ public class tent_2 extends Furniture implements Listener{
 			Location loc1= getLutil().getRelativ(LeftLocation, getBlockFace(), d, 0D);
 			loc1.setYaw(getLutil().FaceToYaw(getBlockFace()));
 			fArmorStand as = getManager().createArmorStand(getObjID(), loc1);
-			as.getInventory().setHelmet(new ItemStack(Material.LOG));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_LOG));
 			as.setSmall(true);
 			as.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
 			aspl.add(as);
@@ -81,7 +82,7 @@ public class tent_2 extends Furniture implements Listener{
 			Location loc2= getLutil().getRelativ(RightLocation, getBlockFace(), d, 0D);
 			loc2.setYaw(getLutil().FaceToYaw(getBlockFace()));
 			as = getManager().createArmorStand(getObjID(), loc2);
-			as.getInventory().setHelmet(new ItemStack(Material.LOG));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_LOG));
 			as.setSmall(true);
 			as.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
 			aspl.add(as);
@@ -90,7 +91,7 @@ public class tent_2 extends Furniture implements Listener{
 			loc3.setYaw(getLutil().FaceToYaw(getBlockFace()));
 			
 			as = getManager().createArmorStand(getObjID(), loc3);
-			as.getInventory().setHelmet(new ItemStack(Material.LOG));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_LOG));
 			as.setSmall(true);
 			as.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
 			aspl.add(as);
@@ -155,7 +156,7 @@ public class tent_2 extends Furniture implements Listener{
 
 		
 		
-		bedLoc = getLutil().setBed(this.getBlockFace(), b1);
+		bedLoc = getLutil().setBed(this.getBlockFace(), b1, Material.RED_BED);
 		getObjID().addBlock(Arrays.asList(b1.getBlock(), b2.getBlock(), b1.getBlock().getRelative(getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 180))));
 		block.add(b1.getWorld().getBlockAt(getRelative(b1, 1, 0)));
 		block.add(b2.getWorld().getBlockAt(b2));
@@ -170,7 +171,7 @@ public class tent_2 extends Furniture implements Listener{
 			loc1.setYaw(getLutil().FaceToYaw(getBlockFace()));
 			loc1.add(0, y,0);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc1);
-			packet.getInventory().setHelmet(new ItemStack(Material.CARPET));
+			packet.getInventory().setHelmet(new ItemStack(Material.WHITE_CARPET));
 			packet.setPose(angle, BodyPart.HEAD);
 			list.add(packet);
 			d+=x;
@@ -197,8 +198,7 @@ public class tent_2 extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		Player p = e.getPlayer();
 		if(!e.canBuild()){return;}
-		if(!p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
-			
+		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) == null){
 			for(Block b : block){
 				if(b.getType().equals(Material.CHEST)){
 					Chest c = (Chest) b.getState();
@@ -206,7 +206,7 @@ public class tent_2 extends Furniture implements Listener{
 				}
 			}
 		}else{
-			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 1);
+			getLib().getColorManager().color(p, e.canBuild(), "_CARPET", getObjID(), ColorType.BLOCK, 1);
 		}
 	}
 }

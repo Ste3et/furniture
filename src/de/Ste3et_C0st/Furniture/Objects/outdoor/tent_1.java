@@ -10,6 +10,7 @@ import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class tent_1 extends FurnitureHelper implements Listener{
@@ -26,10 +27,10 @@ public class tent_1 extends FurnitureHelper implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		final Player p = e.getPlayer();
-		if(!p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
+		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) == null){
 			p.openWorkbench(null, true);
 		}else{
-			getLib().getColorManager().color(p, e.canBuild(), Material.CARPET, getObjID(), ColorType.BLOCK, 1);
+			getLib().getColorManager().color(p, e.canBuild(), "_CARPET", getObjID(), ColorType.BLOCK, 1);
 		}
 	}
 }

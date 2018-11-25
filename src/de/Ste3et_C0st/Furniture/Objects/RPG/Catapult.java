@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -119,55 +120,55 @@ public class Catapult extends FurnitureHelper implements Listener{
 			setRange(e.getPlayer());
 			return;
 		}else{
-			if(stack.getType().isBlock()){
-				@SuppressWarnings("deprecation")
-				FallingBlock block = getWorld().spawnFallingBlock(loc, stack.getType().getId(), (byte) stack.getDurability());
-				if(block == null) return;
-				Vector v= getLaunchVector(getBlockFace());
-				if(v == null) return;
-				block.setDropItem(false);
-				block.setVelocity(v.multiply(1));
-				fallingSandList.put(block, e.getPlayer());
-				e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
-			}else if(stack.getType().equals(Material.MONSTER_EGG)){
-				try{
-					NBTTagCompound nbtTag = new CraftItemStack().getNBTTag(stack);
-					if(nbtTag.hasKey("tag")){
-						NBTTagCompound tag = nbtTag.getCompound("tag");
-						NBTTagCompound id = tag.getCompound("EntityTag");
-						String str = id.getString("id").replace("minecraft:", "");
-						@SuppressWarnings("deprecation")
-						EntityType type = EntityType.fromName(str);
-						if(!entityList.contains(type)){setRange(e.getPlayer());return;} 
-						Vector v= getLaunchVector(getBlockFace());
-						Entity entity = getWorld().spawnEntity(loc, type);
-						entity.setVelocity(v);
-						LivingEntity entiLivingEntity = (LivingEntity) entity;
-						entiLivingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4), false);
-						if(type.equals(EntityType.CREEPER)){
-							if(randInt(0, 25)==7){
-								Creeper creeper = (Creeper) entity;
-								creeper.setPowered(true);
-							}
-						}else if(type.equals(EntityType.SHEEP)){
-							Sheep mob = (Sheep) entity;
-							int i = randInt(0, DyeColor.values().length);
-							mob.setColor(DyeColor.values()[i]);
-							if(randInt(0, 25)==7){
-								mob.setCustomName("jeb_");
-								mob.setCustomNameVisible(false);
-							}
-						}
-					}
-					e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
-					return;
-				}catch(Exception ex){
-					ex.printStackTrace();
-				}
-			}else{
+//			if(stack.getType().isBlock()){
+//				@SuppressWarnings("deprecation")
+//				FallingBlock block = getWorld().spawnFallingBlock(loc, stack.getType().getId(), (byte) stack.getDurability());
+//				if(block == null) return;
+//				Vector v= getLaunchVector(getBlockFace());
+//				if(v == null) return;
+//				block.setDropItem(false);
+//				block.setVelocity(v.multiply(1));
+//				fallingSandList.put(block, e.getPlayer());
+//				e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
+//			}else if(stack.getType().equals(Material.MONSTER_EGG)){
+//				try{
+//					NBTTagCompound nbtTag = new CraftItemStack().getNBTTag(stack);
+//					if(nbtTag.hasKey("tag")){
+//						NBTTagCompound tag = nbtTag.getCompound("tag");
+//						NBTTagCompound id = tag.getCompound("EntityTag");
+//						String str = id.getString("id").replace("minecraft:", "");
+//						@SuppressWarnings("deprecation")
+//						EntityType type = EntityType.fromName(str);
+//						if(!entityList.contains(type)){setRange(e.getPlayer());return;} 
+//						Vector v= getLaunchVector(getBlockFace());
+//						Entity entity = getWorld().spawnEntity(loc, type);
+//						entity.setVelocity(v);
+//						LivingEntity entiLivingEntity = (LivingEntity) entity;
+//						entiLivingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4), false);
+//						if(type.equals(EntityType.CREEPER)){
+//							if(randInt(0, 25)==7){
+//								Creeper creeper = (Creeper) entity;
+//								creeper.setPowered(true);
+//							}
+//						}else if(type.equals(EntityType.SHEEP)){
+//							Sheep mob = (Sheep) entity;
+//							int i = randInt(0, DyeColor.values().length);
+//							mob.setColor(DyeColor.values()[i]);
+//							if(randInt(0, 25)==7){
+//								mob.setCustomName("jeb_");
+//								mob.setCustomNameVisible(false);
+//							}
+//						}
+//					}
+//					e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
+//					return;
+//				}catch(Exception ex){
+//					ex.printStackTrace();
+//				}
+//			}else{
 				setRange(e.getPlayer());
 				return;
-			}
+//			}
 		}
 		consumeItem(e.getPlayer());
 	}

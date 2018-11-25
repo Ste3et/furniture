@@ -1,0 +1,19 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+Campfire2:
+  system-ID: Campfire2
+  displayName: '&cCampfire #2'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: DXD,XEX,DXD
+    disable: false
+    index:
+      D: COBBLESTONE
+      E: COAL
+      X: STICK

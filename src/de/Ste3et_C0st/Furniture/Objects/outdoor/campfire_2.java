@@ -27,11 +27,11 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 public class campfire_2 extends Furniture implements Listener{
 	List<Material> items = new ArrayList<Material>(
 			Arrays.asList(
-					Material.RAW_BEEF,
-					Material.RAW_CHICKEN,
-					Material.RAW_FISH,
-					Material.POTATO_ITEM,
-					Material.PORK,
+					Material.BEEF,
+					Material.CHICKEN,
+					Material.COD,
+					Material.POTATO,
+					Material.PORKCHOP,
 					Material.RABBIT,
 					Material.MUTTON
 				)
@@ -40,9 +40,9 @@ public class campfire_2 extends Furniture implements Listener{
 			Arrays.asList(
 					Material.COOKED_BEEF,
 					Material.COOKED_CHICKEN,
-					Material.COOKED_FISH,
+					Material.COOKED_COD,
 					Material.BAKED_POTATO,
-					Material.GRILLED_PORK,
+					Material.BAKED_POTATO,
 					Material.COOKED_RABBIT,
 					Material.COOKED_MUTTON
 				)
@@ -104,7 +104,7 @@ public class campfire_2 extends Furniture implements Listener{
 			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
 			asp.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
 			asp.setSmall(true);
-			asp.getInventory().setHelmet(new ItemStack(Material.STEP,1,(short)3));
+			asp.getInventory().setHelmet(new ItemStack(Material.STONE_SLAB,1));
 			packetList.add(asp);
 			yaw+=45;
 		}

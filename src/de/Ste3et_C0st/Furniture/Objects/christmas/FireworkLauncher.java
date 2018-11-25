@@ -71,7 +71,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 		if(stand == null) return;
 		if(p.getInventory().getItemInMainHand()!=null){
 			if(p.getInventory().getItemInMainHand().getType()!=null){
-				if(p.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK)){
+				if(p.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
 					drop(stand);
 					setItem(stand, p.getInventory().getItemInMainHand());
 					
@@ -109,7 +109,7 @@ public class FireworkLauncher extends Furniture implements Listener {
 	
 	public boolean canLaunch(fEntity stand){
 		if(stand.getItemInMainHand()!=null){
-			if(stand.getItemInMainHand().getType().equals(Material.FIREWORK)){
+			if(stand.getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
 				return true;
 			}
 		}

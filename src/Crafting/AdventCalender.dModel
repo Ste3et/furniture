@@ -1,0 +1,19 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+AdventCalender:
+  system-ID: AdventCalender
+  displayName: '&cAdventCalender'
+  itemGlowEffect: true
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: XXX,XEX,AXA
+    disable: true
+    index:
+      E: OAK_SLAB
+      X: AIR
+      A: LADDER

@@ -41,8 +41,8 @@ public class flag extends Furniture implements Listener {
 	
 	private void setBlock(){
 		Block b = getLocation().getBlock();
-		if(b.getType()==null||!b.getType().equals(Material.STEP)){
-			b.setType(Material.STEP);
+		if(b.getType()==null||!b.getType().equals(Material.STONE_SLAB)){
+			b.setType(Material.STONE_SLAB);
 		}
 		getObjID().addBlock(Arrays.asList(b));
 	}
@@ -62,14 +62,14 @@ public class flag extends Furniture implements Listener {
 		}
 		
 		fArmorStand as = spawnArmorStand(getCenter().add(0, 1.9, 0));
-		as.setHelmet(new ItemStack(Material.STEP));
+		as.setHelmet(new ItemStack(Material.STONE_SLAB));
 		as.setSmall(true);
 		asList.add(as);
 		
 		Location loc = getRelative(getCenter().add(0, 0.7, 0), getBlockFace(), -.35,-.28);
 		loc.setYaw(getYaw()+90);
 		as = spawnArmorStand(loc);
-		as.setHelmet(new ItemStack(Material.BANNER));
+		as.setHelmet(new ItemStack(Material.GREEN_BANNER));
 		as.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)));
 		as.setName("#FLAG:3");
 		asList.add(as);
@@ -145,7 +145,7 @@ public class flag extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		if(e.getPlayer().getInventory().getItemInMainHand()!=null&&e.getPlayer().getInventory().getItemInMainHand().getType()!=null){
-			if(e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BANNER)){
+			if(e.getPlayer().getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
 				getStand().setHelmet(e.getPlayer().getInventory().getItemInMainHand());update();
 				if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 				Integer i = e.getPlayer().getInventory().getHeldItemSlot();
@@ -183,7 +183,7 @@ public class flag extends Furniture implements Listener {
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		if(e.getPlayer().getInventory().getItemInMainHand()!=null&&e.getPlayer().getInventory().getItemInMainHand().getType()!=null){
-			if(e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BANNER)){
+			if(e.getPlayer().getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
 				getStand().setHelmet(e.getPlayer().getInventory().getItemInMainHand());update();
 				if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 				Integer i = e.getPlayer().getInventory().getHeldItemSlot();

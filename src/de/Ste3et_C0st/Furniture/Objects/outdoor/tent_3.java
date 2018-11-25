@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +25,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
@@ -48,12 +48,10 @@ public class tent_3 extends Furniture implements Listener{
 	
 	Block bed;
 	
-	@SuppressWarnings("deprecation")
 	public void spawn(Location loc){
 		List<fArmorStand> aspL = new ArrayList<fArmorStand>();
-		ItemStack banner = new ItemStack(Material.BANNER);
+		ItemStack banner = new ItemStack(Material.WHITE_BANNER);
 		BannerMeta meta = (BannerMeta) banner.getItemMeta();
-		meta.setBaseColor(DyeColor.WHITE);
 		banner.setItemMeta(meta);
 		
 		Location locstart = getLutil().getRelativ(loc, getBlockFace(), .2D, -.17D);
@@ -102,10 +100,9 @@ public class tent_3 extends Furniture implements Listener{
 			aspL.add(as);
 		}
 		
-		banner = new ItemStack(Material.BANNER);
+		banner = new ItemStack(Material.WHITE_BANNER);
 		meta = (BannerMeta) banner.getItemMeta();
-		meta.setBaseColor(DyeColor.WHITE);
-		meta.addPattern(new Pattern(DyeColor.RED, PatternType.STRIPE_SMALL));
+		meta.addPattern(new Pattern(DyeColor.RED.getDyeColor(), PatternType.STRIPE_SMALL));
 		banner.setItemMeta(meta);
 		
 		Location banner1 = getLutil().getRelativ(loc, getBlockFace(), 1.7D, -.1D);
@@ -150,7 +147,7 @@ public class tent_3 extends Furniture implements Listener{
 	private void setBlock(){
 		Location sit = getLutil().getCenter(getLocation());
 		sit.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-		bed = getLutil().setHalfBed(getBlockFace(), getLutil().getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), getBlockFace(), 2D, 0D));
+		bed = getLutil().setHalfBed(getBlockFace(), getLutil().getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), getBlockFace(), 2D, 0D), Material.RED_BED);
 		getObjID().addBlock(Arrays.asList(bed));
 	}
 	
@@ -172,8 +169,8 @@ public class tent_3 extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
-		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
-			getLib().getColorManager().color(p, e.canBuild(), Material.BANNER, getObjID(), ColorType.BANNER, 1);
+		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) != null){
+			getLib().getColorManager().color(p, e.canBuild(), "_BANNER", getObjID(), ColorType.BANNER, 1);
 		}else{
 			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().equalsIgnoreCase("#SITZ#")){

@@ -1,0 +1,20 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+Flag:
+  system-ID: Flag
+  displayName: '&cFlag'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: XAX,XBO,XAX
+    disable: false
+    index:
+      X: AIR
+      A: STONE_SLAB
+      B: STICK
+      O: BLACK_BANNER

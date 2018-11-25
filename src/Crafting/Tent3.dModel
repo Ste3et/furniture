@@ -1,0 +1,19 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+Tent3:
+  system-ID: Tent3
+  displayName: '&cTent #3'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: 000,0E0,EAE
+    disable: false
+    index:
+      '0': AIR
+      E: WHITE_WOOL
+      A: RED_BED

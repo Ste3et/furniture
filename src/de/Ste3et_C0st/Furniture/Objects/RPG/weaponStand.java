@@ -32,7 +32,7 @@ public class weaponStand extends Furniture {
 	List<Integer> slotList1 = Arrays.asList(6,11,14,16,19,21,24,29,32,34,42);
 	List<Integer> slotList2 = Arrays.asList(20, 15, 33);
 	List<Material> matList = Arrays.asList(
-			Material.FENCE_GATE,
+			Material.OAK_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
 			Material.BIRCH_FENCE_GATE,
 			Material.JUNGLE_FENCE_GATE,
@@ -98,8 +98,8 @@ public class weaponStand extends Furniture {
 			return;
 		}
 		
-		ItemStack is1 = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
-		ItemStack is3 = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+		ItemStack is1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+		ItemStack is3 = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		
 		ItemMeta im1 = is1.getItemMeta();
 		ItemMeta im3 = is3.getItemMeta();
@@ -202,12 +202,12 @@ public class weaponStand extends Furniture {
 		Location center3 = center.clone();
 		double offsety = 0.4;
 		fArmorStand as = getManager().createArmorStand(getObjID(), center2.add(0, offsety, 0));
-		as.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE, 1, (short) 0));
+		as.getInventory().setHelmet(new ItemStack(Material.OAK_PRESSURE_PLATE, 1));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
 		packList.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), center3.add(0, .2, 0).add(0, offsety, 0));
-		as.getInventory().setHelmet(new ItemStack(Material.WOOD_PLATE, 1, (short) 0));
+		as.getInventory().setHelmet(new ItemStack(Material.OAK_PRESSURE_PLATE, 1));
 		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
 		packList.add(as);
 		
@@ -220,17 +220,17 @@ public class weaponStand extends Furniture {
 			Location locat = getLutil().getRelativ(location, face, -.0D, -.0D);
 			
 			as = getManager().createArmorStand(getObjID(), locat.clone());
-			as.getInventory().setHelmet(new ItemStack(Material.FENCE_GATE, 1, (short) 0));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
 			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
 			packList.add(as);
 			
 			as = getManager().createArmorStand(getObjID(), locat.add(0, .37, 0).clone());
-			as.getInventory().setHelmet(new ItemStack(Material.FENCE_GATE, 1, (short) 0));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
 			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
 			packList.add(as);
 			
 			as = getManager().createArmorStand(getObjID(), locat.add(0, .37, 0).clone());
-			as.getInventory().setHelmet(new ItemStack(Material.FENCE_GATE, 1, (short) 0));
+			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
 			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
 			packList.add(as);
 			

@@ -3,7 +3,6 @@ package de.Ste3et_C0st.Furniture.Objects.christmas;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.SkullType;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -34,14 +32,10 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
@@ -130,7 +124,7 @@ public class AdventCalender extends Furniture implements Listener {
 			ItemStack[] stack = isList.get(getDay());
 			for(ItemStack iS : stack){
 				if(iS!=null&&iS.getType()!=null){
-					if(iS.getType().equals(Material.FIREWORK)){
+					if(iS.getType().equals(Material.FIREWORK_ROCKET)){
 						Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
 						FireworkMeta meta = (FireworkMeta) iS.getItemMeta();
 						fw.setFireworkMeta(meta);
@@ -310,7 +304,7 @@ public class AdventCalender extends Furniture implements Listener {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
 			stand.setHelmet(new ItemStack(Material.GOLD_BLOCK));
-			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
 			asList.add(stand);
 			l+=o;
 		}
@@ -322,8 +316,8 @@ public class AdventCalender extends Furniture implements Listener {
 			fArmorStand stand = spawnArmorStand(loc.subtract(0, .3+sub, 0));
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
 			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
-			stand.setHelmet(new ItemStack(Material.LEAVES));
-			stand.setItemInMainHand(new ItemStack(Material.LEAVES));
+			stand.setHelmet(new ItemStack(Material.OAK_LEAVES));
+			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
 			stand.setSmall(true);
 			asList.add(stand);
 			l+=o;
@@ -373,7 +367,6 @@ public class AdventCalender extends Furniture implements Listener {
 		} catch (ParseException e) {
 			return 0;
 		}
-		
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -511,25 +504,11 @@ public class AdventCalender extends Furniture implements Listener {
 		return 360/j;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public ItemStack getSkull(String s) {
-		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
-		ItemMeta headMeta = skull.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), generateSessionKey(10));
-        Property textures = new Property(
-            "textures", s
-        );
-        profile.getProperties().put(textures.getName(), textures);
-        
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-        } catch (NoSuchFieldException | SecurityException e) {
-           	e.printStackTrace();
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-        	e.printStackTrace();
-        }
-        skull.setItemMeta(headMeta);
-        return skull;
+		ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        UUID hashAsId = new UUID(s.hashCode(), s.hashCode());
+        return Bukkit.getUnsafe().modifyItemStack(skull,
+				"{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + s + "\"}]}}}");
     }
 }

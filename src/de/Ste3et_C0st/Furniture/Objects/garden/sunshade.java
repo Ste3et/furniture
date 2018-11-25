@@ -46,12 +46,12 @@ public class sunshade extends FurnitureHelper implements Listener{
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
 		ItemStack is = p.getInventory().getItemInMainHand();
-		if(is.getType().equals(Material.BANNER)){
+		if(is.getType().name().contains("BANNER")){
 			for(fEntity packet : getfAsList()){
-				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.BANNER)){
+				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
 					packet.getInventory().setHelmet(is.clone());
-				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().equals(Material.CARPET)){
-					ItemStack item = new ItemStack(Material.CARPET);
+				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
+					ItemStack item = new ItemStack(Material.WHITE_CARPET);
 					item.setDurability(getLutil().getFromDey((short) is.getDurability()));
 					packet.getInventory().setHelmet(item);
 				}

@@ -43,8 +43,8 @@ public class WaxCandle extends FurnitureHelper implements Listener{
 		if(stack.getType().equals(Material.AIR)) return;
 		if(b!=null){
 			if(b.getType().equals(Material.TORCH) && stack.getType().equals(Material.WATER_BUCKET)){
-				b.setType(Material.REDSTONE_TORCH_OFF);
-			}else if(b.getType().equals(Material.REDSTONE_TORCH_OFF) && stack.getType().equals(Material.FLINT_AND_STEEL)){
+				b.setType(Material.REDSTONE_TORCH);
+			}else if(b.getType().equals(Material.REDSTONE_TORCH) && stack.getType().equals(Material.FLINT_AND_STEEL)){
 				b.setType(Material.TORCH);
 			}
 		}

@@ -1,0 +1,21 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+Tent2:
+  system-ID: Tent2
+  displayName: '&cTent #2'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: 0X0,XEX,OAO
+    disable: false
+    index:
+      '0': AIR
+      E: CRAFTING_TABLE
+      A: RED_BED
+      X: WHITE_WOOL
+      O: OAK_LOG

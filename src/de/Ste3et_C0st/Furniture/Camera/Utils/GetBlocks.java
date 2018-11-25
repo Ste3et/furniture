@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.reflect.MethodUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.entity.Relative;
 
 public class GetBlocks {
 
-	Class<?> CraftBlockClass = null;
+	//Class<?> CraftBlockClass = null;
 	Class<?> CraftMagicNumbersClass = null;
+	public String getBukkitVersion() {return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];}
 	
 	public List<Layer> returnBlocks(Location startLocation, int width, int heigt, int depth, int offsetZ){
 		try{
-			String str = FurnitureLib.getInstance().getBukkitVersion();
-			this.CraftBlockClass = Class.forName("org.bukkit.craftbukkit."+str+".block.CraftBlock");
-			this.CraftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit."+str+".util.CraftMagicNumbers");
+			this.CraftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit."+getBukkitVersion()+".util.CraftMagicNumbers");
 			
 			BlockFace face = main.getLocationUtil().yawToFace(startLocation.getYaw()).getOppositeFace();
 			List<Layer> layerList = new ArrayList<Layer>();
@@ -46,11 +46,11 @@ public class GetBlocks {
 	
 	public Byte getByteFromBlock(Block b){
 		try {
-			Object o = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.block.Block.class).invoke(null, b);
-			Object iBlockData = o.getClass().getMethod("getBlockData").invoke(o);
+			Object nmsBlock = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.Material.class).invoke(null, b.getType());
+			Object iBlockData = nmsBlock.getClass().getMethod("getBlockData").invoke(nmsBlock);
 			Object Material = MethodUtils.invokeMethod(iBlockData, "getMaterial", null);
-			Object MaterialMapColor = MethodUtils.invokeMethod(Material, "r", null);
-			int color = MaterialMapColor.getClass().getField("ad").getInt(MaterialMapColor) * 4;
+			Object MaterialMapColor = MethodUtils.invokeMethod(Material, "i", null);
+			int color = MaterialMapColor.getClass().getField("ac").getInt(MaterialMapColor) * 4;
 //		        if(color == 28){
 //		        color += randInt(0, 3);
 //		     }

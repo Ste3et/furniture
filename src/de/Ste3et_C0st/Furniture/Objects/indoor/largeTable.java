@@ -22,6 +22,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
+import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
@@ -52,7 +53,7 @@ public class largeTable extends Furniture implements Listener{
 		location = getLutil().getRelativ(location, getBlockFace(), 0.1, 0.28);
 		location.add(0,.2,0);
 		Double winkel = 1.57;
-		ItemStack iTemStack_1 = new ItemStack(Material.STAINED_GLASS_PANE);
+		ItemStack iTemStack_1 = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
 		double off = .46;
 		double off2 = off*2+.1;
 		for(int x=1; x<=3;x++){
@@ -203,8 +204,8 @@ public class largeTable extends Furniture implements Listener{
 		if(!e.getID().equals(getObjID())){return;}
 		if(!e.canBuild()){return;}
 		Player p = e.getPlayer();
-		if(p.getInventory().getItemInMainHand().getType().equals(Material.INK_SACK)){
-			getLib().getColorManager().color(p, e.canBuild(), Material.STAINED_GLASS_PANE, getObjID(), ColorType.BLOCK, 3);
+		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) != null){
+			getLib().getColorManager().color(p, e.canBuild(), "_STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
 			update();
 			return;
 		}else{

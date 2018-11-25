@@ -1,0 +1,7 @@
+name: DiceFurniture
+version: 3.2.1.4
+description: Add some new Objects to the Server
+author: Ste3et_C0st
+website: http://dicecraft.de
+depend: [FurnitureLib]
+main: de.Ste3et_C0st.Furniture.Main.main

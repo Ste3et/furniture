@@ -1,0 +1,17 @@
+# ------------------------------------  #
+#                                       #
+#       never touch the system-ID !     #
+#                                       #
+# ------------------------------------  #
+
+Billboard:
+  system-ID: Billboard
+  displayName: '&cBillboard'
+  itemGlowEffect: false
+  spawnMaterial: PIG_SPAWN_EGG
+  itemLore: []
+  crafting:
+    recipe: XXX,XXX,XXX
+    disable: true
+    index:
+      X: AIR

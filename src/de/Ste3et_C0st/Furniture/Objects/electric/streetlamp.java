@@ -57,7 +57,7 @@ public class streetlamp extends Furniture implements Listener{
 		for(int i = 0; i<=3;i++){
 			Location loc = aloc.clone().add(0, .215*i, 0);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
-			packet.getInventory().setHelmet(new ItemStack(Material.STEP));
+			packet.getInventory().setHelmet(new ItemStack(Material.STONE_SLAB));
 			packet.setSmall(true);
 			asList.add(packet);
 		}
@@ -84,13 +84,13 @@ public class streetlamp extends Furniture implements Listener{
 		asList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, face, 0.0, -0.9).add(0, 2.3, 0));
-		packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_LAMP_OFF));
+		packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_TORCH));
 		packet.setName("#LAMP#");
 		packet.setSmall(true);
 		asList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, face, 0.0, -0.9).add(0, 1.8, 0));
-		packet.getInventory().setHelmet(new ItemStack(Material.WOOD, 1,(short) 5));
+		packet.getInventory().setHelmet(new ItemStack(Material.DARK_OAK_WOOD, 1,(short) 5));
 		asList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, face, 0.0, -0.9).add(0, 2.3, 0));
@@ -181,7 +181,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(!b){
 			fEntity packet = getPacket();
 			if(packet==null) return;
-			packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_LAMP_OFF));
+			packet.getInventory().setHelmet(new ItemStack(Material.REDSTONE_TORCH));
 			getManager().updateFurniture(getObjID());
 			FurnitureLib.getInstance().getLightManager().removeLight(light);
 			return;
@@ -208,7 +208,7 @@ public class streetlamp extends Furniture implements Listener{
 		for(fEntity as : getManager().getfArmorStandByObjectID(getObjID())){
 			if(as.getName().equalsIgnoreCase("#LAMP#")){
 				switch (as.getInventory().getHelmet().getType()) {
-				case REDSTONE_LAMP_OFF: return false;
+				case REDSTONE_TORCH: return false;
 				case GLOWSTONE: return true;
 				default: return false;
 				}

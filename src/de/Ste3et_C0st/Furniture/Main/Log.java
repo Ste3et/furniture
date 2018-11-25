@@ -31,7 +31,7 @@ public class Log extends FurnitureHelper implements Listener{
 
 	private int mode = 0;
 	private Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
-	private ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE);
+	private ItemStack pane = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
 	private ItemStack permissions = new ItemStack(Material.ARROW);
 	private Player p;
 	private List<ItemStack> isList = new ArrayList<ItemStack>();
@@ -69,7 +69,6 @@ public class Log extends FurnitureHelper implements Listener{
 		}else{
 			if(e.getPlayer().getInventory().getItemInMainHand().getType().isBlock() && !e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){
 				getCenter().getBlock().setType(e.getPlayer().getInventory().getItemInMainHand().getType());
-				getCenter().getBlock().setData((byte) e.getPlayer().getInventory().getItemInMainHand().getDurability());
 				removeItem(e.getPlayer());
 				return;
 			}else if(!e.getPlayer().getInventory().getItemInMainHand().getType().isBlock() && !e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){
@@ -96,7 +95,7 @@ public class Log extends FurnitureHelper implements Listener{
 				
 				ItemStack is = e.getPlayer().getInventory().getItemInMainHand().clone();
 				is.setAmount(1);
-				stand.setItemInHand(is);
+				stand.setItemInMainHand(is);
 				update();
 				removeItem(e.getPlayer());
 				return;
@@ -124,7 +123,7 @@ public class Log extends FurnitureHelper implements Listener{
 					getWorld().dropItem(getLocation(), is);
 				}
 				
-				stand.setItemInHand(new ItemStack(Material.AIR));
+				stand.setItemInMainHand(new ItemStack(Material.AIR));
 				update();
 				return;
 			}
@@ -132,20 +131,17 @@ public class Log extends FurnitureHelper implements Listener{
 	}
 	
 	private void setList(){
-		ItemStack stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 1);
+		ItemStack stack = new ItemStack(Material.WHITE_BANNER);
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 2);
+		stack = new ItemStack(Material.ORANGE_BANNER);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.BANNER);
-		stack.setDurability((short) 11);
+		stack = new ItemStack(Material.BLUE_BANNER);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront II");
 		stack.setItemMeta(meta);
@@ -212,7 +208,7 @@ public class Log extends FurnitureHelper implements Listener{
 		if(e.getClickedInventory()==null||!e.getClickedInventory().equals(inv)){return;}
 		e.setCancelled(true);
 		if(e.getCurrentItem()==null){return;}
-		if(e.getCurrentItem().getType().equals(Material.BANNER)){
+		if(e.getCurrentItem().getType().name().contains("_BANNER")){
 			Integer i = isList.indexOf(e.getCurrentItem());
 			ItemStack is = null;
 			if(i>=2){i = -1;}
