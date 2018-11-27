@@ -114,13 +114,13 @@ public class tent_3 extends Furniture implements Listener{
 		fArmorStand as = getManager().createArmorStand(getObjID(), banner1);
 		as.getInventory().setHelmet(banner);
 		as.setPose(new EulerAngle(-1.568, 0, 0), BodyPart.HEAD);
-		as.setMarker(false);
+		//as.setMarker(false);
 		aspL.add(as);
 		
 		as = getManager().createArmorStand(getObjID(), banner2);
 		as.getInventory().setHelmet(banner);
 		as.setPose(new EulerAngle(-1.568, 0, 0), BodyPart.HEAD);
-		as.setMarker(false);
+		//as.setMarker(false);
 		aspL.add(as);
 		
 		Location sit = getLutil().getCenter(loc);
@@ -146,8 +146,8 @@ public class tent_3 extends Furniture implements Listener{
 	
 	private void setBlock(){
 		Location sit = getLutil().getCenter(getLocation());
-		sit.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-		bed = getLutil().setHalfBed(getBlockFace(), getLutil().getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), getBlockFace(), 2D, 0D), Material.RED_BED);
+		sit.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()) + 90);
+		bed = getLutil().setHalfBed(getLutil().yawToFace(sit.getYaw()).getOppositeFace(), getLutil().getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), getBlockFace(), 2D, 0D), Material.RED_BED);
 		getObjID().addBlock(Arrays.asList(bed));
 	}
 	
