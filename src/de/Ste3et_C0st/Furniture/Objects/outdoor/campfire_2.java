@@ -2,6 +2,7 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -34,17 +35,6 @@ public class campfire_2 extends Furniture implements Listener{
 					Material.PORKCHOP,
 					Material.RABBIT,
 					Material.MUTTON
-				)
-			);
-	List<Material> items2 = new ArrayList<Material>(
-			Arrays.asList(
-					Material.COOKED_BEEF,
-					Material.COOKED_CHICKEN,
-					Material.COOKED_COD,
-					Material.BAKED_POTATO,
-					Material.BAKED_POTATO,
-					Material.COOKED_RABBIT,
-					Material.COOKED_MUTTON
 				)
 			);
 
@@ -263,7 +253,10 @@ public class campfire_2 extends Furniture implements Listener{
 		if(is==null){return null;}
 		if(is.getType()==null){return null;}
 		if(items.contains(is.getType())){
-			return new ItemStack(items2.get(items.indexOf(is.getType())));
+			String name = is.getType().name();
+			Material mat = EnumSet.allOf(Material.class).stream().filter(ma -> ma.name().startsWith(name) && !ma.equals(is.getType())).filter(ma -> ma.name().equalsIgnoreCase("COOKED") || ma.name().equalsIgnoreCase("BAKED")).findFirst().orElse(null);
+			if(mat == null) return null;
+			return new ItemStack(mat);
 		}
 		return is;
 	}

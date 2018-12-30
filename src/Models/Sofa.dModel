@@ -7,7 +7,7 @@ Sofa:
   creator: 80f94595-e1f5-3520-b48c-c07d9f03274e
   placeAbleSide: TOP
   crafting:
-    recipe: xxx,xxx,xxx
+    recipe: xxx,+++,XxX
     disable: true
     index:
       '0': AIR

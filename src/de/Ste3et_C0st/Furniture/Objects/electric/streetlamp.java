@@ -90,7 +90,7 @@ public class streetlamp extends Furniture implements Listener{
 		asList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, face, 0.0, -0.9).add(0, 1.8, 0));
-		packet.getInventory().setHelmet(new ItemStack(Material.DARK_OAK_WOOD, 1,(short) 5));
+		packet.getInventory().setHelmet(new ItemStack(Material.DARK_OAK_WOOD, 1));
 		asList.add(packet);
 		
 		packet = getManager().createArmorStand(getObjID(), getLutil().getRelativ(center, face, 0.0, -0.9).add(0, 2.3, 0));

@@ -13,8 +13,8 @@ Camera:
   creator: 10eabfae-1d87-3120-b9bc-cb16bfa6ce88
   placeAbleSide: TOP
   crafting:
-    recipe: xxx,xxx,xxx
-    disable: true
+    recipe: DXD,AEA,EAE
+    disable: false
     index:
       D: GUNPOWDER
       E: STICK
