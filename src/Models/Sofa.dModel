@@ -1,19 +1,21 @@
 Sofa:
   system-ID: Sofa
-  displayName: '&cSofa'
+  displayName: §cSofa
   itemGlowEffect: false
   spawnMaterial: PIG_SPAWN_EGG
   itemLore: []
   creator: 80f94595-e1f5-3520-b48c-c07d9f03274e
   placeAbleSide: TOP
   crafting:
-    recipe: xxx,+++,XxX
+    recipe: XXX,DEF,GXI,
     disable: false
     index:
-      '0': AIR
-      +: WHITE_CARPET
-      X: LEVER
-      x: BEDROCK
+      D: WHITE_CARPET
+      E: WHITE_CARPET
+      F: WHITE_CARPET
+      G: LEVER
+      X: AIR
+      I: LEVER
   projectData:
     entitys:
       '0': H4sIAAAAAAAAAI2Sv0/CQBTHX6GUow6uTg7uTjq5YLG/SKBFIEpZyIkHaby2yVEh/gEOjk5G/xKdiItxNNHdPwD/BROv9AqoMfFN733vfT9377UqQB7WHByQI3/kn1ACkCilCh6RBsWxqAutAFOa5rLpMyHLGgtGwlENxwuClAeljtkZYelh0aLRxA+HSaWCapxTwrRwSIkKqGaY7V7NsBSQOtPrd2vrbb/Hcw9E8Lyb6dws24amJ70r5996sxwyttasz9lPxxuzq8b4F1voCbvi6t4/2aVm1bKX8JfHxs0zqvw0lJdwYRCTlv+YNNPnV/CVkjCO2AWCwoFttNogO65jiCUgyPmnsB74IekzPIj3KBkTJvHW6DyMpRwoOg7wMPkeCIquadqao6cEBKiuVZ1VQeYPay0K0zDEZdwrJ79Hus+oj2M/ChVAnW13MBiRePq6w2OXPx51hVR+uOVxl0he1vU5u9y8P/woQN7Dk3TcL/jfH1h7AgAA
