@@ -8,7 +8,7 @@ Sofa:
   placeAbleSide: TOP
   crafting:
     recipe: xxx,+++,XxX
-    disable: true
+    disable: false
     index:
       '0': AIR
       +: WHITE_CARPET
