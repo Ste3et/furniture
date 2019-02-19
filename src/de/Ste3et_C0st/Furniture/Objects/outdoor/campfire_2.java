@@ -253,9 +253,22 @@ public class campfire_2 extends Furniture implements Listener{
 		if(is==null){return null;}
 		if(is.getType()==null){return null;}
 		if(items.contains(is.getType())){
-			String name = is.getType().name();
-			Material mat = EnumSet.allOf(Material.class).stream().filter(ma -> ma.name().startsWith(name) && !ma.equals(is.getType())).filter(ma -> ma.name().equalsIgnoreCase("COOKED") || ma.name().equalsIgnoreCase("BAKED")).findFirst().orElse(null);
-			if(mat == null) return null;
+			Material mat = null;
+			int rnd = (int)(Math.random()*100);
+			if(rnd < 5) {
+				mat = Material.COAL;
+			}else {
+				switch(is.getType()) {
+					case BEEF: mat = Material.COOKED_BEEF; break;
+					case CHICKEN: mat = Material.COOKED_CHICKEN; break;
+					case COD: mat = Material.COOKED_COD; break;
+					case POTATO: mat = Material.BAKED_POTATO; break;
+					case PORKCHOP: mat = Material.COOKED_PORKCHOP; break;
+					case RABBIT: mat = Material.RABBIT_STEW; break;
+					case MUTTON: mat = Material.COOKED_MUTTON; break;
+					default: mat = Material.COAL;break;
+				}
+			}
 			return new ItemStack(mat);
 		}
 		return is;

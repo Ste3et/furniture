@@ -19,9 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Objects.RPG.Crossbow;
+import de.Ste3et_C0st.Furniture.Objects.RPG.Guillotine;
 import de.Ste3et_C0st.Furniture.Objects.RPG.Catapult;
 import de.Ste3et_C0st.Furniture.Objects.RPG.flag;
-import de.Ste3et_C0st.Furniture.Objects.RPG.guillotine;
 import de.Ste3et_C0st.Furniture.Objects.RPG.weaponStand;
 import de.Ste3et_C0st.Furniture.Objects.School.TrashCan;
 import de.Ste3et_C0st.Furniture.Objects.christmas.AdventCalender;
@@ -34,6 +34,7 @@ import de.Ste3et_C0st.Furniture.Objects.garden.Trunk;
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.Furniture.Objects.garden.fance;
 import de.Ste3et_C0st.Furniture.Objects.garden.graveStone;
+import de.Ste3et_C0st.Furniture.Objects.garden.log;
 import de.Ste3et_C0st.Furniture.Objects.garden.sunshade;
 import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
 import de.Ste3et_C0st.Furniture.Objects.light.WaxCandle;
@@ -94,7 +95,7 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Streetlamp", this, getResource("Crafting/Streetlamp.dModel"),PlaceableSide.TOP, streetlamp.class).setSize(2, 4, 1, CenterType.FRONT);
 			new Project("Billboard", this, getResource("Crafting/Billboard.dModel"),PlaceableSide.TOP, billboard.class).setSize(1, 3, 3, CenterType.RIGHT);
 			new Project("WeaponStand", this, getResource("Crafting/WeaponStand.dModel"),PlaceableSide.TOP, weaponStand.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Guillotine", this, getResource("Crafting/Guillotine.dModel"),PlaceableSide.TOP, guillotine.class).setSize(1, 5, 2, CenterType.RIGHT);
+			new Project("Guillotine", this, getResource("Crafting/Guillotine.dModel"),PlaceableSide.TOP, Guillotine.class).setSize(1, 5, 2, CenterType.RIGHT);
 			new Project("FlowerPot", this, getResource("Crafting/FlowerPot.dModel"),PlaceableSide.BOTTOM, TFlowerPot.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("BearTrap", this, getResource("Crafting/BearTrap.dModel"), PlaceableSide.TOP, BearTrap.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("TrashCan", this, getResource("Crafting/TrashCan.dModel"), PlaceableSide.TOP, TrashCan.class).setSize(1, 1, 1, CenterType.RIGHT);
@@ -135,7 +136,6 @@ public class main extends JavaPlugin implements Listener{
 			new Project("Camera", this, getResource("Models/Camera.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("Sofa", this, getResource("Models/Sofa.dModel")).setSize(1, 1, 3, CenterType.RIGHT).setEditorProject(false);
 			new Project("Log", this, getResource("Models/Log.dModel")).setSize(1, 1, 1, CenterType.CENTER).setEditorProject(false);
-			
 			lib.registerPluginFurnitures(getInstance());
 			loadModels();
 		}else{
@@ -216,7 +216,7 @@ public class main extends JavaPlugin implements Listener{
 			case "Tent1": new tent_1(id);break;
 			case "GraveStone": new graveStone(id);break;
 			case "Camera": new camera(id);break;
-			case "Log": new Log(id);break;
+			case "Log": new log(id);break;
 			default:break;
 			}
 		}
@@ -241,7 +241,7 @@ public class main extends JavaPlugin implements Listener{
 		case "Tent1": new tent_1(event.getID());break;
 		case "GraveStone": new graveStone(event.getID());break;
 		case "Camera": new camera(event.getID());break;
-		case "Log": new Log(event.getID());break;
+		case "Log": new log(event.getID());break;
 		default:break;
 		}
 	}

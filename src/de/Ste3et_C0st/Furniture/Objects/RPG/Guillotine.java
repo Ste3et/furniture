@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Objects.RPG;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,7 +33,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class guillotine extends Furniture implements Listener{
+public class Guillotine extends Furniture implements Listener{
 
 	Boolean soundPlaying = false, isFinish = false;
 	fArmorStand packet1, packet2, packet3;
@@ -55,9 +56,9 @@ public class guillotine extends Furniture implements Listener{
 	List<Material> matListIII = Arrays.asList(
 			Material.LEATHER_BOOTS,Material.IRON_BOOTS,Material.GOLDEN_BOOTS,
 			Material.DIAMOND_BOOTS, Material.CHAINMAIL_BOOTS);
-	List<fArmorStand> armorStandList = new ArrayList<fArmorStand>();
+	List<fEntity> armorStandList = new ArrayList<fEntity>();
 	ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-	public guillotine(ObjectID id) {
+	public Guillotine(ObjectID id) {
 		super(id);
 		if(isFinish()){
 			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
@@ -95,24 +96,15 @@ public class guillotine extends Furniture implements Listener{
 	
 	private void setDefault(){
 		armorStandList.clear();
-		if(packet1==null){packet2 = getByName("#Oblation#");}
-		if(packet3==null){packet3 = getByName("#Head#");}
-		for(fEntity packets : getManager().getfArmorStandByObjectID(getObjID())){
-			if(packets instanceof fArmorStand){
-				fArmorStand stand = (fArmorStand) packets;
-				if(!packets.getName().equalsIgnoreCase("")){
-					if(!(packets.getName().startsWith("#Oblation#") && packets.getName().startsWith("#Head#"))){
-						if(packets.getName().startsWith("iron")){
-							armorStandList.add(stand);
-							Location loc = getStartLocation(packets.getName());
-							packets.teleport(loc);
-						}else{
-							packet1 = stand;
-						}
-					}
-				}
-			}
-		}
+		
+		this.packet1 = (fArmorStand) entityByCustomName("#Executioner#");
+		this.packet3 = (fArmorStand) entityByCustomName("#Head#");
+		this.packet2 = (fArmorStand) getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("#Oblation#")).findFirst().orElse(null);
+		
+		getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("iron")).forEach(entity -> {
+			armorStandList.add(entity);
+			entity.teleport(getStartLocation(entity.getCustomName()));
+		});
 		
 		if(packet3!=null){
 			if(packet3.getHelmet()!=null){
@@ -447,30 +439,22 @@ public class guillotine extends Furniture implements Listener{
 		boolean a = false,b = false,c = false;
 		a = !packet1.isInvisible();
 		b = !packet2.isInvisible();
+		
+		if(packet1.getItemInMainHand() == null) {
+			return false;
+		}
+		
+		if(packet1.getHelmet() == null) {
+			return false;
+		}
+		
 		if(packet1.getItemInMainHand()!=null&&!packet1.getItemInMainHand().getType().equals(Material.AIR)){
 			c = true;
-		}else {
-			
-			if(!packet1.getItemInMainHand().getType().equals(Material.AIR)) System.out.println("material");
-			System.out.println("false");
 		}
-		
-		if(packet1.getItemInMainHand()!=null) {
-			System.out.println("mainHand");
-			if(!packet1.getItemInMainHand().getType().equals(Material.AIR)) {
-				System.out.println("material");
-			}else {
-				System.out.println("material==null");
-			}
-		}else {
-			System.out.println("mainHand == null");
-		}
-		
 		
 		if(a&&b&&c){
 			return true;
 		}
-		System.out.println("test");
 		return false;
 	}
 	
@@ -514,7 +498,7 @@ public class guillotine extends Furniture implements Listener{
 									i++;
 								}else{
 									if(d4>d3){
-										for(fArmorStand stand : armorStandList){
+										for(fEntity stand : armorStandList){
 											stand.teleport(stand.getLocation().add(0, -1.7, 0));
 										}
 										d4=-1.7;
