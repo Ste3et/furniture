@@ -11,17 +11,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class graveStone extends FurnitureHelper implements Listener{
 
@@ -61,28 +59,30 @@ public class graveStone extends FurnitureHelper implements Listener{
 		getObjID().addBlock(Arrays.asList(this.sign));
 	}
 	
-	@EventHandler
-	private void onBlockBreak(ProjectBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(sign!=null){
-			sign.setType(Material.AIR);
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+			if(sign!=null){
+				sign.setType(Material.AIR);
+			}
 		}
 	}
 	
-	@EventHandler
-	private void onBlockClick(ProjectClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Player p = e.getPlayer();
-		if(!e.getID().equals(getObjID())) return;
-		if(!e.canBuild()){return;}
-		ItemStack is = p.getInventory().getItemInMainHand();
-		if (is == null) return;
-		if (!is.getType().equals(Material.WRITTEN_BOOK)) return;
-		readFromBook(is);
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			ItemStack is = player.getInventory().getItemInMainHand();
+			if (is == null) return;
+			if (!is.getType().equals(Material.WRITTEN_BOOK)) return;
+			readFromBook(is);
+		}
 	}
 
 	public void resetSign(){

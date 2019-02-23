@@ -204,19 +204,23 @@ public class main extends JavaPlugin implements Listener{
 			if(id.getProjectOBJ() == null) continue;
 			if(id.getSQLAction().equals(SQLAction.REMOVE)) continue;
 			switch (id.getProjectOBJ().getName()) {
-			case "Catapult":new Catapult(id);break;
-			case "Barrels": new barrels(id);break;
-			case "WaxCandle": new WaxCandle(id);break;
-			case "Lantern": new WaxCandle(id);break;
-			case "Fence": new fance(id);break;
-			case "Trunk": new Trunk(id);break;
-			case "Sunshade": new sunshade(id);break;
-			case "Hammock": new hammock(id);break;
-			case "Crossbow": new Crossbow(id);break;
-			case "Tent1": new tent_1(id);break;
-			case "GraveStone": new graveStone(id);break;
-			case "Camera": new camera(id);break;
-			case "Log": new log(id);break;
+			case "Catapult":id.setFunctionObject(new Catapult(id));break;
+			case "Barrels": id.setFunctionObject(new barrels(id));break;
+			case "WaxCandle": id.setFunctionObject(new WaxCandle(id));break;
+			case "Lantern": id.setFunctionObject(new WaxCandle(id));break;
+			case "Fence":{
+				System.out.println("test");
+				id.setFunctionObject(new fance(id));break;
+				
+			}
+			case "Trunk": id.setFunctionObject(new Trunk(id));break;
+			case "Sunshade": id.setFunctionObject(new sunshade(id));break;
+			case "Hammock": id.setFunctionObject(new hammock(id));break;
+			case "Crossbow": id.setFunctionObject(new Crossbow(id));break;
+			case "Tent1": id.setFunctionObject(new tent_1(id));break;
+			case "GraveStone": id.setFunctionObject(new graveStone(id));break;
+			case "Camera": id.setFunctionObject(new camera(id));break;
+			case "Log": id.setFunctionObject(new log(id));break;
 			default:break;
 			}
 		}
@@ -229,19 +233,19 @@ public class main extends JavaPlugin implements Listener{
 		if(event.getProject().getName()==null) return;
 		if(event.getID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		switch (event.getProject().getName()) {
-		case "Catapult":new Catapult(event.getID());break;
-		case "Barrels": new barrels(event.getID());break;
-		case "WaxCandle": new WaxCandle(event.getID());break;
-		case "Lantern": new WaxCandle(event.getID());break;
-		case "Fence": new fance(event.getID());break;
-		case "Trunk": new Trunk(event.getID());break;
-		case "Sunshade": new sunshade(event.getID());break;
-		case "Hammock": new hammock(event.getID());break;
-		case "Crossbow": new Crossbow(event.getID());break;
-		case "Tent1": new tent_1(event.getID());break;
-		case "GraveStone": new graveStone(event.getID());break;
-		case "Camera": new camera(event.getID());break;
-		case "Log": new log(event.getID());break;
+			case "Catapult":event.getID().setFunctionObject(new Catapult(event.getID()));break;
+			case "Barrels": event.getID().setFunctionObject(new barrels(event.getID()));break;
+			case "WaxCandle": event.getID().setFunctionObject(new WaxCandle(event.getID()));break;
+			case "Lantern": event.getID().setFunctionObject(new WaxCandle(event.getID()));break;
+			case "Fence": event.getID().setFunctionObject(new fance(event.getID()));break;
+			case "Trunk": event.getID().setFunctionObject(new Trunk(event.getID()));break;
+			case "Sunshade": event.getID().setFunctionObject(new sunshade(event.getID()));break;
+			case "Hammock": event.getID().setFunctionObject(new hammock(event.getID()));break;
+			case "Crossbow": event.getID().setFunctionObject(new Crossbow(event.getID()));break;
+			case "Tent1": event.getID().setFunctionObject(new tent_1(event.getID()));break;
+			case "GraveStone": event.getID().setFunctionObject(new graveStone(event.getID()));break;
+			case "Camera": event.getID().setFunctionObject(new camera(event.getID()));break;
+			case "Log": event.getID().setFunctionObject(new log(event.getID()));break;
 		default:break;
 		}
 	}

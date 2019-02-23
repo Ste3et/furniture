@@ -3,8 +3,6 @@ package de.Ste3et_C0st.Furniture.Objects.RPG;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -14,7 +12,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -23,8 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -61,9 +56,9 @@ public class Guillotine extends Furniture implements Listener{
 	public Guillotine(ObjectID id) {
 		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			setDefault();
 			initializeInventory();
+			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -298,14 +293,13 @@ public class Guillotine extends Furniture implements Listener{
 		if(stack.getType().equals(Material.AIR)){return false;}
 		return true;
 	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(!isRunning()){
+
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
 			if(canDrop(packet1.getHelmet())){getWorld().dropItem(getLocation(), packet1.getHelmet());}
 			if(canDrop(packet1.getChestPlate())){getWorld().dropItem(getLocation(), packet1.getChestPlate());}
 			if(canDrop(packet1.getLeggings())){getWorld().dropItem(getLocation(), packet1.getLeggings());}
@@ -322,44 +316,41 @@ public class Guillotine extends Furniture implements Listener{
 				im.setDisplayName(packet1.getName());
 				getWorld().dropItem(getLocation(), is);
 			}
-			
-			this.getObjID().remove(e.getPlayer());
-			getManager().remove(getObjID());
-			delete();
+			this.destroy(player);
 		}
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Player p = e.getPlayer();
-		if(!getLib().canBuild(e.getPlayer(), getObjID(), EventType.INTERACT)){return;}
-		if(p.isSneaking()){
-			if(isFinish){return;}
-			p.openInventory(invI);
-			for(int i = 0; i<9;i++){invI.setItem(i, pane);}	
-			
-			ItemStack is = new ItemStack(Material.ZOMBIE_HEAD);
-			ItemMeta im = is.getItemMeta();
-			im.setDisplayName("§2Executioner");
-			is.setItemMeta(im);
-			invI.setItem(2, is);
-			
-			is = new ItemStack(Material.PLAYER_HEAD);
-			im = is.getItemMeta();
-			im.setDisplayName("§cOblation");
-			is.setItemMeta(im);
-			invI.setItem(6, is);
-			this.p = p;
-		}else{
-			if(isRunning()){return;}
-			if(canStart()&&!isFinish){
-				move();
-			}else if(canStart()&&isFinish){
-				setDefault();
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(!getLib().canBuild(player, getObjID(), EventType.INTERACT)){return;}
+			if(player.isSneaking()){
+				if(isFinish){return;}
+				player.openInventory(invI);
+				for(int i = 0; i<9;i++){invI.setItem(i, pane);}	
+				
+				ItemStack is = new ItemStack(Material.ZOMBIE_HEAD);
+				ItemMeta im = is.getItemMeta();
+				im.setDisplayName("§2Executioner");
+				is.setItemMeta(im);
+				invI.setItem(2, is);
+				
+				is = new ItemStack(Material.PLAYER_HEAD);
+				im = is.getItemMeta();
+				im.setDisplayName("§cOblation");
+				is.setItemMeta(im);
+				invI.setItem(6, is);
+				this.p = player;
+			}else{
+				if(isRunning()){return;}
+				if(canStart()&&!isFinish){
+					move();
+				}else if(canStart()&&isFinish){
+					setDefault();
+				}
 			}
 		}
 	}

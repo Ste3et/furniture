@@ -2,22 +2,18 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -25,7 +21,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class campfire_2 extends Furniture implements Listener{
+public class campfire_2 extends Furniture{
 	List<Material> items = new ArrayList<Material>(
 			Arrays.asList(
 					Material.BEEF,
@@ -61,7 +57,6 @@ public class campfire_2 extends Furniture implements Listener{
 	    grill = getLutil().getRelativ(middle,getBlockFace(), .0D, .5D);
 		grill.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		if(id.isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -139,44 +134,44 @@ public class campfire_2 extends Furniture implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
-		final ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
-		fArmorStand packet = null;
-		for(fEntity pack : aspList){
-			if(pack instanceof fArmorStand){
-				fArmorStand stand = (fArmorStand) pack;
-				if(stand.isSmall() && pack.isInvisible()){
-					packet = stand;
-					if(packet.isFire()) {
-						break;
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			final ItemStack itemStack = player.getInventory().getItemInMainHand();
+			fArmorStand packet = null;
+			for(fEntity pack : aspList){
+				if(pack instanceof fArmorStand){
+					fArmorStand stand = (fArmorStand) pack;
+					if(stand.isSmall() && pack.isInvisible()){
+						packet = stand;
+						if(packet.isFire()) {
+							break;
+						}
 					}
 				}
 			}
+			if(itemStack.getType().equals(Material.WATER_BUCKET) && packet.isFire()){
+				 setfire(false);
+			}else if(itemStack.getType().equals(Material.FLINT_AND_STEEL) && !packet.isFire()){
+				 setfire(true);
+			}else if(items.contains(itemStack.getType()) && packet.isFire() && armorS==null){
+				is = itemStack.clone();
+				is.setAmount(1);
+				
+				setGrill();
+				
+				if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+				Integer i = player.getInventory().getHeldItemSlot();
+				ItemStack item = player.getInventory().getItemInMainHand();
+				item.setAmount(item.getAmount()-1);
+				player.getInventory().setItem(i, item);
+				player.updateInventory();
+			}
 		}
-		if(itemStack.getType().equals(Material.WATER_BUCKET) && packet.isFire()){
-			 setfire(false);
-		}else if(itemStack.getType().equals(Material.FLINT_AND_STEEL) && !packet.isFire()){
-			 setfire(true);
-		}else if(items.contains(itemStack.getType()) && packet.isFire() && armorS==null){
-			is = itemStack.clone();
-			is.setAmount(1);
-			
-			setGrill();
-			
-			if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
-			Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-			ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
-			item.setAmount(item.getAmount()-1);
-			e.getPlayer().getInventory().setItem(i, item);
-			e.getPlayer().updateInventory();
-		}
-		
 	}
 	
 	private void setfire(boolean b){
@@ -202,20 +197,20 @@ public class campfire_2 extends Furniture implements Listener{
 		update();
 	}
 	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(isRunning()){
-			Bukkit.getScheduler().cancelTask(timer);
-			timer=null;
-			getWorld().dropItemNaturally(middle.clone().add(0, 1, 0), is).setVelocity(new Vector().zero());
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(isRunning()){
+				Bukkit.getScheduler().cancelTask(timer);
+				timer=null;
+				getWorld().dropItemNaturally(middle.clone().add(0, 1, 0), is).setVelocity(new Vector().zero());
+			}
+			setfire(false);
+			this.destroy(player);
 		}
-		setfire(false);
-		e.remove();
-		delete();
 	}
 	
 	public void removeGrill(){

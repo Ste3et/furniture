@@ -12,15 +12,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -30,12 +25,11 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class tent_3 extends Furniture implements Listener{
+public class tent_3 extends Furniture{
 	public tent_3(ObjectID id){
 		super(id);
 		setBlock();
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		Location loc = getLocation();
@@ -150,32 +144,32 @@ public class tent_3 extends Furniture implements Listener{
 		bed = getLutil().setHalfBed(getLutil().yawToFace(sit.getYaw()).getOppositeFace(), getLutil().getRelativ(sit.add(0,-2,0).getBlock().getLocation().add(0,2,0), getBlockFace(), 2D, 0D), Material.RED_BED);
 		getObjID().addBlock(Arrays.asList(bed));
 	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		bed.setType(Material.AIR);
-		e.remove();
-		delete();
+
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			bed.setType(Material.AIR);
+			this.destroy(player);
+		}
 	}
 	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Player p = e.getPlayer();
-		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) != null){
-			getLib().getColorManager().color(p, e.canBuild(), "_BANNER", getObjID(), ColorType.BANNER, 1);
-		}else{
-			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-				if(packet.getName().equalsIgnoreCase("#SITZ#")){
-					packet.setPassanger(p);
-					packet.update();
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
+				getLib().getColorManager().color(player, true, "_BANNER", getObjID(), ColorType.BANNER, 1);
+			}else{
+				for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
+					if(packet.getName().equalsIgnoreCase("#SITZ#")){
+						packet.setPassanger(player);
+						packet.update();
+					}
 				}
 			}
 		}

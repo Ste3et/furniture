@@ -6,36 +6,26 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.NBT.CraftItemStack;
-import de.Ste3et_C0st.FurnitureLib.NBT.NBTTagCompound;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -99,78 +89,89 @@ public class Catapult extends FurnitureHelper implements Listener{
 	 		}
 		}
 	
-	@EventHandler
-	public void FurnitureClickEvent(ProjectClickEvent e){
-		if(getObjID()==null) return;
-		if(e.getID()==null) return;
-		if(!e.getID().equals(getObjID())) return;
-		if(e.getID().getSQLAction().equals(SQLAction.REMOVE)) return;
-		Location loc = getRelative(getCenter(), getBlockFace(), -.8, -1.03).add(0, -.2, 0);
-		loc.setYaw(getYaw());
-		ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-		if(stack.getType().equals(Material.TNT)){
-			TNTPrimed tnt = (TNTPrimed) e.getID().getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
-			if(tnt == null) return;
-			Vector v= getLaunchVector(getBlockFace());
-			if(v == null) return;
-			tnt.playEffect(EntityEffect.WITCH_MAGIC);
-			tnt.setVelocity(v.multiply(1));
-			fallingSandList.put(tnt, e.getPlayer());
-		}else if(stack.getType().equals(Material.AIR)){
-			setRange(e.getPlayer());
-			return;
-		}else{
-//			if(stack.getType().isBlock()){
-//				@SuppressWarnings("deprecation")
-//				FallingBlock block = getWorld().spawnFallingBlock(loc, stack.getType().getId(), (byte) stack.getDurability());
-//				if(block == null) return;
-//				Vector v= getLaunchVector(getBlockFace());
-//				if(v == null) return;
-//				block.setDropItem(false);
-//				block.setVelocity(v.multiply(1));
-//				fallingSandList.put(block, e.getPlayer());
-//				e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
-//			}else if(stack.getType().equals(Material.MONSTER_EGG)){
-//				try{
-//					NBTTagCompound nbtTag = new CraftItemStack().getNBTTag(stack);
-//					if(nbtTag.hasKey("tag")){
-//						NBTTagCompound tag = nbtTag.getCompound("tag");
-//						NBTTagCompound id = tag.getCompound("EntityTag");
-//						String str = id.getString("id").replace("minecraft:", "");
-//						@SuppressWarnings("deprecation")
-//						EntityType type = EntityType.fromName(str);
-//						if(!entityList.contains(type)){setRange(e.getPlayer());return;} 
-//						Vector v= getLaunchVector(getBlockFace());
-//						Entity entity = getWorld().spawnEntity(loc, type);
-//						entity.setVelocity(v);
-//						LivingEntity entiLivingEntity = (LivingEntity) entity;
-//						entiLivingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4), false);
-//						if(type.equals(EntityType.CREEPER)){
-//							if(randInt(0, 25)==7){
-//								Creeper creeper = (Creeper) entity;
-//								creeper.setPowered(true);
-//							}
-//						}else if(type.equals(EntityType.SHEEP)){
-//							Sheep mob = (Sheep) entity;
-//							int i = randInt(0, DyeColor.values().length);
-//							mob.setColor(DyeColor.values()[i]);
-//							if(randInt(0, 25)==7){
-//								mob.setCustomName("jeb_");
-//								mob.setCustomNameVisible(false);
-//							}
-//						}
-//					}
-//					e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
-//					return;
-//				}catch(Exception ex){
-//					ex.printStackTrace();
-//				}
-//			}else{
-				setRange(e.getPlayer());
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			Location loc = getRelative(getCenter(), getBlockFace(), -.8, -1.03).add(0, -.2, 0);
+			loc.setYaw(getYaw());
+			ItemStack stack = player.getInventory().getItemInMainHand();
+			if(stack.getType().equals(Material.TNT)){
+				TNTPrimed tnt = (TNTPrimed) getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
+				if(tnt == null) return;
+				Vector v= getLaunchVector(getBlockFace());
+				if(v == null) return;
+				tnt.playEffect(EntityEffect.WITCH_MAGIC);
+				tnt.setVelocity(v.multiply(1));
+				fallingSandList.put(tnt, player);
+			}else if(stack.getType().equals(Material.AIR)){
+				setRange(player);
 				return;
-//			}
+			}else{
+	//			if(stack.getType().isBlock()){
+	//				@SuppressWarnings("deprecation")
+	//				FallingBlock block = getWorld().spawnFallingBlock(loc, stack.getType().getId(), (byte) stack.getDurability());
+	//				if(block == null) return;
+	//				Vector v= getLaunchVector(getBlockFace());
+	//				if(v == null) return;
+	//				block.setDropItem(false);
+	//				block.setVelocity(v.multiply(1));
+	//				fallingSandList.put(block, e.getPlayer());
+	//				e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
+	//			}else if(stack.getType().equals(Material.MONSTER_EGG)){
+	//				try{
+	//					NBTTagCompound nbtTag = new CraftItemStack().getNBTTag(stack);
+	//					if(nbtTag.hasKey("tag")){
+	//						NBTTagCompound tag = nbtTag.getCompound("tag");
+	//						NBTTagCompound id = tag.getCompound("EntityTag");
+	//						String str = id.getString("id").replace("minecraft:", "");
+	//						@SuppressWarnings("deprecation")
+	//						EntityType type = EntityType.fromName(str);
+	//						if(!entityList.contains(type)){setRange(e.getPlayer());return;} 
+	//						Vector v= getLaunchVector(getBlockFace());
+	//						Entity entity = getWorld().spawnEntity(loc, type);
+	//						entity.setVelocity(v);
+	//						LivingEntity entiLivingEntity = (LivingEntity) entity;
+	//						entiLivingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 4), false);
+	//						if(type.equals(EntityType.CREEPER)){
+	//							if(randInt(0, 25)==7){
+	//								Creeper creeper = (Creeper) entity;
+	//								creeper.setPowered(true);
+	//							}
+	//						}else if(type.equals(EntityType.SHEEP)){
+	//							Sheep mob = (Sheep) entity;
+	//							int i = randInt(0, DyeColor.values().length);
+	//							mob.setColor(DyeColor.values()[i]);
+	//							if(randInt(0, 25)==7){
+	//								mob.setCustomName("jeb_");
+	//								mob.setCustomNameVisible(false);
+	//							}
+	//						}
+	//					}
+	//					e.getPlayer().playSound(getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, (float) getPitch());
+	//					return;
+	//				}catch(Exception ex){
+	//					ex.printStackTrace();
+	//				}
+	//			}else{
+					setRange(player);
+					return;
+	//			}
+			}
+			consumeItem(player);
 		}
-		consumeItem(e.getPlayer());
+	}
+	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 	
 	public void setRange(Player p){

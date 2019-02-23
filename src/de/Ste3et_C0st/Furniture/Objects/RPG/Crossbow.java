@@ -2,7 +2,6 @@ package de.Ste3et_C0st.Furniture.Objects.RPG;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,45 +11,41 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TippedArrow;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class Crossbow extends FurnitureHelper implements Listener  {
+public class Crossbow extends FurnitureHelper  {
 
 	public Crossbow(ObjectID id){
 		super(id);
-		Bukkit.getPluginManager().registerEvents(this, main.instance);
 	}
 	
-	@EventHandler
-	public void onFurnitureClick(ProjectClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())) return;
-		if(!e.canBuild()){return;}
-		fEntity stand = getArmorStand();
-		if(stand==null){return;}
-		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		if(is!=null&& (is.getType().equals(Material.ARROW) || is.getType().equals(Material.SPECTRAL_ARROW) || is.getType().equals(Material.TIPPED_ARROW)) ){
-			if(!hasArrow()){
-				fEntity entity = getArmorStand();
-				entity.setItemInMainHand(is.clone());
-				update();
-				consumeItem(e.getPlayer());
-				return;
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			fEntity stand = getArmorStand();
+			if(stand==null){return;}
+			ItemStack is = player.getInventory().getItemInMainHand();
+			if(is!=null&& (is.getType().equals(Material.ARROW) || is.getType().equals(Material.SPECTRAL_ARROW) || is.getType().equals(Material.TIPPED_ARROW)) ){
+				if(!hasArrow()){
+					fEntity entity = getArmorStand();
+					entity.setItemInMainHand(is.clone());
+					update();
+					consumeItem(player);
+					return;
+				}
 			}
-		}
-		if(hasArrow()){
-			spawnArrow(getArrow().getType(), e.getPlayer());
+			if(hasArrow()){
+				spawnArrow(getArrow().getType(), player);
+			}
 		}
 	}
 	
@@ -131,5 +126,15 @@ public class Crossbow extends FurnitureHelper implements Listener  {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 }

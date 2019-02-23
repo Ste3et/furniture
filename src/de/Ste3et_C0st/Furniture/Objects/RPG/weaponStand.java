@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -18,8 +19,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -27,7 +26,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class weaponStand extends Furniture {
+public class weaponStand extends Furniture implements Listener{
 
 	List<Integer> slotList1 = Arrays.asList(6,11,14,16,19,21,24,29,32,34,42);
 	List<Integer> slotList2 = Arrays.asList(20, 15, 33);
@@ -51,87 +50,88 @@ public class weaponStand extends Furniture {
 	Player p = null;
 	Inventory inv = null;
 	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(p!=null){
-			p.closeInventory();
-		}
-		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
-		for(fEntity packet : asList){
-			if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
-				if(packet.getInventory().getItemInMainHand()!=null){
-					if(!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-						getWorld().dropItem(getLocation(), packet.getInventory().getItemInMainHand());
-					}
-				}
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(p!=null){
+				p.closeInventory();
+				inv = null;
 			}
-		}
-		e.remove();
-		inv = null;
-		delete();
-	}
-
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(p!=null){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		this.p = e.getPlayer();
-		
-		ItemStack itemstack = p.getInventory().getItemInMainHand();
-		if(itemstack!=null&&matList.contains(itemstack.getType())){
-			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-				if(packet.getInventory().getHelmet()!=null){
-					if(packet.getInventory().getHelmet().getType().name().toLowerCase().endsWith("gate")){
-						ItemStack itemStack = new ItemStack(itemstack.getType(), 1, (short) 0);
-						packet.getInventory().setHelmet(itemStack);
-					}
-				}
-			}
-			getManager().updateFurniture(getObjID());
-			this.p = null;
-			return;
-		}
-		
-		ItemStack is1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
-		ItemStack is3 = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
-		
-		ItemMeta im1 = is1.getItemMeta();
-		ItemMeta im3 = is3.getItemMeta();
-		im1.setDisplayName("§c");
-		im3.setDisplayName("§c");
-		is1.setItemMeta(im1);
-		is3.setItemMeta(im3);
-		
-		inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
-		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
-		
-		int j = 1;
-		for(int i = 0; i<inv.getSize();i++){
-			inv.setItem(i, is1);
-			if(slotList1.contains(i)){
-				inv.setItem(i, is3);
-			}else if(slotList2.contains(i)){
-				for(fEntity packet : asList){
-					if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
-						if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
-							ItemStack is = new ItemStack(Material.AIR);
-							if(packet.getInventory().getItemInMainHand()!=null){is = packet.getInventory().getItemInMainHand();}
-							inv.setItem(i, is);
+			List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+			for(fEntity packet : asList){
+				if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
+					if(packet.getInventory().getItemInMainHand()!=null){
+						if(!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+							getWorld().dropItem(getLocation(), packet.getInventory().getItemInMainHand());
 						}
 					}
 				}
-				j++;
 			}
+			this.destroy(player);
 		}
-		
-		this.p.openInventory(inv);
-		this.p.updateInventory();
+	}
+
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.p = player;
+			
+			ItemStack itemstack = p.getInventory().getItemInMainHand();
+			if(itemstack!=null&&matList.contains(itemstack.getType())){
+				for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
+					if(packet.getInventory().getHelmet()!=null){
+						if(packet.getInventory().getHelmet().getType().name().toLowerCase().endsWith("gate")){
+							ItemStack itemStack = new ItemStack(itemstack.getType(), 1);
+							packet.getInventory().setHelmet(itemStack);
+						}
+					}
+				}
+				getManager().updateFurniture(getObjID());
+				this.p = null;
+				return;
+			}
+			
+			ItemStack is1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
+			ItemStack is3 = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+			
+			ItemMeta im1 = is1.getItemMeta();
+			ItemMeta im3 = is3.getItemMeta();
+			im1.setDisplayName("§c");
+			im3.setDisplayName("§c");
+			is1.setItemMeta(im1);
+			is3.setItemMeta(im3);
+			
+			inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
+			List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+			
+			int j = 1;
+			for(int i = 0; i<inv.getSize();i++){
+				inv.setItem(i, is1);
+				if(slotList1.contains(i)){
+					inv.setItem(i, is3);
+				}else if(slotList2.contains(i)){
+					for(fEntity packet : asList){
+						if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
+							if(packet.getName().equalsIgnoreCase("#SLOT"+j+"#")){
+								ItemStack is = new ItemStack(Material.AIR);
+								if(packet.getInventory().getItemInMainHand()!=null){is = packet.getInventory().getItemInMainHand();}
+								inv.setItem(i, is);
+							}
+						}
+					}
+					j++;
+				}
+			}
+			
+			this.p.openInventory(inv);
+			this.p.updateInventory();
+		}
 	}
 	
 	@EventHandler

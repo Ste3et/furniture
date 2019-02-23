@@ -5,71 +5,63 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class campfire_1 extends Furniture implements Listener{
+public class campfire_1 extends Furniture{
 
 	public campfire_1(ObjectID id){
 		super(id);
-		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
-			return;
-		}
+		if(isFinish()){return;}
 		spawn(id.getStartLocation());
 	}
 	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(getObjID()==null||e.getID()==null){return;}
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.getID()==null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-			packet.setFire(false);
-			Location location = getLocation().clone();
-			location.add(0, 1.2, 0);
-			getLib().getLightManager().removeLight(location);
-		}
-		getManager().updateFurniture(getObjID());
-		e.remove();
-		delete();
-	}
-	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
-		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		if(is.getType().equals(Material.WATER_BUCKET)){
-			for(fEntity packet : aspList){
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				packet.setFire(false);
 				Location location = getLocation().clone();
 				location.add(0, 1.2, 0);
 				getLib().getLightManager().removeLight(location);
 			}
-			getManager().updateFurniture(getObjID());
-		}else if(is.getType().equals(Material.FLINT_AND_STEEL)){
-			for(fEntity packet : aspList){
-				packet.setFire(true);
-				Location location = getLocation().clone();
-				location.add(0, 1.2, 0);
-				getLib().getLightManager().addLight(location,15);
+			this.destroy(player);
+		}
+	}
+	
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			ItemStack is = player.getInventory().getItemInMainHand();
+			if(is.getType().equals(Material.WATER_BUCKET)){
+				for(fEntity packet : aspList){
+					packet.setFire(false);
+					Location location = getLocation().clone();
+					location.add(0, 1.2, 0);
+					getLib().getLightManager().removeLight(location);
+				}
+				getManager().updateFurniture(getObjID());
+			}else if(is.getType().equals(Material.FLINT_AND_STEEL)){
+				for(fEntity packet : aspList){
+					packet.setFire(true);
+					Location location = getLocation().clone();
+					location.add(0, 1.2, 0);
+					getLib().getLightManager().addLight(location,15);
+				}
+				getManager().updateFurniture(getObjID());
 			}
-			getManager().updateFurniture(getObjID());
 		}
 	}
 	

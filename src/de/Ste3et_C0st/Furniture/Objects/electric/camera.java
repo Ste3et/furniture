@@ -4,17 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.map.MapView;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class camera extends FurnitureHelper implements Listener{
@@ -66,19 +65,29 @@ public class camera extends FurnitureHelper implements Listener{
 		update();
 	}
 	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
+	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onFurnitureClick(ProjectClickEvent e) {
-		if(!e.getID().equals(getObjID())){return;}
-		Player p = e.getPlayer();
-		Location pLocation = getLutil().getRelativ(p.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
+	@Override
+	public void onClick(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		Location pLocation = getLutil().getRelativ(player.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
 		if(pLocation.equals(locCopy)){
-			if(getLutil().yawToFace(p.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
-				if(e.canBuild()){
-					if(!p.getInventory().getItemInMainHand().getType().equals(Material.FILLED_MAP)){
+			if(getLutil().yawToFace(player.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
+				if(canBuild(player)){
+					if(!player.getInventory().getItemInMainHand().getType().equals(Material.FILLED_MAP)){
 						if(entity  == null || entity2 == null)return;
 						if(this.zoom.equalsIgnoreCase("#ZOOM0#")){
 							this.mode = ScaleMode.FAR;
@@ -98,12 +107,10 @@ public class camera extends FurnitureHelper implements Listener{
 						update();
 						return;
 					}
-				}else{
-					if(!p.getInventory().getItemInMainHand().getType().equals(Material.MAP)){
-						return;
-					}
+				}else if(!player.getInventory().getItemInMainHand().getType().equals(Material.MAP)){
+					return;
 				}
-				MapView view = Bukkit.getMap(p.getInventory().getItemInMainHand().getDurability());
+				MapView view = Bukkit.getMap(player.getInventory().getItemInMainHand().getDurability());
 				Location l = getLocation().clone();
 				l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 				view.getRenderers().clear();

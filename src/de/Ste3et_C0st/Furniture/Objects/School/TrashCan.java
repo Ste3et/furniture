@@ -6,21 +6,18 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class TrashCan extends Furniture implements Listener  {
+public class TrashCan extends Furniture{
 
 	public TrashCan(ObjectID id){
 		super(id);
@@ -30,44 +27,45 @@ public class TrashCan extends Furniture implements Listener  {
 		}
 		spawn(id.getStartLocation());
 	}
-
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())) return;
-		if(!e.canBuild()){return;}
-		e.remove();
-		delete();
+	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())) return;
-		if(!e.canBuild()){return;}
-		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		fEntity stand = null;
-		for(fEntity s : getfAsList()){
-			if(s.getName().equalsIgnoreCase("#TRASH#")){
-				stand = s;break;
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			ItemStack is = player.getInventory().getItemInMainHand();
+			fEntity stand = null;
+			for(fEntity s : getfAsList()){
+				if(s.getName().equalsIgnoreCase("#TRASH#")){
+					stand = s;break;
+				}
 			}
-		}
-		if(stand==null){return;}
-		if(is==null||is.getType()==null||is.getType().equals(Material.AIR)){
-			if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
-				getWorld().dropItem(getCenter(), stand.getItemInMainHand());
-				stand.setItemInMainHand(new ItemStack(Material.AIR));
-				update();
-				return;
+			if(stand==null){return;}
+			if(is==null||is.getType()==null||is.getType().equals(Material.AIR)){
+				if(stand.getItemInMainHand()!=null&&!stand.getItemInMainHand().getType().equals(Material.AIR)){
+					getWorld().dropItem(getCenter(), stand.getItemInMainHand());
+					stand.setItemInMainHand(new ItemStack(Material.AIR));
+					update();
+					return;
+				}
 			}
+			stand.setItemInMainHand(is);
+			player.getInventory().clear(player.getInventory().getHeldItemSlot());
+			player.updateInventory();
+			update();
+			return;
 		}
-		stand.setItemInMainHand(is);
-		e.getPlayer().getInventory().clear(e.getPlayer().getInventory().getHeldItemSlot());
-		e.getPlayer().updateInventory();
-		update();
-		return;
 	}
 
 	@Override

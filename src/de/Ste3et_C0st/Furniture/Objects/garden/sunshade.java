@@ -3,17 +3,15 @@ package de.Ste3et_C0st.Furniture.Objects.garden;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
@@ -39,42 +37,43 @@ public class sunshade extends FurnitureHelper implements Listener{
 		}return true;
 	}
 	
-	@EventHandler
-	public void onClick(ProjectClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Player p = e.getPlayer();
-		ItemStack is = p.getInventory().getItemInMainHand();
-		if(is.getType().name().contains("BANNER")){
-			for(fEntity packet : getfAsList()){
-				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
-					packet.getInventory().setHelmet(is.clone());
-				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
-					ItemStack item = new ItemStack(Material.WHITE_CARPET);
-					item.setDurability(getLutil().getFromDey((short) is.getDurability()));
-					packet.getInventory().setHelmet(item);
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			ItemStack is = player.getInventory().getItemInMainHand();
+			if(is.getType().name().contains("BANNER")){
+				for(fEntity packet : getfAsList()){
+					if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
+						packet.getInventory().setHelmet(is.clone());
+					}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
+						ItemStack item = new ItemStack(Material.WHITE_CARPET);
+						item.setDurability(getLutil().getFromDey((short) is.getDurability()));
+						packet.getInventory().setHelmet(item);
+					}
+				}
+				update();
+				consumeItem(player);
+			}else{
+				if(!isOpen()){
+					open();
+				}else{
+					close();
 				}
 			}
-			update();
-			consumeItem(p);
-		}else{
-			if(!isOpen()){
-				open();
-			}else{
-				close();
-			}
 		}
-		
 	}
-	
-	@EventHandler
-	public void onBreak(ProjectBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(isRunning){
-			stopTimer();
+
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+			if(isRunning) stopTimer();
 		}
 	}
 	

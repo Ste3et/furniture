@@ -38,15 +38,13 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class AdventCalender extends Furniture implements Listener {
+public class AdventCalender extends Furniture implements Listener{
 	double sub = .9;
 	
 	HashMap<Integer, ItemStack[]> isList = new HashMap<Integer, ItemStack[]>();
@@ -79,38 +77,38 @@ public class AdventCalender extends Furniture implements Listener {
 		spawn(id.getStartLocation());
 	}
 	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!canBuild(e.getPlayer())){return;}
-		e.remove(true,false);
-		delete();
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-		if(is==null){open(e.getPlayer()); return;}
-		if(is.getType()==null){open(e.getPlayer()); return;}
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		ItemStack is = player.getInventory().getItemInMainHand();
+		if(is==null){open(player); return;}
+		if(is.getType()==null){open(player); return;}
 		if(is.getType().equals(Material.ARROW)){
-			if(p!=null){open(e.getPlayer());return;}
-			if(!getObjID().getUUID().equals(e.getPlayer().getUniqueId())){open(e.getPlayer());return;}
-			if(!canBuild(e.getPlayer())){return;}
+			if(p!=null){open(player);return;}
+			if(!getObjID().getUUID().equals(player.getUniqueId())){open(player);return;}
+			if(!canBuild(player)){return;}
 			i = is.getAmount();
 			if(i>31 || i<1) return;
-			this.p = e.getPlayer();
+			this.p = player;
 			if(isList.containsKey(i)){
 				openInventory(isList.get(i));
 			}else{
 				openInventory(null);
 			}
 		}else{
-			open(e.getPlayer());
+			open(player);
 		}
 	}
 	

@@ -10,14 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -27,7 +22,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class largeTable extends Furniture implements Listener{
+public class largeTable extends Furniture{
 
 	public largeTable(ObjectID id){
 		super(id);
@@ -37,8 +32,6 @@ public class largeTable extends Furniture implements Listener{
 					tellerIDs.add(packet.getEntityID());
 				}
 			}
-			
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -175,41 +168,39 @@ public class largeTable extends Furniture implements Listener{
 			i++;
 		}
 	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.getID()==null){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		for(Integer id : tellerIDs){
-			fEntity asp = getManager().getfArmorStandByID(id);
-			if(asp!=null&&asp.getInventory().getItemInMainHand()!=null){
-				if(asp.getName().startsWith("#TELLER")){
-					fEntity packet = asp;
-					e.getLocation().getWorld().dropItem(e.getLocation(), packet.getInventory().getItemInMainHand());
+
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			for(Integer id : tellerIDs){
+				fEntity asp = getManager().getfArmorStandByID(id);
+				if(asp!=null&&asp.getInventory().getItemInMainHand()!=null){
+					if(asp.getName().startsWith("#TELLER")){
+						fEntity packet = asp;
+						getWorld().dropItem(getLocation(), packet.getInventory().getItemInMainHand());
+					}
 				}
 			}
+			this.destroy(player);
 		}
-		e.remove();
-		delete();
 	}
 	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.getID()==null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Player p = e.getPlayer();
-		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) != null){
-			getLib().getColorManager().color(p, e.canBuild(), "_STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
-			update();
-			return;
-		}else{
-			setTeller(p, p.getInventory().getItemInMainHand());
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
+				getLib().getColorManager().color(player, canBuild(player), "_STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
+				update();
+				return;
+			}else{
+				setTeller(player, player.getInventory().getItemInMainHand());
+			}
 		}
 	}
 	

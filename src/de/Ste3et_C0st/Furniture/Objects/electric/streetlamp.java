@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -16,10 +17,6 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -125,23 +122,23 @@ public class streetlamp extends Furniture implements Listener{
 		getObjID().addBlock(blockLocation);
 	}
 	
-	@EventHandler
-	private void onBlockBreak(FurnitureBlockBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.canBuild()){return;}
-		FurnitureLib.getInstance().getLightManager().removeLight(light);
-		e.remove();
-		delete();
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			FurnitureLib.getInstance().getLightManager().removeLight(light);
+			this.destroy(player);
+		}
 	}
 	
-	@EventHandler
-	private void onBlockClick(FurnitureBlockClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.canBuild()){return;}
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(!canBuild(player)) {return;}
 		if(isOn()){
 			setLight(false);
 		}else{
@@ -215,33 +212,5 @@ public class streetlamp extends Furniture implements Listener{
 			}
 		}
 		return false;
-	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.canBuild()){return;}
-		FurnitureLib.getInstance().getLightManager().removeLight(light);
-		e.remove();
-		delete();
-	}
-	
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		Boolean isOn = isOn();
-		fEntity packet = getPacket();
-		if(packet==null) return;
-		if(redstone) return;
-		if(isOn){
-			setLight(false);
-		}else{
-			setLight(true);
-		}
 	}
 }

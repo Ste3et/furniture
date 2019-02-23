@@ -9,16 +9,10 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockClickEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -26,14 +20,13 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class flag extends Furniture implements Listener {
+public class flag extends Furniture {
 
 	public flag(ObjectID id){
 		super(id);
 		setBlock();
 		if(isFinish()){
 			setState(3, getStand());
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -127,80 +120,42 @@ public class flag extends Furniture implements Listener {
 		update();
 	}
 
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		delete();
-		e.remove();
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(e.getPlayer().getInventory().getItemInMainHand()!=null&&e.getPlayer().getInventory().getItemInMainHand().getType()!=null){
-			if(e.getPlayer().getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
-				getStand().setHelmet(e.getPlayer().getInventory().getItemInMainHand());update();
-				if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
-				Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-				ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-				is.setAmount(is.getAmount()-1);
-				e.getPlayer().getInventory().setItem(i, is);
-				e.getPlayer().updateInventory();
-				return;
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(player.getInventory().getItemInMainHand()!=null&&player.getInventory().getItemInMainHand().getType()!=null){
+				if(player.getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
+					getStand().setHelmet(player.getInventory().getItemInMainHand());update();
+					if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+					Integer i = player.getInventory().getHeldItemSlot();
+					ItemStack is = player.getInventory().getItemInMainHand();
+					is.setAmount(is.getAmount()-1);
+					player.getInventory().setItem(i, is);
+					player.updateInventory();
+					return;
+				}
 			}
-		}
-		
-		int state = getState();
-		switch (state) {
-		case 3:state=2;break;
-		case 2:state=1;break;
-		case 1:state=3;break;
-		}
-		setState(state, getStand());
-	}
-	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBlockBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		delete();
-		e.remove();
-	}
-
-	@EventHandler
-	public void onFurnitureClick(FurnitureBlockClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(e.getPlayer().getInventory().getItemInMainHand()!=null&&e.getPlayer().getInventory().getItemInMainHand().getType()!=null){
-			if(e.getPlayer().getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
-				getStand().setHelmet(e.getPlayer().getInventory().getItemInMainHand());update();
-				if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
-				Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-				ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-				is.setAmount(is.getAmount()-1);
-				e.getPlayer().getInventory().setItem(i, is);
-				e.getPlayer().updateInventory();
-				return;
+			
+			int state = getState();
+			switch (state) {
+			case 3:state=2;break;
+			case 2:state=1;break;
+			case 1:state=3;break;
 			}
+			setState(state, getStand());
 		}
-		
-		int state = getState();
-		switch (state) {
-		case 3:state=2;break;
-		case 2:state=1;break;
-		case 1:state=3;break;
-		}
-		setState(state, getStand());
 	}
 }

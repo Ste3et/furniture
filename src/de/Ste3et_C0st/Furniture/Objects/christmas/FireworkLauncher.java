@@ -11,14 +11,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -35,71 +32,71 @@ public class FireworkLauncher extends Furniture implements Listener {
 		}
 		spawn(id.getStartLocation());
 	}
-
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!canBuild(e.getPlayer())){return;}
-		for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-			if(packet.getName().equalsIgnoreCase("#FIREWORK#")){
-				if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-					ItemStack is = packet.getInventory().getItemInMainHand();
-					getWorld().dropItem(getLocation(), is);
+	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
+				if(packet.getName().equalsIgnoreCase("#FIREWORK#")){
+					if(packet.getInventory().getItemInMainHand()!=null&&!packet.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+						ItemStack is = packet.getInventory().getItemInMainHand();
+						getWorld().dropItem(getLocation(), is);
+					}
 				}
 			}
+			this.destroy(player);
 		}
-		e.remove(true,true);
-		delete();
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!canBuild(e.getPlayer())){return;}
-		Player p = e.getPlayer();
-		fEntity stand = null;
-		for(fEntity st : getfAsList()){
-			if(st.getName().equalsIgnoreCase("#FIREWORK#")){
-				stand = st;
-				break;
-			}
-		}
-		if(stand == null) return;
-		if(p.getInventory().getItemInMainHand()!=null){
-			if(p.getInventory().getItemInMainHand().getType()!=null){
-				if(p.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
-					drop(stand);
-					setItem(stand, p.getInventory().getItemInMainHand());
-					
-					Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable() {
-						
-						@Override
-						public void run() {
-							update();
-							
-						}
-					}, 5);
-					
-					if(e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
-					Integer i = e.getPlayer().getInventory().getHeldItemSlot();
-					ItemStack is = e.getPlayer().getInventory().getItemInMainHand();
-					is.setAmount(is.getAmount()-1);
-					p.getInventory().setItem(i, is);
-					p.updateInventory();
-					return;
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			fEntity stand = null;
+			for(fEntity st : getfAsList()){
+				if(st.getName().equalsIgnoreCase("#FIREWORK#")){
+					stand = st;
+					break;
 				}
 			}
-		}
-		
-		if(canLaunch(stand)){
-			Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
-			FireworkMeta meta = (FireworkMeta) stand.getItemInMainHand().getItemMeta();
-			fw.setFireworkMeta(meta);
-			setItem(stand, new ItemStack(Material.AIR));
+			if(stand == null) return;
+			if(player.getInventory().getItemInMainHand()!=null){
+				if(player.getInventory().getItemInMainHand().getType()!=null){
+					if(player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
+						drop(stand);
+						setItem(stand, player.getInventory().getItemInMainHand());
+						
+						Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable() {
+							
+							@Override
+							public void run() {
+								update();
+								
+							}
+						}, 5);
+						
+						if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+						Integer i = player.getInventory().getHeldItemSlot();
+						ItemStack is = player.getInventory().getItemInMainHand();
+						is.setAmount(is.getAmount()-1);
+						player.getInventory().setItem(i, is);
+						player.updateInventory();
+						return;
+					}
+				}
+			}
+			
+			if(canLaunch(stand)){
+				Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
+				FireworkMeta meta = (FireworkMeta) stand.getItemInMainHand().getItemMeta();
+				fw.setFireworkMeta(meta);
+				setItem(stand, new ItemStack(Material.AIR));
+			}
 		}
 	}
 	

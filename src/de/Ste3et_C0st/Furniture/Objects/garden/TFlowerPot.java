@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -16,9 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBlockBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -68,26 +66,20 @@ public class TFlowerPot extends Furniture implements Listener {
 		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
-
-	@Override
-	public void onFurnitureBreak(FurnitureBreakEvent paramFurnitureBreakEvent) {}
-
-	@Override
-	public void onFurnitureClick(FurnitureClickEvent paramFurnitureClickEvent) {}
 	
-	@EventHandler
-	private void BlockBreak(FurnitureBlockBreakEvent e){
-		  if(e.getID() == null || getObjID() == null) return;
-		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		  if (pot==null) return;
-		  if (e.getBlock() == null) return;
-		  if (e.getBlock().getLocation() == null) return;
-		  if(!e.getBlock().equals(pot)){return;}
-		  if(!canBuild(e.getPlayer())){return;}
-		  destroy(e.getPlayer());
-		  pot.setType(Material.AIR);
-		  pot=null;
-		  return;
+	@Override
+	public void onClick(Player p) {}
+	
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			pot.setType(Material.AIR);
+			pot=null;
+			this.destroy(player);
+		}
 	}
 	
 	@EventHandler

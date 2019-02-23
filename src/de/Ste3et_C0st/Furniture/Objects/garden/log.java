@@ -18,8 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.ShematicLoader.Events.ProjectClickEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.HiddenStringUtils;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.ManageInv;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
@@ -49,11 +47,14 @@ public class log extends FurnitureHelper implements Listener{
 		setList();
 	}
 	
-	@EventHandler
-	private void onBlockBreak(ProjectBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 	
 	private Project getProjectByItem(ItemStack is){
@@ -83,51 +84,53 @@ public class log extends FurnitureHelper implements Listener{
 		return copy;
 	}
 
-	@EventHandler
-	private void onBlockBreak(ProjectClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		if(e.getPlayer().isSneaking()){
-			if(e.getPlayer().getInventory().getItemInMainHand().getType().isBlock()&&
-				!e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-				return;
-			}
-			openInventory(e.getPlayer());
-		}else{
-			ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-			if(stack == null || stack.getType().equals(Material.AIR)){
-				//dropItem
-				fEntity entity = entityByCustomName(this.mode + "");
-				if(entity != null) {
-					if(entity.getItemInMainHand() != null) {
-						if(!entity.getItemInMainHand().getType().equals(Material.AIR)) {
-							if(entity.getItemInMainHand().equals(stack)) {return;}
-							getWorld().dropItem(getLocation(), entity.getItemInMainHand());
-							entity.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-							update();
-							}
-						}
-					}
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(player.isSneaking()){
+				if(player.getInventory().getItemInMainHand().getType().isBlock()&&
+					!player.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+					return;
+				}
+				openInventory(player);
 			}else{
-				if(getProjectByItem(stack) != null) {return;}
-				if(stack.getType().isBlock()) {
-					Block b = getCenter().getBlock();
-					b.setType(stack.getType());
-				}else{
+				ItemStack stack = player.getInventory().getItemInMainHand();
+				if(stack == null || stack.getType().equals(Material.AIR)){
+					//dropItem
 					fEntity entity = entityByCustomName(this.mode + "");
 					if(entity != null) {
 						if(entity.getItemInMainHand() != null) {
 							if(!entity.getItemInMainHand().getType().equals(Material.AIR)) {
 								if(entity.getItemInMainHand().equals(stack)) {return;}
 								getWorld().dropItem(getLocation(), entity.getItemInMainHand());
+								entity.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+								update();
+								}
 							}
 						}
-						ItemStack placeItem = stack.clone();
-						placeItem.setAmount(1);
-						entity.getInventory().setItemInMainHand(placeItem);
-						consumeItem(e.getPlayer());
-						update();
+				}else{
+					if(getProjectByItem(stack) != null) {return;}
+					if(stack.getType().isBlock()) {
+						Block b = getCenter().getBlock();
+						b.setType(stack.getType());
+					}else{
+						fEntity entity = entityByCustomName(this.mode + "");
+						if(entity != null) {
+							if(entity.getItemInMainHand() != null) {
+								if(!entity.getItemInMainHand().getType().equals(Material.AIR)) {
+									if(entity.getItemInMainHand().equals(stack)) {return;}
+									getWorld().dropItem(getLocation(), entity.getItemInMainHand());
+								}
+							}
+							ItemStack placeItem = stack.clone();
+							placeItem.setAmount(1);
+							entity.getInventory().setItemInMainHand(placeItem);
+							consumeItem(player);
+							update();
+						}
 					}
 				}
 			}

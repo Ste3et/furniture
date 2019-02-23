@@ -7,20 +7,17 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class AdventWreath extends Furniture implements Listener  {
+public class AdventWreath extends Furniture  {
 	double sub = .9;
 	
 	List<Location> locationList = Arrays.asList(
@@ -40,34 +37,36 @@ public class AdventWreath extends Furniture implements Listener  {
 		spawn(id.getStartLocation());
 	}
 
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!canBuild(e.getPlayer())){return;}
-		e.remove(true,false);
-		delete();
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			this.destroy(player);
+		}
 	}
 
-	@EventHandler
-	public void onFurnitureClick(FurnitureClickEvent e) {
-		if(e.getID() == null || getObjID() == null) return;
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		fArmorStand stand = (fArmorStand) e.getfEntity();
-		String str = stand.getName();
-		if(str.startsWith("Fire") || str.startsWith("Torch")){
-			int i = Integer.parseInt(str.split(":")[1]);
-			for(fEntity fstand : getfAsList()){
-				if(fstand.getName().equalsIgnoreCase("Fire:" + i)){
-					if(!fstand.getName().endsWith("Burn")){
-						fstand.sendParticle(fstand.getLocation().clone().add(0, .93, 0), 26, true);
-						fstand.setName("Fire:" + i + ":Burn");
-						update();
-					}
-				}
-			}
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+//			fArmorStand stand = (fArmorStand) e.getfEntity();
+//			String str = stand.getName();
+//			if(str.startsWith("Fire") || str.startsWith("Torch")){
+//				int i = Integer.parseInt(str.split(":")[1]);
+//				for(fEntity fstand : getfAsList()){
+//					if(fstand.getName().equalsIgnoreCase("Fire:" + i)){
+//						if(!fstand.getName().endsWith("Burn")){
+//							fstand.sendParticle(fstand.getLocation().clone().add(0, .93, 0), 26, true);
+//							fstand.setName("Fire:" + i + ":Burn");
+//							update();
+//						}
+//					}
+//				}
+//			}
 		}
 	}
 	
@@ -150,18 +149,18 @@ public class AdventWreath extends Furniture implements Listener  {
 			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-41,-37.5f,18)));
 			stand.setSmall(true);
 			stand.setName("Torch:" + i);
-			stand.setHelmet(new ItemStack(Material.LEVER, 1, (short) 13));
+			stand.setHelmet(new ItemStack(Material.LEVER, 1));
 			asList.add(stand);
 			y=y+90;
 		}
 		
-		ItemStack is = new ItemStack(Material.POPPY, 1, (short) 8);
+		ItemStack is = new ItemStack(Material.POPPY, 1);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .5, .5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.5, -.5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.5, .5), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .5, -.5), is);
 		
-		is = new ItemStack(Material.POPPY, 1, (short) 4);
+		is = new ItemStack(Material.POPPY, 1);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), .25, .25), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.25, -.25), is);
 		spawnFlower(getRelative(getCenter().subtract(0, .7, 0), getLutil().yawToFace(0), -.25, .25), is);

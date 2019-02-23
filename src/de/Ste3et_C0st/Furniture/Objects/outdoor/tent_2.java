@@ -12,14 +12,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureBreakEvent;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureClickEvent;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -178,35 +175,35 @@ public class tent_2 extends Furniture implements Listener{
 		}
 	}
 	
-	@EventHandler
-	public void onFurnitureBreak(FurnitureBreakEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		if(!e.canBuild()){return;}
-		for(Block bl : block){
-			bl.setType(Material.AIR);
+	@Override
+	public void onBreak(Player player) {
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			for(Block bl : block){
+				bl.setType(Material.AIR);
+			}
+			this.destroy(player);
 		}
-		e.remove();
-		delete();
 	}
 	
-	@EventHandler
-	public void onFurnitureClick(final FurnitureClickEvent e){
-		if(e.getID() == null || getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(!e.getID().equals(getObjID())){return;}
-		Player p = e.getPlayer();
-		if(!e.canBuild()){return;}
-		if(DyeColor.getDyeColor(p.getInventory().getItemInMainHand().getType()) == null){
-			for(Block b : block){
-				if(b.getType().equals(Material.CHEST)){
-					Chest c = (Chest) b.getState();
-					e.getPlayer().openInventory(c.getBlockInventory());
+	@Override
+	public void onClick(Player player){
+		if(getObjID() == null) return;
+		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+		if(player == null) return;
+		if(canBuild(player)) {
+			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) == null){
+				for(Block b : block){
+					if(b.getType().equals(Material.CHEST)){
+						Chest c = (Chest) b.getState();
+						player.getPlayer().openInventory(c.getBlockInventory());
+					}
 				}
+			}else{
+				getLib().getColorManager().color(player, true, "_CARPET", getObjID(), ColorType.BLOCK, 1);
 			}
-		}else{
-			getLib().getColorManager().color(p, e.canBuild(), "_CARPET", getObjID(), ColorType.BLOCK, 1);
 		}
 	}
 }
