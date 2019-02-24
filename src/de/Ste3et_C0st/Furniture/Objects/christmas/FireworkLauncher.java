@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.EulerAngle;
@@ -22,12 +21,11 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class FireworkLauncher extends Furniture implements Listener {
+public class FireworkLauncher extends Furniture{
 
 	public FireworkLauncher(ObjectID id){
 		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, getPlugin());
 			return;
 		}
 		spawn(id.getStartLocation());

@@ -11,17 +11,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
-public class graveStone extends FurnitureHelper implements Listener{
+public class graveStone extends FurnitureHelper{
 
 	private Location signLoc;
 	private Block sign;
@@ -30,7 +28,6 @@ public class graveStone extends FurnitureHelper implements Listener{
 	public graveStone(ObjectID id) {
 		super(id);
 		setBlock();
-		Bukkit.getPluginManager().registerEvents(this, main.instance);
 	}
 	
 	@SuppressWarnings("deprecation")

@@ -12,11 +12,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -25,7 +23,7 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class tent_2 extends Furniture implements Listener{
+public class tent_2 extends Furniture{
 	Integer id;
 	List<Block> block = new ArrayList<Block>();
 	Location bedLoc;
@@ -49,7 +47,6 @@ public class tent_2 extends Furniture implements Listener{
 		setBlock(loca);
 		
 		if(id.isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(loc);

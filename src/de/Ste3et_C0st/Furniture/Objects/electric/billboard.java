@@ -9,23 +9,19 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class billboard extends Furniture implements Listener{
+public class billboard extends Furniture{
 	public billboard(ObjectID id){
 		super(id);
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());

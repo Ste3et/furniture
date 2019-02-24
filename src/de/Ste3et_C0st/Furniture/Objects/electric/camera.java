@@ -4,19 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.map.MapView;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class camera extends FurnitureHelper implements Listener{
+public class camera extends FurnitureHelper{
 	
 	private fEntity entity = null, entity2 = null;
 	private String zoom = "#ZOOM0#";
@@ -24,8 +22,6 @@ public class camera extends FurnitureHelper implements Listener{
 	
 	public camera(ObjectID id){
 		super(id);
-		Bukkit.getPluginManager().registerEvents(this, main.instance);
-		
 		boolean b = false;
 		for(fEntity stand : id.getPacketList()){
 			if(stand.getCustomName().startsWith("#ZOOM")){

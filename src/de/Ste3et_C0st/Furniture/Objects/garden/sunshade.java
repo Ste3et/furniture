@@ -3,11 +3,9 @@ package de.Ste3et_C0st.Furniture.Objects.garden;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -15,14 +13,13 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class sunshade extends FurnitureHelper implements Listener{
+public class sunshade extends FurnitureHelper{
 
 	public boolean isRunning = false;
 	Integer timer;
 	
 	public sunshade(ObjectID id) {
 		super(id);
-		Bukkit.getPluginManager().registerEvents(this, main.instance);
 	}
 	
 	private boolean isOpen(fArmorStand packet){
@@ -50,7 +47,6 @@ public class sunshade extends FurnitureHelper implements Listener{
 						packet.getInventory().setHelmet(is.clone());
 					}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
 						ItemStack item = new ItemStack(Material.WHITE_CARPET);
-						item.setDurability(getLutil().getFromDey((short) is.getDurability()));
 						packet.getInventory().setHelmet(item);
 					}
 				}
