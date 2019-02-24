@@ -10,26 +10,21 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 
-public class TFlowerPot extends Furniture implements Listener {
+public class TFlowerPot extends Furniture{
 
 	Block pot;
 	public TFlowerPot(ObjectID id){
 		super(id);
 		setPotState();
 		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
 		spawn(id.getStartLocation());
@@ -80,15 +75,5 @@ public class TFlowerPot extends Furniture implements Listener {
 			pot=null;
 			this.destroy(player);
 		}
-	}
-	
-	@EventHandler
-	private void onPhysiks(BlockPhysicsEvent e){
-		 if(getObjID()==null){return;}
-		  if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		  if (pot==null) return;
-		  if (e.getBlock() == null) return;
-		  if (!e.getBlock().equals(pot)) return;
-		  e.setCancelled(true);
 	}
 }
