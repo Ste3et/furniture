@@ -80,8 +80,8 @@ public class weaponStand extends Furniture implements Listener{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
+			if(this.p != null) {return;}
 			this.p = player;
-			
 			ItemStack itemstack = p.getInventory().getItemInMainHand();
 			if(itemstack!=null&&matList.contains(itemstack.getType())){
 				for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
