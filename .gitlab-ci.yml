@@ -3,7 +3,6 @@ image: maven:3-jdk-8
 stages:
 - build
 - tag
-- deploy
 
 DiceFurniture:
   stage: build
@@ -12,12 +11,5 @@ DiceFurniture:
   artifacts:
      paths:
      - target/*.jar
-  only:
-    - master
-    
-DiceFurniture-Nexus:
-  stage: deploy
-  script:
-     - mvn deploy
   only:
     - master
