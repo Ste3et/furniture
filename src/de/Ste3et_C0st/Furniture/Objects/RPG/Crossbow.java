@@ -9,8 +9,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.SpectralArrow;
-import org.bukkit.entity.TippedArrow;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -61,10 +59,6 @@ public class Crossbow extends FurnitureHelper  {
 		Arrow a = null;
 		if(mat.equals(Material.ARROW)){
 			a = (Arrow) getWorld().spawnEntity(start, EntityType.ARROW);
-		}else if(mat.equals(Material.SPECTRAL_ARROW)){
-			a = (SpectralArrow) getWorld().spawnEntity(start, EntityType.SPECTRAL_ARROW);
-		}else if(mat.equals(Material.TIPPED_ARROW)){
-			a = (TippedArrow) getWorld().spawnEntity(start, EntityType.TIPPED_ARROW);
 		}
 		a.setCritical(true);
 		a.setVelocity(v);

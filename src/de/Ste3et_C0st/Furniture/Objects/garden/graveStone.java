@@ -42,8 +42,8 @@ public class graveStone extends FurnitureHelper{
 		Location sign = getLutil().getRelativ(kreutz2.getBlock().getLocation(), getBlockFace(), 0D, 1D);
 		this.signLoc = sign;
 		
-		if(!sign.getBlock().getType().equals(Material.WALL_SIGN)){
-			sign.getBlock().setType(Material.WALL_SIGN);
+		if(!sign.getBlock().getType().equals(Material.OAK_SIGN)){
+			sign.getBlock().setType(Material.OAK_SIGN);
 			this.sign = sign.getBlock();
 			BlockState state = this.sign.getState();
 			LocationUtil util = getLutil();
@@ -146,14 +146,14 @@ public class graveStone extends FurnitureHelper{
 	}
 	
 	public String[] getText(){
-		if(sign==null || !sign.getType().equals(Material.WALL_SIGN)){return null;}
+		if(sign==null || !sign.getType().equals(Material.OAK_SIGN)){return null;}
 		Sign sign = (Sign) this.sign.getState();
 		return sign.getLines();
 	}
 	
 	public void setText(Integer line, String text){
 		if(line==null || text == null){return;}
-		if(sign==null || !sign.getType().equals(Material.WALL_SIGN)){return;}
+		if(sign==null || !sign.getType().equals(Material.OAK_SIGN)){return;}
 		Sign sign = (Sign) this.sign.getState();
 		sign.setLine(line, text);
 		sign.update(true, false);

@@ -49,6 +49,7 @@ public class weaponStand extends Furniture implements Listener{
 
 	Player p = null;
 	Inventory inv = null;
+	String title = "";
 	
 	@Override
 	public void onBreak(Player player) {
@@ -107,7 +108,9 @@ public class weaponStand extends Furniture implements Listener{
 			is1.setItemMeta(im1);
 			is3.setItemMeta(im3);
 			
-			inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
+			this.title = "§cWeaponBox";
+			inv = Bukkit.createInventory(null, 45, this.title);
+
 			List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
 			
 			int j = 1;
@@ -166,7 +169,7 @@ public class weaponStand extends Furniture implements Listener{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(p==null){return;}
 		if(inv==null){return;}
-		if(!e.getInventory().getTitle().equalsIgnoreCase(inv.getTitle())){return;}
+		if(!e.getView().getTitle().equalsIgnoreCase(this.title)){return;}
 		
 		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
 		int j = 1;
