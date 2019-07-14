@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
@@ -106,11 +107,14 @@ public class camera extends FurnitureHelper{
 				}else if(!player.getInventory().getItemInMainHand().getType().equals(Material.MAP)){
 					return;
 				}
-				MapView view = Bukkit.getMap(player.getInventory().getItemInMainHand().getDurability());
-				Location l = getLocation().clone();
-				l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
-				view.getRenderers().clear();
-				try{view.addRenderer(new RenderClass(l, mode));}catch (Exception ex){ex.printStackTrace();}
+				MapMeta meta = (MapMeta) player.getInventory().getItemInMainHand().getItemMeta();
+				if(meta.hasMapId()) {
+					MapView view = Bukkit.getMap((short) meta.getMapId());
+					Location l = getLocation().clone();
+					l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+					view.getRenderers().clear();
+					try{view.addRenderer(new RenderClass(l, mode));}catch (Exception ex){ex.printStackTrace();}
+				}
 			}
 		}
 	}

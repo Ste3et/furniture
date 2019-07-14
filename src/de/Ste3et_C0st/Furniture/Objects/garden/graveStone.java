@@ -8,15 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
 public class graveStone extends FurnitureHelper{
@@ -30,7 +30,6 @@ public class graveStone extends FurnitureHelper{
 		setBlock();
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void setBlock(){
 		Location location = getLocation().clone();
 		if(getBlockFace().equals(BlockFace.WEST)){location = getLutil().getRelativ(location, getBlockFace(), .0, -1.02);}
@@ -42,13 +41,12 @@ public class graveStone extends FurnitureHelper{
 		Location sign = getLutil().getRelativ(kreutz2.getBlock().getLocation(), getBlockFace(), 0D, 1D);
 		this.signLoc = sign;
 		
-		if(!sign.getBlock().getType().equals(Material.OAK_SIGN)){
-			sign.getBlock().setType(Material.OAK_SIGN);
+		if(!sign.getBlock().getType().name().contains("SIGN")){
+			sign.getBlock().setType(Material.valueOf(Type.version.equalsIgnoreCase("1.13") ? "WALL_SIGN" : "OAK_WALL_SIGN"));
 			this.sign = sign.getBlock();
-			BlockState state = this.sign.getState();
-			LocationUtil util = getLutil();
-			state.setRawData(util.getFacebyte(util.yawToFace(getYaw() + 90)));
-			state.update();
+			Directional direct = (Directional) this.sign.getBlockData();
+			direct.setFacing(getBlockFace());
+			this.sign.setBlockData(direct);
 		}else{
 			this.sign = sign.getBlock();
 		}
@@ -146,14 +144,14 @@ public class graveStone extends FurnitureHelper{
 	}
 	
 	public String[] getText(){
-		if(sign==null || !sign.getType().equals(Material.OAK_SIGN)){return null;}
+		if(sign==null || !sign.getType().name().contains("SIGN")){return null;}
 		Sign sign = (Sign) this.sign.getState();
 		return sign.getLines();
 	}
 	
 	public void setText(Integer line, String text){
 		if(line==null || text == null){return;}
-		if(sign==null || !sign.getType().equals(Material.OAK_SIGN)){return;}
+		if(sign==null || !sign.getType().name().contains("SIGN")){return;}
 		Sign sign = (Sign) this.sign.getState();
 		sign.setLine(line, text);
 		sign.update(true, false);
