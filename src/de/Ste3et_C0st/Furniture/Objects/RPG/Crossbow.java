@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class Crossbow extends FurnitureHelper  {
+public class Crossbow extends Furniture{
 
 	public Crossbow(ObjectID id){
 		super(id);
@@ -130,5 +130,11 @@ public class Crossbow extends FurnitureHelper  {
 		if(canBuild(player)) {
 			this.destroy(player);
 		}
+	}
+
+	@Override
+	public void spawn(Location location) {
+		// TODO Auto-generated method stub
+		
 	}
 }

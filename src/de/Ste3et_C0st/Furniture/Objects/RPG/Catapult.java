@@ -26,14 +26,14 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class Catapult extends FurnitureHelper implements Listener{
+public class Catapult extends Furniture implements Listener{
 
 	private fArmorStand stand1;
 	private HashMap<Entity, Player> fallingSandList = new HashMap<Entity, Player>();
@@ -247,6 +247,9 @@ public class Catapult extends FurnitureHelper implements Listener{
 		}
 		return v;
 	}
+
+	@Override
+	public void spawn(Location location) {}
 	
 
 }

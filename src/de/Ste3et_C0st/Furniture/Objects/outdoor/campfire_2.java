@@ -22,7 +22,7 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class campfire_2 extends Furniture{
-	List<Material> items = new ArrayList<Material>(
+	private List<Material> items = new ArrayList<Material>(
 			Arrays.asList(
 					Material.BEEF,
 					Material.CHICKEN,
@@ -34,7 +34,7 @@ public class campfire_2 extends Furniture{
 				)
 			);
 
-	EulerAngle[] angle = {
+	private EulerAngle[] angle = {
 			new EulerAngle(-1.5, -.5, 0),
 			new EulerAngle(-1.9, -.3, .7),
 			new EulerAngle(-1.5, .3, 1.9),
@@ -42,97 +42,27 @@ public class campfire_2 extends Furniture{
 			
 	};
 	
-	Location middle;
-	Location grill;
-	Integer timer;
-	fArmorStand armorS;
-	ItemStack is;
+	private Location middle;
+	private Location grill;
+	private Integer timer;
+	private fArmorStand armorS;
+	private ItemStack is;
 	
 	public campfire_2(ObjectID id){
 		super(id);
-	    middle = getLutil().getCenter(getLocation());
-		middle = getLutil().getRelativ(middle, getBlockFace(), .5D, -.5D);
-		middle.add(0,-1.2,0);
+	    this.middle = getLutil().getCenter(getLocation());
+	    this.middle = getLutil().getRelativ(middle, getBlockFace(), .5D, -.5D);
+	    this.middle.add(0,-1.2,0);
 		
-	    grill = getLutil().getRelativ(middle,getBlockFace(), .0D, .5D);
-		grill.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
+	    this.grill = getLutil().getRelativ(middle,getBlockFace(), .0D, .5D);
+	    this.grill.setYaw(getLutil().FaceToYaw(getBlockFace())+90);
 		if(id.isFinish()){
 			return;
 		}
 		spawn(id.getStartLocation());
 	}
 	
-	public void spawn(Location loc){
-		List<fArmorStand> packetList = new ArrayList<fArmorStand>();
-		Location stick1 = getLutil().getRelativ(middle, getBlockFace(), .47D, -.05D);
-		Location stick2 = getLutil().getRelativ(middle, getBlockFace(), .47D, .85D);
-		
-		Location bone = getLutil().getRelativ(middle, getBlockFace(), .5D, .82D);
-		stick2.setYaw(getLutil().FaceToYaw(getBlockFace()));
-		
-		stick1.setYaw(getLutil().FaceToYaw(getBlockFace()));
-		bone.setYaw(getLutil().FaceToYaw(getBlockFace()));
-		stick1.add(0,.3,0);
-		stick2.add(0,.3,0);
-		bone.add(0,.17,0);
-		Integer yaw = 90;
-		for(int i = 0; i<=7;i++){
-			Location location = null;
-			if(getLutil().axisList.contains(getLutil().yawToFaceRadial(yaw))){
-				location = getLutil().getRelativ(middle, getLutil().yawToFaceRadial(yaw), 0D, .5D);
-			}else{
-				location = getLutil().getRelativ(middle, getLutil().yawToFaceRadial(yaw), 0D, .35D);
-			}
-			
-			location.setYaw(90+yaw);
-			
-			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
-			asp.setPose(new EulerAngle(1.568, 0, 0), BodyPart.HEAD);
-			asp.setSmall(true);
-			asp.getInventory().setHelmet(new ItemStack(Material.STONE_SLAB,1));
-			packetList.add(asp);
-			yaw+=45;
-		}
-		
-		yaw = 90;
-		for(int i = 0; i<=3;i++){
-			Location location = getLutil().getRelativ(middle, getLutil().yawToFace(yaw), .4, -.5D);
-			location.add(0,-.5,0);
-			location.setYaw(90+yaw);
-			
-			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
-			asp.setPose( new EulerAngle(2, 0, 0), BodyPart.RIGHT_ARM);
-			asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-			
-			packetList.add(asp);
-			yaw+=90;
-		}
-		
-		fArmorStand asp = getManager().createArmorStand(getObjID(), stick1);
-		
-		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-		packetList.add(asp);
-		asp = getManager().createArmorStand(getObjID(), stick2);
-		
-		asp.setPose(new EulerAngle(1.38,.0,.0), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-		packetList.add(asp);
-		asp = getManager().createArmorStand(getObjID(), bone);
-		asp.setPose(new EulerAngle(1.38,.0,1.57), BodyPart.RIGHT_ARM);
-		asp.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
-		packetList.add(asp);
-		
-		asp = getManager().createArmorStand(getObjID(), middle.add(0,.1,0));
-		asp.setSmall(true);
-		packetList.add(asp);
-		
-		for(fArmorStand packet : packetList){
-			packet.setInvisible(true);
-		}
-		getManager().send(getObjID());
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
+	public void spawn(Location loc){}
 	
 	@Override
 	public void onClick(Player player){

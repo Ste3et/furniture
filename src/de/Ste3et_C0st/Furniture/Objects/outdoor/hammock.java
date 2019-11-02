@@ -1,15 +1,16 @@
 package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class hammock extends FurnitureHelper{
+public class hammock extends Furniture{
 
 	public hammock(ObjectID id) {
 		super(id);
@@ -80,5 +81,8 @@ public class hammock extends FurnitureHelper{
 		
 		return b;
 	}
+
+	@Override
+	public void spawn(Location location) {}
 
 }

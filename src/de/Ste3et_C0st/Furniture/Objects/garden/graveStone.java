@@ -14,12 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
-public class graveStone extends FurnitureHelper{
+public class graveStone extends Furniture{
 
 	private Location signLoc;
 	private Block sign;
@@ -157,4 +158,7 @@ public class graveStone extends FurnitureHelper{
 		sign.update(true, false);
 		lines[line] = text;
 	}
+
+	@Override
+	public void spawn(Location location) {}
 }

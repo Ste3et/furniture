@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,14 +21,14 @@ import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.HiddenStringUtils;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.ManageInv;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class log extends FurnitureHelper implements Listener{
+public class log extends Furniture implements Listener{
 
 	private int mode = 0;
 	private Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
@@ -259,5 +260,8 @@ public class log extends FurnitureHelper implements Listener{
 		if(e.getInventory()==null){return;}
 		if(e.getInventory().equals(inv)){this.p = null;}
 	}
+
+	@Override
+	public void spawn(Location location) {}
 	
 }

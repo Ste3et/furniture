@@ -10,12 +10,12 @@ import org.bukkit.map.MapView;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class camera extends FurnitureHelper{
+public class camera extends Furniture{
 	
 	private fEntity entity = null, entity2 = null;
 	private String zoom = "#ZOOM0#";
@@ -78,6 +78,7 @@ public class camera extends FurnitureHelper{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
+		player.sendMessage("test");
 		Location pLocation = getLutil().getRelativ(player.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
@@ -118,4 +119,7 @@ public class camera extends FurnitureHelper{
 			}
 		}
 	}
+
+	@Override
+	public void spawn(Location location) {}
 }

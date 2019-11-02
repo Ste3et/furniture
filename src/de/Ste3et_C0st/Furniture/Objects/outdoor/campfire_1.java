@@ -66,14 +66,5 @@ public class campfire_1 extends Furniture{
 	}
 	
 	
-	public void spawn(Location loc){
-		for(int i = 0;i<=3;i++){
-			Location location = getLutil().getCenter(loc);
-			location.add(0,-1.9,0);
-			location.setYaw(i*60);
-			getManager().createArmorStand(getObjID(), location);
-		}
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
+	public void spawn(Location loc){}
 }

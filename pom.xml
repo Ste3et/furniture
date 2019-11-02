@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.Ste3et_C0st.furniture</groupId>
   <artifactId>DiceFurniture</artifactId>
-  <version>3.3.0.2</version>
+  <version>3.3.0.3</version>
   <build>
 	<defaultGoal>clean package install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
@@ -96,11 +96,11 @@
 	  		<version>1.13-R0.1-SNAPSHOT</version>
 	  		<scope>provided</scope>
 	  	</dependency>
-	  	
+		
 		<dependency>
-		    <groupId>com.gitlab.Ste3et_C0st</groupId>
-		    <artifactId>furniturelib-1.13</artifactId>
-		    <version>v2.0.7</version>
+		    <groupId>com.github.Ste3et</groupId>
+		    <artifactId>FurnitureLib</artifactId>
+		    <version>v2.1.5</version>
 		</dependency>
 	 </dependencies>
 </project>

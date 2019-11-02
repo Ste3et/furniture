@@ -6,11 +6,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
-public class WaxCandle extends FurnitureHelper{
+public class WaxCandle extends Furniture{
 	
 	public WaxCandle(ObjectID id){
 		super(id);
@@ -45,4 +45,7 @@ public class WaxCandle extends FurnitureHelper{
 			this.destroy(player);
 		}
 	}
+
+	@Override
+	public void spawn(Location location) {}
 }

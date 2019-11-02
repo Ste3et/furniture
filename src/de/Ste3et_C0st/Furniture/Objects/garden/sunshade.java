@@ -1,19 +1,20 @@
 package de.Ste3et_C0st.Furniture.Objects.garden;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class sunshade extends FurnitureHelper{
+public class sunshade extends Furniture{
 
 	public boolean isRunning = false;
 	Integer timer;
@@ -135,4 +136,7 @@ public class sunshade extends FurnitureHelper{
 			isRunning = false;
 		}
 	}
+
+	@Override
+	public void spawn(Location location) {}
 }

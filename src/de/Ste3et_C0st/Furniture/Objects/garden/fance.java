@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.Ste3et_C0st.Furniture.Main.main;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class fance extends FurnitureHelper{
+public class fance extends Furniture{
 	List<Material> matList = Arrays.asList(
 			Material.SPRUCE_FENCE,
 			Material.BIRCH_FENCE,
@@ -63,4 +63,7 @@ public class fance extends FurnitureHelper{
 	}
 	
 	private void setTypes(ItemStack is){for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){packet.getInventory().setHelmet(is);}}
+
+	@Override
+	public void spawn(Location location) {}
 }

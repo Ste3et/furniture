@@ -1,164 +1,36 @@
 package de.Ste3et_C0st.Furniture.Objects.indoor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.EulerAngle;
-
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class largeTable extends Furniture{
 
+	private List<Integer> tellerIDs = new ArrayList<Integer>();
+	
 	public largeTable(ObjectID id){
 		super(id);
-		if(isFinish()){
-			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-				if(packet.getName().startsWith("#TELLER")){
-					tellerIDs.add(packet.getEntityID());
-				}
+		System.out.println(id.getPacketList());
+		for(fEntity packet : getfAsList()){
+			if(packet.getName().startsWith("#TELLER")){
+				tellerIDs.add(packet.getEntityID());
 			}
-			return;
 		}
-		spawn(id.getStartLocation());
 	}
-	List<Integer> tellerIDs = new ArrayList<Integer>();
 	
-	public void spawn(Location loc){
-		List<fArmorStand> armorlist = new ArrayList<fArmorStand>();
-		
-		Location location = getLutil().getCenter(loc.getBlock().getLocation());
-		float yaw = getLutil().FaceToYaw(getBlockFace());
-		location = getLutil().getRelativ(location, getBlockFace(), 0.1, 0.28);
-		location.add(0,.2,0);
-		Double winkel = 1.57;
-		ItemStack iTemStack_1 = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-		double off = .46;
-		double off2 = off*2+.1;
-		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), -off, x*-.62);
-			l.add(0,-1.48,0);
-			l.setYaw(yaw);
-			
-			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
-			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
-			as.getInventory().setHelmet(iTemStack_1);
-			armorlist.add(as);
-		}
-		
-		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 0.62-off, x*-.62);
-			l.add(0,-1.48,0);
-			l.setYaw(yaw);
-			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
-			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
-			as.getInventory().setHelmet(iTemStack_1);
-			armorlist.add(as);
-		}
-		
-		for(int x=1; x<=3;x++){
-			Location l = getLutil().getRelativ(location.clone(), getBlockFace(), 1.24-off, x*-.62);
-			l.add(0,-1.48,0);
-			l.setYaw(yaw);
-			fArmorStand as = getManager().createArmorStand(getObjID(), l.clone());
-			as.setPose(new EulerAngle(winkel, 0, 0), BodyPart.HEAD);
-			as.getInventory().setHelmet(iTemStack_1);
-			armorlist.add(as);
-		}
-
-		Location middle = getLutil().getCenter(armorlist.get(0).getLocation());
-		Location mitteTisch = getLutil().getCenter(armorlist.get(4).getLocation().getBlock().getLocation());
-		middle.add(0, -.9, 0);
-		Location feet1 = getLutil().getRelativ(middle, getBlockFace(), -.2, .1);
-		Location feet2 = getLutil().getRelativ(middle, getBlockFace(), -.2, -1.3);
-		Location feet3 = getLutil().getRelativ(middle, getBlockFace(), 1.1, .1);
-		Location feet4 = getLutil().getRelativ(middle, getBlockFace(), 1.1, -1.3);
-		
-		
-		double hight = .67;
-		
-		Location t1 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.95+off2, .4).add(0,hight,0);
-		Location t2 = getLutil().getRelativ(mitteTisch, getBlockFace(), -.4+off2, -.92).add(0,hight,0);
-		Location t3 = getLutil().getRelativ(mitteTisch, getBlockFace(), .92+off2, -.36).add(0,hight,0);
-		Location t4 = getLutil().getRelativ(mitteTisch, getBlockFace(), .4+off2, .92).add(0,hight,0);
-		
-		float yaw1 = yaw;
-		float yaw2 = yaw1-90;
-		float yaw3 = yaw2-90;
-		float yaw4 = yaw3-90;
-		
-		t1.setYaw(yaw1);
-		t2.setYaw(yaw2);
-		t3.setYaw(yaw3);
-		t4.setYaw(yaw4);
-		
-		feet1.setYaw(yaw);
-		feet2.setYaw(yaw);
-		feet3.setYaw(yaw);
-		feet4.setYaw(yaw);
-		
-		fArmorStand as = getManager().createArmorStand(getObjID(), feet1);
-		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
-		armorlist.add(as);
-		
-		as = getManager().createArmorStand(getObjID(), feet2);
-		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
-		armorlist.add(as);
-		
-		as = getManager().createArmorStand(getObjID(), feet3);
-		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
-		armorlist.add(as);
-		
-		as = getManager().createArmorStand(getObjID(), feet4);
-		as.setPose(new EulerAngle(-1.75, 0, 0), BodyPart.RIGHT_ARM);
-		as.getInventory().setItemInMainHand(new ItemStack(Material.BONE));
-		armorlist.add(as);
-		
-		
-		as = getManager().createArmorStand(getObjID(), t1);
-		as.setName("#TELLER1#");
-		as.setPose(new EulerAngle(0, 0, 0), BodyPart.RIGHT_ARM);
-		armorlist.add(as);
-		tellerIDs.add(as.getEntityID());
-		as = getManager().createArmorStand(getObjID(), t2);
-		as.setName("#TELLER2#");
-		as.setPose(new EulerAngle(0, 0, 0), BodyPart.RIGHT_ARM);
-		armorlist.add(as);
-		tellerIDs.add(as.getEntityID());
-		as = getManager().createArmorStand(getObjID(), t3);
-		as.setName("#TELLER3#");
-		as.setPose(new EulerAngle(0, 0, 0), BodyPart.RIGHT_ARM);
-		armorlist.add(as);
-		tellerIDs.add(as.getEntityID());
-		as = getManager().createArmorStand(getObjID(), t4);
-		as.setName("#TELLER4#");
-		as.setPose(new EulerAngle(0, 0, 0), BodyPart.RIGHT_ARM);
-		armorlist.add(as);
-		tellerIDs.add(as.getEntityID());
-		
-		for(fArmorStand packet : armorlist){
-			packet.setInvisible(true);
-		}
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
 	
 	public void setTeller(HashMap<Integer, ItemStack> itemList){
 		int i = 0;
@@ -205,46 +77,33 @@ public class largeTable extends Furniture{
 	}
 	
 	public void setTeller(Player player, ItemStack is){
-		BlockFace b = getLutil().yawToFace(player.getLocation().getYaw());
-		fEntity as = null;
-		if(tellerIDs == null || tellerIDs.isEmpty()){return;}
-		for(Integer id : this.tellerIDs){
-			if(id!=null){
-				fEntity armorStand = getManager().getfArmorStandByID(id);
-				if(armorStand!=null){
-					BlockFace b2 = getLutil().yawToFace(armorStand.getLocation().getYaw());
-					if(b2.equals(b)){
-						as = armorStand;
-						break;
-					}
-				}
+		fEntity as = getfAsList().stream().filter(entity -> entity.getName().startsWith("#TELLER")).sorted(Comparator.comparingDouble(p1 -> p1.getLocation().distance(player.getLocation()))).findFirst().orElse(null);
+		if(as != null) {
+			if(as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
+			if(as.getInventory().getItemInMainHand()!=null&&!as.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
+				fEntity asp = as;
+				ItemStack item = asp.getInventory().getItemInMainHand();
+				item.setAmount(1);
+				asp.getLocation().getWorld().dropItem(asp.getLocation(), item);
 			}
+			
+			ItemStack IS = is.clone();
+			if(IS.getAmount()<=0){
+				IS.setAmount(0);
+			}else{
+				IS.setAmount(1);
+			}
+			as.getInventory().setItemInMainHand(IS);
+			
+			update();
+			
+			if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+			Integer i = player.getInventory().getHeldItemSlot();
+			ItemStack itemstack = is.clone();
+			itemstack.setAmount(itemstack.getAmount()-1);
+			player.getInventory().setItem(i, itemstack);
+			player.updateInventory();
 		}
-		if(as==null) return;
-		if(as.getInventory().getItemInMainHand()!= null && as.getInventory().getItemInMainHand().equals(is)){return;}
-		if(as.getInventory().getItemInMainHand()!=null&&!as.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
-			fEntity asp = as;
-			ItemStack item = asp.getInventory().getItemInMainHand();
-			item.setAmount(1);
-			asp.getLocation().getWorld().dropItem(asp.getLocation(), item);
-		}
-		
-		ItemStack IS = is.clone();
-		if(IS.getAmount()<=0){
-			IS.setAmount(0);
-		}else{
-			IS.setAmount(1);
-		}
-		as.getInventory().setItemInMainHand(IS);
-		
-		update();
-		
-		if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
-		Integer i = player.getInventory().getHeldItemSlot();
-		ItemStack itemstack = is.clone();
-		itemstack.setAmount(itemstack.getAmount()-1);
-		player.getInventory().setItem(i, itemstack);
-		player.updateInventory();
 	}
 	
 	public HashMap<Integer, ItemStack> getTeller(){
@@ -259,4 +118,8 @@ public class largeTable extends Furniture{
 		}
 		return teller;
 	}
+
+
+	@Override
+	public void spawn(Location location) {}
 }

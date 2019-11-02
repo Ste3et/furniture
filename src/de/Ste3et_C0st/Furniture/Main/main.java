@@ -1,9 +1,5 @@
 package de.Ste3et_C0st.Furniture.Main;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,55 +7,18 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import de.Ste3et_C0st.Furniture.Objects.RPG.Crossbow;
-import de.Ste3et_C0st.Furniture.Objects.RPG.Guillotine;
-import de.Ste3et_C0st.Furniture.Objects.RPG.Catapult;
-import de.Ste3et_C0st.Furniture.Objects.RPG.flag;
-import de.Ste3et_C0st.Furniture.Objects.RPG.weaponStand;
-import de.Ste3et_C0st.Furniture.Objects.School.TrashCan;
-import de.Ste3et_C0st.Furniture.Objects.christmas.AdventCalender;
-import de.Ste3et_C0st.Furniture.Objects.christmas.FireworkLauncher;
-import de.Ste3et_C0st.Furniture.Objects.electric.billboard;
-import de.Ste3et_C0st.Furniture.Objects.electric.camera;
-import de.Ste3et_C0st.Furniture.Objects.electric.streetlamp;
-import de.Ste3et_C0st.Furniture.Objects.garden.TFlowerPot;
-import de.Ste3et_C0st.Furniture.Objects.garden.Trunk;
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
-import de.Ste3et_C0st.Furniture.Objects.garden.fance;
-import de.Ste3et_C0st.Furniture.Objects.garden.graveStone;
-import de.Ste3et_C0st.Furniture.Objects.garden.log;
-import de.Ste3et_C0st.Furniture.Objects.garden.sunshade;
-import de.Ste3et_C0st.Furniture.Objects.indoor.largeTable;
-import de.Ste3et_C0st.Furniture.Objects.light.WaxCandle;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.barrels;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.campfire_1;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.campfire_2;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.hammock;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_1;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_2;
-import de.Ste3et_C0st.Furniture.Objects.outdoor.tent_3;
-import de.Ste3et_C0st.Furniture.Objects.trap.BearTrap;
-import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
-import de.Ste3et_C0st.FurnitureLib.Events.FurnitureLateSpawnEvent;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
-import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.CenterType;
-import de.Ste3et_C0st.FurnitureLib.main.Type.PlaceableSide;
-import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 
-public class main extends JavaPlugin implements Listener{
+public class main extends JavaPlugin{
 	
-	FurnitureLib lib;
-	config c;
-	FileConfiguration file;
+	private config c;
+	private FileConfiguration file;
 	public static double damage = 0;
 	
 	public static main instance;
@@ -70,97 +29,21 @@ public class main extends JavaPlugin implements Listener{
 	public void onEnable(){
 		if(!Bukkit.getPluginManager().isPluginEnabled("FurnitureLib")){Bukkit.getPluginManager().disablePlugin(this);}
 		instance = this;
-		lib = (FurnitureLib) Bukkit.getPluginManager().getPlugin("FurnitureLib");
-		util = lib.getLocationUtil();
-		if(lib.getDescription().getVersion().startsWith("2.")){
-
-			addDefault("fence", "whiteList", "config.yml");
-			addDefault("bearTrap", "damage", "damage.yml");
-			addDefault("catapult", "range", "range.yml");
+		util = FurnitureLib.getInstance().getLocationUtil();
+		if(FurnitureLib.getInstance().getDescription().getVersion().startsWith("2.")){
+			FurnitureHook furniturePlugin = new FurnitureHook(getInstance());
+			furniturePlugin.saveRessource("config.yml", "/fence/whiteList.yml");
+			furniturePlugin.saveRessource("damage.yml", "/bearTrap/damage.yml");
+			furniturePlugin.saveRessource("range.yml", "/catapult/range.yml");
 			
+			furniturePlugin.register();
 			setDefaults();
 			setDefaults_2();
-			Bukkit.getPluginManager().registerEvents(this, this);
-			
-			/*
-			 * Register a new Project wit only the crafting recipe the ArmorStands must be hardcode
-			 * new Project("PROJECTNAME", this, getResource("Folder/File.dModel"), PlaceableSide.ENUM, ClassFile)
-			 */
-			
-			new Project("LargeTable", this,getResource("Crafting/LargeTable.dModel"),PlaceableSide.TOP, largeTable.class).setSize(2, 1, 2, CenterType.RIGHT);
-	        new Project("Campfire1", this,getResource("Crafting/Campfire1.dModel"),PlaceableSide.TOP, campfire_1.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Campfire2", this,getResource("Crafting/Campfire2.dModel"),PlaceableSide.TOP, campfire_2.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Tent2", this,getResource("Crafting/Tent2.dModel"),PlaceableSide.TOP, tent_2.class).setSize(4, 3, 5, CenterType.RIGHT);
-			new Project("Tent3", this,getResource("Crafting/Tent3.dModel"),PlaceableSide.TOP, tent_3.class).setSize(3, 2, 3, CenterType.CENTER);
-			new Project("Streetlamp", this, getResource("Crafting/Streetlamp.dModel"),PlaceableSide.TOP, streetlamp.class).setSize(2, 4, 1, CenterType.FRONT);
-			new Project("Billboard", this, getResource("Crafting/Billboard.dModel"),PlaceableSide.TOP, billboard.class).setSize(1, 3, 3, CenterType.RIGHT);
-			new Project("WeaponStand", this, getResource("Crafting/WeaponStand.dModel"),PlaceableSide.TOP, weaponStand.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Guillotine", this, getResource("Crafting/Guillotine.dModel"),PlaceableSide.TOP, Guillotine.class).setSize(1, 5, 2, CenterType.RIGHT);
-			new Project("FlowerPot", this, getResource("Crafting/FlowerPot.dModel"),PlaceableSide.BOTTOM, TFlowerPot.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("BearTrap", this, getResource("Crafting/BearTrap.dModel"), PlaceableSide.TOP, BearTrap.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("TrashCan", this, getResource("Crafting/TrashCan.dModel"), PlaceableSide.TOP, TrashCan.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("Flag", this, getResource("Crafting/Flag.dModel"), PlaceableSide.TOP, flag.class).setSize(1, 3, 1, CenterType.RIGHT);
-			new Project("AdventCalender", this, getResource("Crafting/AdventCalender.dModel"), PlaceableSide.TOP, AdventCalender.class).setSize(1, 1, 1, CenterType.RIGHT);
-			new Project("FireworkLauncher", this, getResource("Crafting/FireworkLauncher.dModel"), PlaceableSide.TOP, FireworkLauncher.class).setSize(1, 1, 1, CenterType.CENTER);
-
-			/*
-			 * Register a new Project with a FurnitureMaker Model
-			 * new Project("PROJECTNAME", this, getResource("Folder/File.dModel"))
-			 */
-			
-			new Project("Catapult", this, getResource("Models/Catapult.dModel")).setSize(3, 2, 3, CenterType.RIGHT).setEditorProject(false);
-			new Project("HumanSkeleton", this, getResource("Models/HumanSkeleton.dModel")).setSize(3, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("CandyCane", this, getResource("Models/CandyCane.dModel")).setSize(3, 4, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SnowGolem", this, getResource("Models/SnowGolem.dModel")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("TV", this, getResource("Models/TV.dModel")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
-			new Project("Chair", this, getResource("Models/Chair.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("CampChair", this, getResource("Models/CampChair.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("CactusPlant", this, getResource("Models/CactusPlant.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SleepingBag", this, getResource("Models/SleepingBag.dModel")).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("ChristmasTree", this, getResource("Models/ChristmasTree.dModel")).setSize(1, 1, 2, CenterType.RIGHT).setEditorProject(false);
-			new Project("Table", this, getResource("Models/Table.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SchoolChair", this, getResource("Models/SchoolChair.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("SchoolTable", this, getResource("Models/SchoolTable.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("BlackBoard", this, getResource("Models/BlackBoard.dModel")).setSize(1, 2, 3, CenterType.RIGHT).setEditorProject(false);
-			new Project("Barrels", this, getResource("Models/Barrels.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("WaxCandle", this, getResource("Models/WaxCandle.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Lantern", this, getResource("Models/Lantern.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("MailBox", this, getResource("Models/MailBox.dModel")).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Fence", this, getResource("Models/Fence.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Trunk", this, getResource("Models/Trunk.dModel")).setSize(1, 1, 4, CenterType.RIGHT).setEditorProject(false);
-			new Project("Sunshade", this, getResource("Models/Sunshade.dModel")).setSize(1, 3, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Hammock", this, getResource("Models/Hammock.dModel")).setSize(1, 2, 7, CenterType.RIGHT).setEditorProject(false);
-			new Project("Crossbow", this, getResource("Models/Crossbow.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Tent1", this,getResource("Models/Tent1.dModel")).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
-			new Project("GraveStone", this,getResource("Models/GraveStone.dModel")).setSize(1, 2, 3, CenterType.CENTER).setEditorProject(false);
-			new Project("Camera", this, getResource("Models/Camera.dModel")).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Sofa", this, getResource("Models/Sofa.dModel")).setSize(1, 1, 3, CenterType.RIGHT).setEditorProject(false);
-			new Project("Log", this, getResource("Models/Log.dModel")).setSize(1, 1, 1, CenterType.CENTER).setEditorProject(false);
-			lib.registerPluginFurnitures(getInstance());
-			loadModels();
 		}else{
-			lib.send("FurnitureLib Version > 2.x not found");
-			lib.send("DiceFurniture deos not load");
+			FurnitureLib.getInstance().send("FurnitureLib Version > 2.x not found");
+			FurnitureLib.getInstance().send("DiceFurniture deos not load");
 		}
-	}
-	
-	private void addDefault(String a, String b, String d){
-		c = new config();
-		this.file = c.getConfig(b, "plugin/"+a+"/");
-		this.file.addDefaults(YamlConfiguration.loadConfiguration(loadStream(d)));
-		this.file.options().copyDefaults(true);
-		this.c.saveConfig(b, this.file, "plugin/"+a+"/");
-	}
-	
-	public BufferedReader loadStream(String str){
-		if(!str.startsWith("/")) str = "/" + str;
-		InputStream stream = getInstance().getClass().getResourceAsStream(str);
-		try {
-			return new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
+		
 	}
 
 	private void setDefaults_2(){
@@ -195,58 +78,5 @@ public class main extends JavaPlugin implements Listener{
 
 	public static Plugin getInstance() {
 		return instance;
-	}
-	
-	public void loadModels(){
-		//Hook the class to the project
-		for(ObjectID id : FurnitureLib.getInstance().getFurnitureManager().getObjectList()){
-			if(id==null) continue;
-			if(id.getProjectOBJ() == null) continue;
-			if(id.getSQLAction().equals(SQLAction.REMOVE)) continue;
-			switch (id.getProjectOBJ().getName()) {
-			case "Catapult":id.setFunctionObject(new Catapult(id));break;
-			case "Barrels": id.setFunctionObject(new barrels(id));break;
-			case "WaxCandle": id.setFunctionObject(new WaxCandle(id));break;
-			case "Lantern": id.setFunctionObject(new WaxCandle(id));break;
-			case "Fence":{
-				System.out.println("test");
-				id.setFunctionObject(new fance(id));break;
-				
-			}
-			case "Trunk": id.setFunctionObject(new Trunk(id));break;
-			case "Sunshade": id.setFunctionObject(new sunshade(id));break;
-			case "Hammock": id.setFunctionObject(new hammock(id));break;
-			case "Crossbow": id.setFunctionObject(new Crossbow(id));break;
-			case "Tent1": id.setFunctionObject(new tent_1(id));break;
-			case "GraveStone": id.setFunctionObject(new graveStone(id));break;
-			case "Camera": id.setFunctionObject(new camera(id));break;
-			case "Log": id.setFunctionObject(new log(id));break;
-			default:break;
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onFurnitureLateSpawn(FurnitureLateSpawnEvent event){
-		//Hook the Furniture to the class then it will be placed
-		if(event.getProject()==null) return;
-		if(event.getProject().getName()==null) return;
-		if(event.getID().getSQLAction().equals(SQLAction.REMOVE)) return;
-		switch (event.getProject().getName()) {
-			case "Catapult":event.getID().setFunctionObject(new Catapult(event.getID()));break;
-			case "Barrels": event.getID().setFunctionObject(new barrels(event.getID()));break;
-			case "WaxCandle": event.getID().setFunctionObject(new WaxCandle(event.getID()));break;
-			case "Lantern": event.getID().setFunctionObject(new WaxCandle(event.getID()));break;
-			case "Fence": event.getID().setFunctionObject(new fance(event.getID()));break;
-			case "Trunk": event.getID().setFunctionObject(new Trunk(event.getID()));break;
-			case "Sunshade": event.getID().setFunctionObject(new sunshade(event.getID()));break;
-			case "Hammock": event.getID().setFunctionObject(new hammock(event.getID()));break;
-			case "Crossbow": event.getID().setFunctionObject(new Crossbow(event.getID()));break;
-			case "Tent1": event.getID().setFunctionObject(new tent_1(event.getID()));break;
-			case "GraveStone": event.getID().setFunctionObject(new graveStone(event.getID()));break;
-			case "Camera": event.getID().setFunctionObject(new camera(event.getID()));break;
-			case "Log": event.getID().setFunctionObject(new log(event.getID()));break;
-		default:break;
-		}
 	}
 }
