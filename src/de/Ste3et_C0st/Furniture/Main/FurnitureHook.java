@@ -74,8 +74,8 @@ public class FurnitureHook extends FurniturePlugin{
 			new Project("Log", getPlugin(), getResource("Models/Log.dModel"), log.class).setSize(1, 1, 1, CenterType.CENTER).setEditorProject(false);
 			new Project("LargeTable", getPlugin(),getResource("Models/LargeTable.dModel"),PlaceableSide.TOP, largeTable.class).setSize(2, 1, 2, CenterType.RIGHT).setEditorProject(false);
 	        new Project("Campfire1", getPlugin(),getResource("Models/Campfire1.dModel"),PlaceableSide.TOP, campfire_1.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Campfire2", getPlugin(),getResource("Models/Campfire2.dModel"),PlaceableSide.TOP, campfire_2.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Tent2", getPlugin(),getResource("Models/Tent2.dModel"),PlaceableSide.TOP, tent_2.class).setSize(4, 3, 5, CenterType.RIGHT).setEditorProject(false);
+			new Project("Campfire2", getPlugin(),getResource("Models/Campfire2.dModel"),PlaceableSide.TOP, campfire_2.class).setSize(2, 1, 2, CenterType.RIGHT).setEditorProject(false);
+			new Project("Tent2", getPlugin(),getResource("Models/Tent2.dModel"),PlaceableSide.TOP, tent_2.class).setSize(6, 3, 5, CenterType.RIGHT).setEditorProject(false);
 			new Project("Tent3", getPlugin(),getResource("Models/Tent3.dModel"),PlaceableSide.TOP, tent_3.class).setSize(3, 2, 3, CenterType.CENTER).setEditorProject(false);
 			new Project("Streetlamp", getPlugin(), getResource("Models/Streetlamp.dModel"),PlaceableSide.TOP, streetlamp.class).setSize(2, 4, 1, CenterType.FRONT).setEditorProject(false);
 			new Project("Billboard", getPlugin(), getResource("Models/Billboard.dModel"),PlaceableSide.TOP, billboard.class).setSize(1, 3, 3, CenterType.RIGHT).setEditorProject(false);

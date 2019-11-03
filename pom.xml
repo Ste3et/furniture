@@ -98,9 +98,9 @@
 	  	</dependency>
 		
 		<dependency>
-		    <groupId>com.github.Ste3et</groupId>
-		    <artifactId>FurnitureLib</artifactId>
-		    <version>2.1.6</version>
+		    <groupId>com.gitlab.ste3et_c0st</groupId>
+		    <artifactId>furniturelib-1.13</artifactId>
+		    <version>v2.1.6</version>
 		</dependency>
 	 </dependencies>
 </project>
