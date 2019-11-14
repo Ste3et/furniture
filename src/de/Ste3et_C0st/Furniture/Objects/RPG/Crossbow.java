@@ -56,10 +56,7 @@ public class Crossbow extends Furniture{
 		Location start = getRelative(getCenter(), getBlockFace(), 0,0);
 		start.setYaw(getYaw());
 		start = start.add(0, 1.8, 0);
-		Arrow a = null;
-		if(mat.equals(Material.ARROW)){
-			a = (Arrow) getWorld().spawnEntity(start, EntityType.ARROW);
-		}
+		Arrow a = (Arrow) getWorld().spawnEntity(start, EntityType.ARROW);;
 		a.setCritical(true);
 		a.setVelocity(v);
 		a.setShooter(p);

@@ -61,9 +61,18 @@ public class Guillotine extends Furniture implements Listener{
 			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
 			return;
 		}
+		
+		getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("iron")).forEach(entity -> {
+			String[] a = entity.getCustomName().split(":");
+			String b = a + ":" + entity.getLocation().getX() + ":" + entity.getLocation().getY() + ":" + entity.getLocation().getZ();
+			entity.setCustomName(b);
+		});
+		
 		setDefault();
 		initializeInventory();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
+		
+		
 	}
 	
 	private void initializeInventory(){

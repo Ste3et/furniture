@@ -33,34 +33,9 @@ public class graveStone extends Furniture{
 	}
 	
 	private void setBlock(){
-		Location location = getLocation().clone();
-		if(getBlockFace().equals(BlockFace.WEST)){location = getLutil().getRelativ(location, getBlockFace(), .0, -1.02);}
-		if(getBlockFace().equals(BlockFace.SOUTH)){location = getLutil().getRelativ(location, getBlockFace(), -1.0, -1.02);}
-		if(getBlockFace().equals(BlockFace.EAST)){location = getLutil().getRelativ(location, getBlockFace(), -1.0, .0);}
-		Location center = getLutil().getRelativ(location, getBlockFace(), .18D, .955D);
-		center.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()) + 90);
-		Location kreutz2 = getLutil().getRelativ(center, getBlockFace(), -.23, -1.27);
-		Location sign = getLutil().getRelativ(kreutz2.getBlock().getLocation(), getBlockFace(), 0D, 1D);
-		this.signLoc = sign;
-		
-		if(!sign.getBlock().getType().name().contains("SIGN")){
-			sign.getBlock().setType(Material.valueOf(Type.version.equalsIgnoreCase("1.13") ? "WALL_SIGN" : "OAK_WALL_SIGN"));
-			this.sign = sign.getBlock();
-			if(FurnitureHook.isNewVersion()) {
-				org.bukkit.block.data.Directional direct = (org.bukkit.block.data.Directional) this.sign.getBlockData();
-				direct.setFacing(getBlockFace());
-				this.sign.setBlockData(direct);
-			}else {
-				BlockState state = this.sign.getState();
-				LocationUtil util = getLutil();
-				state.setRawData(util.getFacebyte(util.yawToFace(getYaw() + 90)));
-				state.update();
-			}
-		}else{
-			this.sign = sign.getBlock();
-		}
+		this.signLoc = getObjID().getBlockList().stream().filter(b -> b.getBlock().getType().name().contains("SIGN")).findFirst().orElse(null);
+		if(this.signLoc != null) this.sign = this.signLoc.getBlock();
 		this.lines = getText();
-		getObjID().addBlock(Arrays.asList(this.sign));
 	}
 	
 	@Override

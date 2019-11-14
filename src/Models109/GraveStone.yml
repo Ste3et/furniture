@@ -35,3 +35,10 @@ GraveStone:
         Z-Offset: 0.0
         Type: BARRIER
         Data: 0
+      '1':
+        X-Offset: 0.0
+        Y-Offset: 0.0
+        Z-Offset: 1.0
+        Type: WALL_SIGN
+        Data: 0
+        Rotation: SOUTH
