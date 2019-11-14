@@ -10,6 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
@@ -23,7 +25,6 @@ public class largeTable extends Furniture{
 	
 	public largeTable(ObjectID id){
 		super(id);
-		System.out.println(id.getPacketList());
 		for(fEntity packet : getfAsList()){
 			if(packet.getName().startsWith("#TELLER")){
 				tellerIDs.add(packet.getEntityID());
@@ -66,13 +67,20 @@ public class largeTable extends Furniture{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
-			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
-				getLib().getColorManager().color(player, canBuild(player), "_STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
-				update();
-				return;
-			}else{
-				setTeller(player, player.getInventory().getItemInMainHand());
+			if(FurnitureHook.isNewVersion()) {
+				if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
+					getLib().getColorManager().color(player, canBuild(player), "STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
+					update();
+					return;
+				}
+			}else {
+				if(player.getInventory().getItemInMainHand().getType().equals(Material.valueOf("INK_SACK"))){
+					getLib().getColorManager().color(player, canBuild(player), "STAINED_GLASS_PANE", getObjID(), ColorType.BLOCK, 3);
+					update();
+					return;
+				}
 			}
+			setTeller(player, player.getInventory().getItemInMainHand());
 		}
 	}
 	

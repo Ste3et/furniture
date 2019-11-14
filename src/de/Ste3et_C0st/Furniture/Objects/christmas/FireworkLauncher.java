@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -65,7 +66,7 @@ public class FireworkLauncher extends Furniture{
 			if(stand == null) return;
 			if(player.getInventory().getItemInMainHand()!=null){
 				if(player.getInventory().getItemInMainHand().getType()!=null){
-					if(player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
+					if(player.getInventory().getItemInMainHand().getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "FIREWORK_ROCKET" : "FIREWORK"))){
 						drop(stand);
 						setItem(stand, player.getInventory().getItemInMainHand());
 						
@@ -104,7 +105,7 @@ public class FireworkLauncher extends Furniture{
 	
 	public boolean canLaunch(fEntity stand){
 		if(stand.getItemInMainHand()!=null){
-			if(stand.getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)){
+			if(stand.getItemInMainHand().getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "FIREWORK_ROCKET" : "FIREWORK"))){
 				return true;
 			}
 		}

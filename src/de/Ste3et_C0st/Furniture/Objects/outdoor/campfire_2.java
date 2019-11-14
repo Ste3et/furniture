@@ -2,17 +2,22 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -24,11 +29,11 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 public class campfire_2 extends Furniture{
 	private List<Material> items = new ArrayList<Material>(
 			Arrays.asList(
-					Material.BEEF,
-					Material.CHICKEN,
-					Material.COD,
+					Material.valueOf(FurnitureHook.isNewVersion() ? "BEEF" : "RAW_BEEF"),
+					Material.valueOf(FurnitureHook.isNewVersion() ? "CHICKEN" : "RAW_CHICKEN"),
+					Material.valueOf(FurnitureHook.isNewVersion() ? "COD" : "RAW_FISH"),
 					Material.POTATO,
-					Material.PORKCHOP,
+					Material.valueOf(FurnitureHook.isNewVersion() ? "PORKCHOP" : "PORK"),
 					Material.RABBIT,
 					Material.MUTTON
 				)
@@ -183,18 +188,16 @@ public class campfire_2 extends Furniture{
 			if(rnd < 5) {
 				mat = Material.COAL;
 			}else {
-				switch(is.getType()) {
-					case BEEF: mat = Material.COOKED_BEEF; break;
-					case CHICKEN: mat = Material.COOKED_CHICKEN; break;
-					case COD: mat = Material.COOKED_COD; break;
-					case POTATO: mat = Material.BAKED_POTATO; break;
-					case PORKCHOP: mat = Material.COOKED_PORKCHOP; break;
-					case RABBIT: mat = Material.RABBIT_STEW; break;
-					case MUTTON: mat = Material.COOKED_MUTTON; break;
-					default: mat = Material.COAL;break;
-				}
+				Iterator<Recipe> recipes = Bukkit.recipeIterator();
+	            while (recipes.hasNext()) {
+	                if (recipes.next() instanceof FurnaceRecipe == false) continue;
+	                FurnaceRecipe frecipe = (FurnaceRecipe) recipes.next();
+	                if(frecipe.getInput().getType().equals(is.getType())) {
+	                	frecipe.getResult();
+	                }
+	            }
 			}
-			return new ItemStack(mat);
+			return Objects.nonNull(mat) ? new ItemStack(mat) : is;
 		}
 		return is;
 	}

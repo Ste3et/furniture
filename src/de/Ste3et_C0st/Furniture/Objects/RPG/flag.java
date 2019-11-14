@@ -33,47 +33,12 @@ public class flag extends Furniture {
 	}
 	
 	private void setBlock(){
-		Block b = getLocation().getBlock();
-		if(b.getType()==null||!b.getType().equals(Material.STONE_SLAB)){
-			b.setType(Material.STONE_SLAB);
-		}
-		getObjID().addBlock(Arrays.asList(b));
+		
 	}
 
 	@Override
 	public void spawn(Location location) {
-		List<fArmorStand> asList = new ArrayList<fArmorStand>();
-		Location center = getLutil().getCenter(location).clone();
-		center.add(0, -0.45, 0);
-		for(int i = 0; i<=2;i++){
-			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), .47, .38).add(0, .88*i, 0);
-			loc.setYaw(getYaw());
-			fArmorStand packet = spawnArmorStand(loc);
-			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-			packet.setPose(new EulerAngle(1.39, 0, 0), BodyPart.RIGHT_ARM);
-			asList.add(packet);
-		}
 		
-		fArmorStand as = spawnArmorStand(getCenter().add(0, 1.9, 0));
-		as.setHelmet(new ItemStack(Material.STONE_SLAB));
-		as.setSmall(true);
-		asList.add(as);
-		
-		Location loc = getRelative(getCenter().add(0, 0.7, 0), getBlockFace(), -.35,-.28);
-		loc.setYaw(getYaw()+90);
-		as = spawnArmorStand(loc);
-		as.setHelmet(new ItemStack(Material.GREEN_BANNER));
-		as.setHeadPose(getLutil().degresstoRad(new EulerAngle(0, 0, 90)));
-		as.setName("#FLAG:3");
-		asList.add(as);
-		
-		for(fArmorStand packet : asList){
-			packet.setInvisible(true);
-			packet.setBasePlate(false);
-		}
-		
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	public int getState(){
@@ -137,7 +102,7 @@ public class flag extends Furniture {
 		if(player == null) return;
 		if(canBuild(player)) {
 			if(player.getInventory().getItemInMainHand()!=null&&player.getInventory().getItemInMainHand().getType()!=null){
-				if(player.getInventory().getItemInMainHand().getType().name().contains("_BANNER")){
+				if(player.getInventory().getItemInMainHand().getType().name().contains("BANNER")){
 					getStand().setHelmet(player.getInventory().getItemInMainHand());update();
 					if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
 					Integer i = player.getInventory().getHeldItemSlot();

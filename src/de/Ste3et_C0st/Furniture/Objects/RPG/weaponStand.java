@@ -1,13 +1,11 @@
 package de.Ste3et_C0st.Furniture.Objects.RPG;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,14 +14,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.EulerAngle;
-
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class weaponStand extends Furniture implements Listener{
@@ -31,7 +26,7 @@ public class weaponStand extends Furniture implements Listener{
 	List<Integer> slotList1 = Arrays.asList(6,11,14,16,19,21,24,29,32,34,42);
 	List<Integer> slotList2 = Arrays.asList(20, 15, 33);
 	List<Material> matList = Arrays.asList(
-			Material.OAK_FENCE_GATE,
+			Material.valueOf(FurnitureHook.isNewVersion() ? "OAK_FENCE_GATE" : "FENCE_GATE"),
 			Material.SPRUCE_FENCE_GATE,
 			Material.BIRCH_FENCE_GATE,
 			Material.JUNGLE_FENCE_GATE,
@@ -97,8 +92,8 @@ public class weaponStand extends Furniture implements Listener{
 				return;
 			}
 			
-			ItemStack is1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
-			ItemStack is3 = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+			ItemStack is1 = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("BLACK_STAINED_GLASS_PANE"), 1) : new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 15);
+			ItemStack is3 = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("BLACK_STAINED_GLASS_PANE"), 1) : new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 14);
 			
 			ItemMeta im1 = is1.getItemMeta();
 			ItemMeta im3 = is3.getItemMeta();
@@ -195,73 +190,6 @@ public class weaponStand extends Furniture implements Listener{
 
 	@Override
 	public void spawn(Location loc) {
-		List<fArmorStand> packList = new ArrayList<fArmorStand>();
-		Location center = getLutil().getCenter(loc);
-		center = center.add(0, -2.2, 0);
-		
-		Location center2 = center;
-		Location center3 = center.clone();
-		double offsety = 0.4;
-		fArmorStand as = getManager().createArmorStand(getObjID(), center2.add(0, offsety, 0));
-		as.getInventory().setHelmet(new ItemStack(Material.OAK_PRESSURE_PLATE, 1));
-		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
-		packList.add(as);
-		
-		as = getManager().createArmorStand(getObjID(), center3.add(0, .2, 0).add(0, offsety, 0));
-		as.getInventory().setHelmet(new ItemStack(Material.OAK_PRESSURE_PLATE, 1));
-		as.setPose(getLutil().degresstoRad(new EulerAngle(0, 45, 0)), BodyPart.HEAD);
-		packList.add(as);
-		
-		Location location = center;
-		location = location.add(0, -offsety, 0);
-		
-		float yaw = 0;
-		for(int i = 0; i<4;i++){
-			BlockFace face = getLutil().yawToFace(yaw);
-			Location locat = getLutil().getRelativ(location, face, -.0D, -.0D);
-			
-			as = getManager().createArmorStand(getObjID(), locat.clone());
-			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
-			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
-			packList.add(as);
-			
-			as = getManager().createArmorStand(getObjID(), locat.add(0, .37, 0).clone());
-			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
-			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
-			packList.add(as);
-			
-			as = getManager().createArmorStand(getObjID(), locat.add(0, .37, 0).clone());
-			as.getInventory().setHelmet(new ItemStack(Material.OAK_FENCE_GATE, 1));
-			as.setPose(getLutil().degresstoRad(new EulerAngle(0, -45, 0)), BodyPart.HEAD);
-			packList.add(as);
-			
-			yaw +=90;
-		}
-		
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(location, getBlockFace(), .5, .4d).add(0, 1.8, 0));
-		as.setName("#SLOT1#");
-		as.setPose(getLutil().degresstoRad(new EulerAngle(80, 30, 15)), BodyPart.RIGHT_ARM);
-		as.setMarker(false);
-		packList.add(as);
-		
-		BlockFace face = getLutil().yawToFace(getLutil().FaceToYaw(getBlockFace()) + 90);
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(location, face, .5, .45d).add(0, 1.75, 0));
-		as.setName("#SLOT2#");
-		as.setPose(getLutil().degresstoRad(new EulerAngle(80, 30, 20)), BodyPart.RIGHT_ARM);
-		as.setMarker(false);
-		packList.add(as);
-
-		as = getManager().createArmorStand(getObjID(), getLutil().getRelativ(location, getBlockFace().getOppositeFace(), -.30, .65d).add(0, 1.0, 0));
-		as.setName("#SLOT3#");
-		//as.getInventory().setItemInHand(new ItemStack(Material.DIAMOND_AXE));
-		as.setPose(getLutil().degresstoRad(new EulerAngle(-80, 30, 15)), BodyPart.RIGHT_ARM);
-		as.setMarker(false);
-		packList.add(as);
-		
-		for(fArmorStand asp : packList){
-			asp.setInvisible(true);
-		}
-		send();
 		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 }

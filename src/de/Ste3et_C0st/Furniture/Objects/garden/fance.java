@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -22,8 +23,8 @@ public class fance extends Furniture{
 			Material.JUNGLE_FENCE,
 			Material.DARK_OAK_FENCE,
 			Material.ACACIA_FENCE,
-			Material.COBBLESTONE_WALL,
-			Material.NETHER_BRICK_FENCE);
+			Material.valueOf(FurnitureHook.isNewVersion() ? "COBBLESTONE_WALL" : "COBBLE_WALL"),
+			Material.valueOf(FurnitureHook.isNewVersion() ? "NETHER_BRICK_FENCE" : "NETHER_FENCE"));
 	
 	public fance(ObjectID id){
 		super(id);

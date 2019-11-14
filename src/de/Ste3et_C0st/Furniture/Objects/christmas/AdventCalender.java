@@ -37,6 +37,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -122,7 +123,7 @@ public class AdventCalender extends Furniture implements Listener{
 			ItemStack[] stack = isList.get(getDay());
 			for(ItemStack iS : stack){
 				if(iS!=null&&iS.getType()!=null){
-					if(iS.getType().equals(Material.FIREWORK_ROCKET)){
+					if(iS.getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "FIREWORK_ROCKET" : "FIREWORK"))){
 						Firework fw = (Firework) getWorld().spawnEntity(getCenter(), EntityType.FIREWORK);
 						FireworkMeta meta = (FireworkMeta) iS.getItemMeta();
 						fw.setFireworkMeta(meta);
@@ -291,67 +292,6 @@ public class AdventCalender extends Furniture implements Listener{
 
 	@Override
 	public void spawn(Location arg0) {
-		List<fArmorStand> asList = new ArrayList<fArmorStand>();
-		int j = 15;
-		double l = 0;
-		double o = getDegress(j);
-		for(int i = 0; i<=j;i++){
-			Location loc = getCenter();
-			loc.setYaw((float) l);
-			fArmorStand stand = spawnArmorStand(loc.subtract(0, 1.2+sub, 0));
-			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
-			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
-			stand.setHelmet(new ItemStack(Material.GOLD_BLOCK));
-			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
-			asList.add(stand);
-			l+=o;
-		}
-		
-		l = 0;
-		for(int i = 0; i<=j;i++){
-			Location loc = getCenter();
-			loc.setYaw((float) l);
-			fArmorStand stand = spawnArmorStand(loc.subtract(0, .3+sub, 0));
-			stand.setRightArmPose(getLutil().degresstoRad(new EulerAngle(210, 190, 305)));
-			stand.setHeadPose(getLutil().degresstoRad(new EulerAngle(60, 0, 0)));
-			stand.setHelmet(new ItemStack(Material.OAK_LEAVES));
-			stand.setItemInMainHand(new ItemStack(Material.OAK_LEAVES));
-			stand.setSmall(true);
-			asList.add(stand);
-			l+=o;
-		}
-		
-		Location loc = getCenter();
-		loc.setYaw(getYaw()+180);
-		fArmorStand stand = spawnArmorStand(loc.add(0,-1.5,0));
-		stand.setHelmet(new ItemStack(Material.CHEST));
-		asList.add(stand);
-		
-		ItemStack[] is = getStack();
-		
-		loc = getRelative(getCenter(), getBlockFace(), 0, .25);
-		loc.setYaw(getYaw()+180);
-		stand = spawnArmorStand(loc);
-		stand.setHelmet(is[0]);
-		stand.setName("#Advent1#");
-		stand.setSmall(true);
-		asList.add(stand);
-		
-		loc = getRelative(getCenter(), getBlockFace(), 0, -.25);
-		loc.setYaw(getYaw()+180);
-		stand = spawnArmorStand(loc);
-		stand.setHelmet(is[1]);
-		stand.setName("#Advent2#");
-		stand.setSmall(true);
-		asList.add(stand);
-		
-		for(fArmorStand pack : asList){
-			pack.setInvisible(true);
-			pack.setBasePlate(false);
-		}
-		
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -498,13 +438,10 @@ public class AdventCalender extends Furniture implements Listener{
 		return result;
 	}
 	
-	private int getDegress(int j){
-		return 360/j;
-	}
-	
 	@SuppressWarnings("deprecation")
 	public ItemStack getSkull(String s) {
-		ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+		ItemStack skull = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "PLAYER_HEAD" : "SKULL_ITEM"), 1);
+		if(FurnitureHook.isNewVersion()) skull.setDurability((short) 3);
         UUID hashAsId = new UUID(s.hashCode(), s.hashCode());
         return Bukkit.getUnsafe().modifyItemStack(skull,
 				"{SkullOwner:{Id:\"" + hashAsId + "\",Properties:{textures:[{Value:\"" + s + "\"}]}}}");

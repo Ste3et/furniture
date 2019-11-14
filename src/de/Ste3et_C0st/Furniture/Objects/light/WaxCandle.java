@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -28,8 +29,8 @@ public class WaxCandle extends Furniture{
 			if(stack.getType().equals(Material.AIR)) return;
 			if(b!=null){
 				if(b.getType().equals(Material.TORCH) && stack.getType().equals(Material.WATER_BUCKET)){
-					b.setType(Material.REDSTONE_TORCH);
-				}else if(b.getType().equals(Material.REDSTONE_TORCH) && stack.getType().equals(Material.FLINT_AND_STEEL)){
+					b.setType(Material.valueOf(FurnitureHook.isNewVersion() ? "REDSTONE_TORCH" : "REDSTONE_TORCH_OFF"));
+				}else if(b.getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "REDSTONE_TORCH" : "REDSTONE_TORCH_OFF")) && stack.getType().equals(Material.FLINT_AND_STEEL)){
 					b.setType(Material.TORCH);
 				}
 			}

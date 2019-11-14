@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.HiddenStringUtils;
@@ -32,7 +33,7 @@ public class log extends Furniture implements Listener{
 
 	private int mode = 0;
 	private Inventory inv = Bukkit.createInventory(null, 9, "§2Settings");
-	private ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+	private ItemStack pane = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("BLACK_STAINED_GLASS_PANE")) : new ItemStack(Material.valueOf("STAINED_GLASS_PANE"),1 ,(short) 15);
 	private ItemStack permissions = new ItemStack(Material.ARROW);
 	private Player p;
 	private List<ItemStack> isList = new ArrayList<ItemStack>();
@@ -139,17 +140,17 @@ public class log extends Furniture implements Listener{
 	}
 	
 	private void setList(){
-		ItemStack stack = new ItemStack(Material.WHITE_BANNER);
+		ItemStack stack = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "WHITE_BANNER" : "BANNER"));
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.ORANGE_BANNER);
+		stack = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("ORANGE_BANNER")) : new ItemStack(Material.valueOf("BANNER"), 1, (short) 1);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront I");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = new ItemStack(Material.BLUE_BANNER);
+		stack = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("BLUE_BANNER")) : new ItemStack(Material.valueOf("BANNER"), 1, (short) 11);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront II");
 		stack.setItemMeta(meta);
@@ -202,7 +203,7 @@ public class log extends Furniture implements Listener{
 			i++;
 			is = isList.get(i);
 			mode = i;
-			modeSwitch(e.getCurrentItem().getType());
+			if(FurnitureHook.isNewVersion()) {modeSwitch(e.getCurrentItem().getType()); }else {modeSwitch(e.getCurrentItem().getDurability()); }
 			inv.setItem(e.getSlot(), is);
 			p.updateInventory();
 		}else if(e.getCurrentItem().getType().equals(Material.ARROW)){
@@ -221,19 +222,19 @@ public class log extends Furniture implements Listener{
 		int currentArmorStand = 0;
 		
 		switch (type) {
-		case WHITE_BANNER:
-			oldArmorStand = 0;
-			currentArmorStand = 1;
-			break;
-		case ORANGE_BANNER:
-			oldArmorStand = 1;
-			currentArmorStand = 2;
-			break;
-		case BLUE_BANNER:
-			oldArmorStand = 2;
-			currentArmorStand = 0;
-			break;
-		default: break;
+			case WHITE_BANNER:
+				oldArmorStand = 0;
+				currentArmorStand = 1;
+				break;
+			case ORANGE_BANNER:
+				oldArmorStand = 1;
+				currentArmorStand = 2;
+				break;
+			case BLUE_BANNER:
+				oldArmorStand = 2;
+				currentArmorStand = 0;
+				break;
+			default: break;
 		}
 		
 		fEntity standOld = null;
@@ -252,6 +253,43 @@ public class log extends Furniture implements Listener{
 			update();
 		}
 	}
+	
+	public void modeSwitch(short dura){
+		int oldArmorStand = 0;
+		int currentArmorStand = 0;
+		
+		switch (dura) {
+		case 1:
+			oldArmorStand = 0;
+			currentArmorStand = 1;
+			break;
+		case 2:
+			oldArmorStand = 1;
+			currentArmorStand = 2;
+			break;
+		case 11:
+			oldArmorStand = 2;
+			currentArmorStand = 0;
+			break;
+		}
+		
+		fEntity standOld = null;
+		fEntity standCurrent = null;
+		for(fEntity s : getObjID().getPacketList()){
+			if(s.getName().equalsIgnoreCase(oldArmorStand+"")){
+				standOld=s;
+			}else if(s.getName().equalsIgnoreCase(currentArmorStand+"")){
+				standCurrent=s;
+			}
+		}
+		
+		if(standOld!=null&&standCurrent!=null){
+			standCurrent.setItemInMainHand(standOld.getItemInMainHand());
+			standOld.setItemInMainHand(new ItemStack(Material.AIR));
+			update();
+		}
+	}
+
 	
 	@EventHandler
 	public void onClose(InventoryCloseEvent e){

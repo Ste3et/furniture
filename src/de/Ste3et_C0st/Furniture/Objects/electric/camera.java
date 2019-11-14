@@ -9,6 +9,7 @@ import org.bukkit.map.MapView;
 
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -85,7 +86,7 @@ public class camera extends Furniture{
 		if(pLocation.equals(locCopy)){
 			if(getLutil().yawToFace(player.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
 				if(canBuild(player)){
-					if(!player.getInventory().getItemInMainHand().getType().equals(Material.FILLED_MAP)){
+					if(!player.getInventory().getItemInMainHand().getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "FILLED_MAP" : "MAP"))){
 						if(entity  == null || entity2 == null)return;
 						if(this.zoom.equalsIgnoreCase("#ZOOM0#")){
 							this.mode = ScaleMode.FAR;
@@ -109,8 +110,16 @@ public class camera extends Furniture{
 					return;
 				}
 				MapMeta meta = (MapMeta) player.getInventory().getItemInMainHand().getItemMeta();
-				if(meta.hasMapId()) {
-					MapView view = Bukkit.getMap((short) meta.getMapId());
+				if(FurnitureHook.isNewVersion()) {
+					if(meta.hasMapId()) {
+						MapView view = Bukkit.getMap((short) meta.getMapId());
+						Location l = getLocation().clone();
+						l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
+						view.getRenderers().clear();
+						try{view.addRenderer(new RenderClass(l, mode));}catch (Exception ex){ex.printStackTrace();}
+					}
+				}else {
+					MapView view = Bukkit.getMap((short) player.getInventory().getItemInMainHand().getDurability());
 					Location l = getLocation().clone();
 					l.setYaw(getLutil().FaceToYaw(getBlockFace().getOppositeFace()));
 					view.getRenderers().clear();

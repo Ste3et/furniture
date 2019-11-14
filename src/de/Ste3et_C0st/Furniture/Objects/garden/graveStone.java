@@ -8,14 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureHelper;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -45,9 +46,16 @@ public class graveStone extends Furniture{
 		if(!sign.getBlock().getType().name().contains("SIGN")){
 			sign.getBlock().setType(Material.valueOf(Type.version.equalsIgnoreCase("1.13") ? "WALL_SIGN" : "OAK_WALL_SIGN"));
 			this.sign = sign.getBlock();
-			Directional direct = (Directional) this.sign.getBlockData();
-			direct.setFacing(getBlockFace());
-			this.sign.setBlockData(direct);
+			if(FurnitureHook.isNewVersion()) {
+				org.bukkit.block.data.Directional direct = (org.bukkit.block.data.Directional) this.sign.getBlockData();
+				direct.setFacing(getBlockFace());
+				this.sign.setBlockData(direct);
+			}else {
+				BlockState state = this.sign.getState();
+				LocationUtil util = getLutil();
+				state.setRawData(util.getFacebyte(util.yawToFace(getYaw() + 90)));
+				state.update();
+			}
 		}else{
 			this.sign = sign.getBlock();
 		}

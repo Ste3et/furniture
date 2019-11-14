@@ -7,12 +7,12 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -32,7 +32,14 @@ public class TFlowerPot extends Furniture{
 	
 	private void setPotState(){
 		pot=getLocation().getBlock();
-		if(pot.getType()==null||!Tag.FLOWER_POTS.isTagged(pot.getType())){pot.setType(Material.FLOWER_POT);}
+		
+		if(FurnitureHook.isNewVersion()) {
+			if(pot.getType()==null||!org.bukkit.Tag.FLOWER_POTS.isTagged(pot.getType())){pot.setType(Material.FLOWER_POT);}
+		}else {
+			if(pot.getType()==null||!pot.getType().equals(Material.FLOWER_POT)){pot.setType(Material.FLOWER_POT);}
+		}
+		
+		
 		getObjID().addBlock(Arrays.asList(pot));
 	}
 

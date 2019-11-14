@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -47,7 +48,7 @@ public class sunshade extends Furniture{
 					if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
 						packet.getInventory().setHelmet(is.clone());
 					}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
-						ItemStack item = new ItemStack(Material.WHITE_CARPET);
+						ItemStack item = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "WHITE_CARPET" : "CARPET"));
 						packet.getInventory().setHelmet(item);
 					}
 				}
