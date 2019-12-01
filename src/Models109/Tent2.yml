@@ -116,7 +116,7 @@ Tent2:
         Z-Offset: -2.0
         Type: BED_BLOCK
         Data: 10
-        Rotation: NORTH
+        Rotation: SOUTH
       '2':
         X-Offset: 3.0
         Y-Offset: 0.0

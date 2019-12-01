@@ -69,13 +69,10 @@ public class AdventCalender extends Furniture implements Listener{
 	
 	public AdventCalender(ObjectID id){
 		super(id);
-		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, getPlugin());
-			load();
-			check();
-			return;
-		}
 		spawn(id.getStartLocation());
+		load();
+		check();
+		Bukkit.getPluginManager().registerEvents(this, getPlugin());
 	}
 	
 	@Override

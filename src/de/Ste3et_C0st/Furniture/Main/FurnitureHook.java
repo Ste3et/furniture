@@ -68,7 +68,7 @@ public class FurnitureHook extends FurniturePlugin{
 			new Project("BlackBoard", getPlugin(), getResource(modelFolder + "BlackBoard" + ending)).setPlaceableSide(PlaceableSide.SIDE).setSize(1, 2, 3, CenterType.RIGHT).setEditorProject(false);
 			new Project("Barrels", getPlugin(), getResource(modelFolder + "Barrels" + ending), barrels.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("WaxCandle", getPlugin(), getResource(modelFolder + "WaxCandle" + ending), WaxCandle.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
-			new Project("Lantern", getPlugin(), getResource(modelFolder + "Lantern" + ending)).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
+			new Project("Lantern", getPlugin(), getResource(modelFolder + "Lantern" + ending), WaxCandle.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("MailBox", getPlugin(), getResource(modelFolder + "MailBox" + ending)).setSize(1, 2, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("Fence", getPlugin(), getResource(modelFolder + "Fence" + ending), fance.class).setSize(1, 1, 1, CenterType.RIGHT).setEditorProject(false);
 			new Project("Trunk", getPlugin(), getResource(modelFolder + "Trunk" + ending), Trunk.class).setSize(1, 1, 4, CenterType.RIGHT).setEditorProject(false);

@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
@@ -35,16 +37,25 @@ public class tent_2 extends Furniture{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
-			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) == null){
-				for(Location b : getObjID().getBlockList()){
-					if(b.getBlock().getType().equals(Material.CHEST)){
-						Chest c = (Chest) b.getBlock().getState();
-						player.getPlayer().openInventory(c.getBlockInventory());
-					}
+			if(FurnitureHook.isNewVersion()) {
+				if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
+					getLib().getColorManager().color(player, true, "_CARPET", getObjID(), ColorType.BLOCK, 1);
+					return;
 				}
-			}else{
-				getLib().getColorManager().color(player, true, "_CARPET", getObjID(), ColorType.BLOCK, 1);
+			}else {
+				if(player.getInventory().getItemInMainHand().getType().name().equalsIgnoreCase("INK_SACK")){
+					getLib().getColorManager().color(player, true, "CARPET", getObjID(), ColorType.BLOCK, 1);
+					return;
+				}
 			}
+			
+			for(Location b : getObjID().getBlockList()){
+				if(b.getBlock().getType().equals(Material.CHEST)){
+					Chest c = (Chest) b.getBlock().getState();
+					player.getPlayer().openInventory(c.getBlockInventory());
+				}
+			}
+			
 		}
 	}
 }

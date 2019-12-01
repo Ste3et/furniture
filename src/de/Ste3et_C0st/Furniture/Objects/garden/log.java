@@ -140,12 +140,12 @@ public class log extends Furniture implements Listener{
 	}
 	
 	private void setList(){
-		ItemStack stack = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "WHITE_BANNER" : "BANNER"));
+		ItemStack stack = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("WHITE_BANNER")) : new ItemStack(Material.valueOf("BANNER"), 1, (short) 1);
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cTop");
 		stack.setItemMeta(meta);
 		isList.add(stack);
-		stack = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("ORANGE_BANNER")) : new ItemStack(Material.valueOf("BANNER"), 1, (short) 1);
+		stack = FurnitureHook.isNewVersion() ? new ItemStack(Material.valueOf("ORANGE_BANNER")) : new ItemStack(Material.valueOf("BANNER"), 1, (short) 2);
 		meta = stack.getItemMeta();
 		meta.setDisplayName("§6Mode: §cFront I");
 		stack.setItemMeta(meta);
@@ -196,7 +196,7 @@ public class log extends Furniture implements Listener{
 		if(e.getClickedInventory()==null||!e.getClickedInventory().equals(inv)){return;}
 		e.setCancelled(true);
 		if(e.getCurrentItem()==null){return;}
-		if(e.getCurrentItem().getType().name().contains("_BANNER")){
+		if(e.getCurrentItem().getType().name().contains("BANNER")){
 			Integer i = isList.indexOf(e.getCurrentItem());
 			ItemStack is = null;
 			if(i>=2){i = -1;}

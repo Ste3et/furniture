@@ -2,6 +2,8 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
@@ -33,14 +35,22 @@ public class tent_3 extends Furniture{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
-			if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
-				getLib().getColorManager().color(player, true, "_BANNER", getObjID(), ColorType.BANNER, 1);
-			}else{
-				for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
-					if(packet.getName().equalsIgnoreCase("#SITZ#")){
-						packet.setPassanger(player);
-						packet.update();
-					}
+			if(FurnitureHook.isNewVersion()) {
+				if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
+					getLib().getColorManager().color(player, true, "BANNER", getObjID(), ColorType.BANNER, 1);
+					return;
+				}
+			}else {
+				if(player.getInventory().getItemInMainHand().getType().name().equalsIgnoreCase("INK_SACK")){
+					getLib().getColorManager().color(player, true, "BANNER", getObjID(), ColorType.BANNER, 1);
+					return;
+				}
+			}
+			
+			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
+				if(packet.getName().equalsIgnoreCase("#SITZ#")){
+					packet.setPassanger(player);
+					packet.update();
 				}
 			}
 		}
