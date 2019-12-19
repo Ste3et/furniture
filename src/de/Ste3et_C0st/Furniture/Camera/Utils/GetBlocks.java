@@ -2,27 +2,37 @@ package de.Ste3et_C0st.Furniture.Camera.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
-import org.apache.commons.lang.reflect.MethodUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
-import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 
 public class GetBlocks {
 
-	//Class<?> CraftBlockClass = null;
-	Class<?> CraftMagicNumbersClass = null;
+	public static MinecraftBlockColor colorBlock;
+	
+	static {
+		try {
+			Class<?> color = Class.forName("de.Ste3et_C0st.Furniture.Camera.Utils." + MinecraftBlockColor.getMainVersion() + ".BlockColor");
+			if(Objects.nonNull(color)) {
+				colorBlock = (MinecraftBlockColor) color.newInstance();
+			}else {
+				colorBlock = de.Ste3et_C0st.Furniture.Camera.Utils.v1_13.BlockColor.class.newInstance();
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String getBukkitVersion() {return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];}
 	
 	public List<Layer> returnBlocks(Location startLocation, int width, int heigt, int depth, int offsetZ){
 		try{
-			this.CraftMagicNumbersClass = Class.forName("org.bukkit.craftbukkit."+getBukkitVersion()+".util.CraftMagicNumbers");
-			
 			BlockFace face = main.getLocationUtil().yawToFace(startLocation.getYaw()).getOppositeFace();
 			List<Layer> layerList = new ArrayList<Layer>();
 			for(int i = depth; i>=0; i--){
@@ -46,15 +56,16 @@ public class GetBlocks {
 	
 	public Byte getByteFromBlock(Block b){
 		try {
-			Object nmsBlock = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.Material.class).invoke(null, b.getType());
-			Object iBlockData = nmsBlock.getClass().getMethod("getBlockData").invoke(nmsBlock);
-			Object Material = MethodUtils.invokeMethod(iBlockData, "getMaterial", null);
-			Object MaterialMapColor = MethodUtils.invokeMethod(Material, "i", null);
-			int color = MaterialMapColor.getClass().getField("ac").getInt(MaterialMapColor) * 4;
-//		        if(color == 28){
-//		        color += randInt(0, 3);
-//		     }
-			return (byte) color;
+			return colorBlock.getBlockColor(b);
+//			Object nmsBlock = CraftMagicNumbersClass.getMethod("getBlock", org.bukkit.Material.class).invoke(null, b.getType());
+//			Object iBlockData = nmsBlock.getClass().getMethod("getBlockData").invoke(nmsBlock);
+//			Object Material = MethodUtils.invokeMethod(iBlockData, "getMaterial", null);
+//			Object MaterialMapColor = MethodUtils.invokeMethod(Material, "i", null);
+//			int color = MaterialMapColor.getClass().getField("ac").getInt(MaterialMapColor) * 4;
+////		        if(color == 28){
+////		        color += randInt(0, 3);
+////		     }
+//			return (byte) color;
 		} catch (Exception e) {
 			//e.printStackTrace();
 			return 0;

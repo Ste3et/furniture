@@ -26,25 +26,22 @@ public class camera extends Furniture{
 		super(id);
 		boolean b = false;
 		for(fEntity stand : id.getPacketList()){
+			if(stand.isCustomNameVisible()) {
+				b = true;
+				stand.setNameVasibility(false);
+			}
 			if(stand.getCustomName().startsWith("#ZOOM")){
-				if(stand.isCustomNameVisible()){
-					stand.setNameVasibility(false);
-					b = true;
-				}
 				this.entity2 = stand;
 				zoom = stand.getCustomName();
 			}
+			
 			if(stand.getItemInMainHand() != null){
 				if(stand.getItemInMainHand().getType().equals(Material.TRIPWIRE_HOOK)){
 					this.entity = stand;
 				}
 			}
-			
 		}
-		
-		if(b){
-			update();
-		}
+		if(b) update();
 	}
 
 	public void setZoom(){
@@ -79,7 +76,6 @@ public class camera extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		player.sendMessage("test");
 		Location pLocation = getLutil().getRelativ(player.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
