@@ -230,7 +230,7 @@ public class AdventCalender extends Furniture implements Listener{
 		conf = new config();
 	    file = conf.getConfig(getObjID().getSerial() + "_Players", "plugin/AdventCalender/Data/");
 	    if(file == null) return;
-	    if(!file.isSet("Players")) return;
+	    if(!file.contains("Players")) return;
 	    for(String s : file.getConfigurationSection("Players").getKeys(false)){
 	    	UUID uuid = UUID.fromString(s);
 	    	int i = file.getInt("Players." + s);
@@ -249,7 +249,7 @@ public class AdventCalender extends Furniture implements Listener{
 		if(uuid != null){
 			config conf = new config();
 	    	FileConfiguration file = conf.getConfig(getObjID().getSerial() + "_Players", "plugin/AdventCalender/Data/");
-	    	file.set("Players." + uuid.toString(), i);
+	    	file.set("Players." + uuid.toString(), getDay());
 			conf.saveConfig(getObjID().getSerial() + "_Players", file, "plugin/AdventCalender/Data/");
 		}
     }

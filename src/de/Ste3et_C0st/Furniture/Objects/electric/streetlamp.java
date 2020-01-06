@@ -7,16 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
-import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -25,20 +21,15 @@ import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
 public class streetlamp extends Furniture implements Listener{
 	
-	Location light;
-	Vector loc2, loc3;
+	private Location light, redstoneBlock;
 	boolean redstone = false;
 
 	public streetlamp(ObjectID id){
 		super(id);
 		setBlock();
-		this.loc2 = id.getStartLocation().toVector();
-		this.loc3 = id.getStartLocation().getBlock().getRelative(BlockFace.DOWN).getLocation().toVector();
+		
 		this.light = getLutil().getRelativ(getLocation(), getBlockFace(), -1D, 0D);
-		if(isFinish()){
-			Bukkit.getPluginManager().registerEvents(this, main.getInstance());
-			return;
-		}
+		this.redstoneBlock = getCenter().getBlock().getLocation();
 		spawn(id.getStartLocation());
 	}
 	
@@ -94,18 +85,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(getObjID()==null){return;} 
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.getBlock()==null){return;}
-		Vector loc = e.getBlock().getLocation().toVector();
-		if(loc2.distance(loc)<=1){
-			if(e.getNewCurrent()==0){
-				setLight(false);
-				redstone = false;
-			}else{
-				setLight(true);
-				redstone = true;
-			}
-			return;
-		}
-		if(loc3.distance(loc)<=1){
+		if(redstoneBlock.distance(e.getBlock().getLocation()) <= 1){
 			if(e.getNewCurrent()==0){
 				setLight(false);
 				redstone = false;
