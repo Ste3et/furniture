@@ -30,11 +30,11 @@ public class billboard extends Furniture{
 	public void spawn(Location location){
 		List<fArmorStand> asList = new ArrayList<fArmorStand>();
 		Location center = getLutil().getCenter(location).add(0, -1.2, 0);
-		Location center2 = getLutil().getRelativ(center, getBlockFace(), 0D, -4D);
-		Location center3 = getLutil().getRelativ(center, getBlockFace(), 0D, -3.3D);
+		Location center2 = getLutil().getRelative(center, getBlockFace(), 0D, -4D);
+		Location center3 = getLutil().getRelative(center, getBlockFace(), 0D, -3.3D);
 		
 		for(int i = 0; i<=3;i++){
-			Location loc = getLutil().getRelativ(center.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
+			Location loc = getLutil().getRelative(center.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
@@ -43,7 +43,7 @@ public class billboard extends Furniture{
 		}
 		
 		for(int i = 0; i<=3;i++){
-			Location loc = getLutil().getRelativ(center2.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
+			Location loc = getLutil().getRelative(center2.clone(), getBlockFace(), -.1, -.5).add(0, .88*i, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
@@ -52,7 +52,7 @@ public class billboard extends Furniture{
 		}
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, .7D, 0);
+			Location loc = getLutil().getRelative(center3.clone(), getBlockFace(), -.1, .88*i).add(0, .7D, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
@@ -61,7 +61,7 @@ public class billboard extends Furniture{
 		}
 		
 		for(int i = 0; i<=4;i++){
-			Location loc = getLutil().getRelativ(center3.clone(), getBlockFace(), -.1, .88*i).add(0, 2.9D, 0);
+			Location loc = getLutil().getRelative(center3.clone(), getBlockFace(), -.1, .88*i).add(0, 2.9D, 0);
 			loc.setYaw(loc.getYaw()+90);
 			fArmorStand packet = getManager().createArmorStand(getObjID(), loc);
 			packet.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
@@ -71,8 +71,8 @@ public class billboard extends Furniture{
 		List<Block> blockLocation = new ArrayList<Block>();
 		for(int x = 0; x<=1;x++){
 			for(int y = 0;y<=2;y++){
-				Location loc = getLutil().getRelativ(location, getBlockFace(),0D,(double) -y-1).add(0, x+1, 0);
-				Location loc2 = getLutil().getRelativ(location, getBlockFace(),-1D,(double) -y-1).add(0, x+1, 0);
+				Location loc = getLutil().getRelative(location, getBlockFace(),0D,(double) -y-1).add(0, x+1, 0);
+				Location loc2 = getLutil().getRelative(location, getBlockFace(),-1D,(double) -y-1).add(0, x+1, 0);
 				loc.getBlock().setType(Material.BARRIER);
 				ItemFrame frame = (ItemFrame) getWorld().spawn(loc2, ItemFrame.class);
 				frame.setFacingDirection(getBlockFace());

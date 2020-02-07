@@ -28,7 +28,7 @@ public class streetlamp extends Furniture implements Listener{
 		super(id);
 		setBlock();
 		
-		this.light = getLutil().getRelativ(getLocation(), getBlockFace(), -1D, 0D);
+		this.light = getLutil().getRelative(getLocation(), getBlockFace(), -1D, 0D);
 		this.redstoneBlock = getCenter().getBlock().getLocation();
 		spawn(id.getStartLocation());
 	}
@@ -47,7 +47,7 @@ public class streetlamp extends Furniture implements Listener{
 			block.setType(Material.BARRIER);
 			blockLocation.add(block);
 			if(i==3){
-				Location loc =getLutil().getRelativ(location, getBlockFace(), -1D, 0D);
+				Location loc =getLutil().getRelative(location, getBlockFace(), -1D, 0D);
 				Block blocks = loc.getBlock();
 				blocks.setType(Material.BARRIER);
 				blockLocation.add(blocks);

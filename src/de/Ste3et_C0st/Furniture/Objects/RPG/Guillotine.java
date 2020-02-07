@@ -337,7 +337,7 @@ public class Guillotine extends Furniture implements Listener{
 					update();
 					if(b1&&b2){
 						if(d1!=d2){
-							packet2.teleport(getLutil().getRelativ(packet2.getLocation(), getBlockFace(), .1, 0d));
+							packet2.teleport(getLutil().getRelative(packet2.getLocation(), getBlockFace(), .1, 0d));
 							update();
 							d1+=.1;
 						}else{
@@ -364,7 +364,7 @@ public class Guillotine extends Furniture implements Listener{
 										}else if(j!=0&&j<3){
 											update();
 										}else if(j == 3){
-											getWorld().playEffect(getLutil().getRelativ(getLocation(), getBlockFace(), 0d, -.1d).add(0, 1.3, 0), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+											getWorld().playEffect(getLutil().getRelative(getLocation(), getBlockFace(), 0d, -.1d).add(0, 1.3, 0), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 											stopTimer();
 											isFinish=true;
 											return;

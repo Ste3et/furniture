@@ -47,10 +47,10 @@ public class campfire_2 extends Furniture {
 	public campfire_2(ObjectID id) {
 		super(id);
 		this.middle = getLutil().getCenter(getLocation());
-		this.middle = getLutil().getRelativ(middle, getBlockFace(), .5D, -.5D);
+		this.middle = getLutil().getRelative(middle, getBlockFace(), .5D, -.5D);
 		this.middle.add(0, -1.2, 0);
 
-		this.grill = getLutil().getRelativ(middle, getBlockFace(), .0D, .5D);
+		this.grill = getLutil().getRelative(middle, getBlockFace(), .0D, .5D);
 		this.grill.setYaw(getLutil().FaceToYaw(getBlockFace()) + 90);
 		if (id.isFinish()) {
 			return;

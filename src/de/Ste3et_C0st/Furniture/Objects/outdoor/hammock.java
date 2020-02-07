@@ -49,8 +49,8 @@ public class hammock extends Furniture{
 				}else {
 					for(fEntity entity : getfAsList()){
 						if(entity.getName().startsWith("#SITZ#")){
-							if(entity.getPassanger()==null||entity.getPassanger().isEmpty()){
-								entity.setPassanger(player);
+							if(entity.getPassenger()==null||entity.getPassenger().isEmpty()){
+								entity.setPassenger(player);
 							}
 							return;
 						}

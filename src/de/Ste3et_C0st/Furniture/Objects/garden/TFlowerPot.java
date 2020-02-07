@@ -48,7 +48,7 @@ public class TFlowerPot extends Furniture{
 		List<fArmorStand> packetList = new ArrayList<fArmorStand>();
 		float yaw = 90;
 		for(int i = 0; i<=3;i++){
-			Location location = getLutil().getRelativ(getCenter(), getLutil().yawToFace(yaw), .53, .08);
+			Location location = getLutil().getRelative(getCenter(), getLutil().yawToFace(yaw), .53, .08);
 			location.add(0,-1.7,0);
 			location.setYaw(90+yaw);
 			

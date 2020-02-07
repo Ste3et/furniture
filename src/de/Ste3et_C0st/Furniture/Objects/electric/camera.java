@@ -76,7 +76,7 @@ public class camera extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		Location pLocation = getLutil().getRelativ(player.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
+		Location pLocation = getLutil().getRelative(player.getLocation().getBlock().getLocation(), getBlockFace(), -1D, 0D).clone();
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
 		if(pLocation.equals(locCopy)){
