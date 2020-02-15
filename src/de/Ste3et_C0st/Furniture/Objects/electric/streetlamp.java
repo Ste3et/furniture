@@ -85,6 +85,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(getObjID()==null){return;} 
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
 		if(e.getBlock()==null){return;}
+		if(!redstoneBlock.getWorld().equals(e.getBlock().getWorld())) return;
 		if(redstoneBlock.distance(e.getBlock().getLocation()) <= 1){
 			if(e.getNewCurrent()==0){
 				setLight(false);

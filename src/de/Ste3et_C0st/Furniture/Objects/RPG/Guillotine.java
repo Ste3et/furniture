@@ -23,6 +23,7 @@ import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
@@ -93,6 +94,11 @@ public class Guillotine extends Furniture implements Listener{
 		this.packet1 = (fArmorStand) entityByCustomName("#Executioner#");
 		this.packet3 = (fArmorStand) entityByCustomName("#Head#");
 		this.packet2 = (fArmorStand) getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("#Oblation#")).findFirst().orElse(null);
+		
+		if(!isFinish()) {
+			Location oblationLocation = packet2.getLocation();
+			packet2.setName("#Oblation#:" + oblationLocation.getX() + ":" + oblationLocation.getY() + ":" + oblationLocation.getZ());
+		}
 		
 		getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("iron")).forEach(entity -> {
 			armorStandList.add(entity);
@@ -450,11 +456,11 @@ public class Guillotine extends Furniture implements Listener{
 			if(invIII.getItem(19)!=null){invisible=false;}
 			if(invIII.getItem(28)!=null){invisible=false;}
 			if(invIII.getItem(37)!=null){invisible=false;}
-			
 			packet2.setBasePlate(false);
 			packet2.setArms(true);
 			packet2.setInvisible(invisible);
 			update();
+			LocationUtil.particleBlock(packet2.getLocation().getBlock());
 			this.p = null;
 		}
 	}
