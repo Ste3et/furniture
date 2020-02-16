@@ -42,6 +42,8 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.PlaceableSide;
 
 public class FurnitureHook extends FurniturePlugin{
 
+	private final boolean editModels = FurnitureLib.getInstance().getConfig().getBoolean("config.editDiceFurnitureModels", false);
+	
 	public FurnitureHook(Plugin pluginInstance) {
 		super(pluginInstance);
 	}
@@ -96,7 +98,7 @@ public class FurnitureHook extends FurniturePlugin{
 			new Project("AdventCalender", getPlugin(), getResource(modelFolder + "AdventCalender" + ending), PlaceableSide.TOP, AdventCalender.class).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FireworkLauncher", getPlugin(), getResource(modelFolder + "FireworkLauncher" + ending), PlaceableSide.TOP, FireworkLauncher.class).setSize(1, 1, 1, CenterType.CENTER);
 			
-			FurnitureLib.getInstance().getFurnitureManager().getProjects().stream().filter(pro -> pro.getPlugin().equals(getPlugin())).forEach(pro -> pro.setEditorProject(false));
+			FurnitureLib.getInstance().getFurnitureManager().getProjects().stream().filter(pro -> pro.getPlugin().equals(getPlugin())).forEach(pro -> pro.setEditorProject(editModels));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

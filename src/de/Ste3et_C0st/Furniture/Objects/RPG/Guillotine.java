@@ -65,7 +65,7 @@ public class Guillotine extends Furniture implements Listener{
 		
 		getfAsList().stream().filter(entity -> entity.getCustomName().startsWith("iron")).forEach(entity -> {
 			String[] a = entity.getCustomName().split(":");
-			String b = a + ":" + entity.getLocation().getX() + ":" + entity.getLocation().getY() + ":" + entity.getLocation().getZ();
+			String b = a[0] + ":" + entity.getLocation().getX() + ":" + entity.getLocation().getY() + ":" + entity.getLocation().getZ();
 			entity.setCustomName(b);
 		});
 		
