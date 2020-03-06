@@ -3,9 +3,11 @@ package de.Ste3et_C0st.Furniture.Main;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import de.Ste3et_C0st.Furniture.Main.Event.redstoneEvent;
 import de.Ste3et_C0st.Furniture.Objects.RPG.Catapult;
 import de.Ste3et_C0st.Furniture.Objects.RPG.Crossbow;
 import de.Ste3et_C0st.Furniture.Objects.RPG.Guillotine;
@@ -46,6 +48,7 @@ public class FurnitureHook extends FurniturePlugin{
 	
 	public FurnitureHook(Plugin pluginInstance) {
 		super(pluginInstance);
+		Bukkit.getPluginManager().registerEvents(new redstoneEvent(), pluginInstance);
 	}
 
 	@Override

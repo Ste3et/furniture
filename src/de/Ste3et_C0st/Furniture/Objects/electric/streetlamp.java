@@ -1,6 +1,8 @@
 package de.Ste3et_C0st.Furniture.Objects.electric;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -8,9 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
@@ -19,23 +18,22 @@ import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
 
-public class streetlamp extends Furniture implements Listener{
+public class streetlamp extends Furniture{
 	
 	private Location light, redstoneBlock;
-	boolean redstone = false;
-
+	public static HashMap<Location, streetlamp> locationSet = new HashMap<Location, streetlamp>();
+	
 	public streetlamp(ObjectID id){
 		super(id);
 		setBlock();
 		
 		this.light = getLutil().getRelative(getLocation(), getBlockFace(), -1D, 0D);
 		this.redstoneBlock = getCenter().getBlock().getLocation();
+		if(!locationSet.containsKey(this.redstoneBlock)) locationSet.put(this.redstoneBlock, this);
 		spawn(id.getStartLocation());
 	}
 	
-	public void spawn(Location location){
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
+	public void spawn(Location location){}
 	
 	private void setBlock(){
 		List<Block> blockLocation = new ArrayList<Block>();
@@ -64,6 +62,7 @@ public class streetlamp extends Furniture implements Listener{
 		if(canBuild(player)) {
 			FurnitureLib.getInstance().getLightManager().removeLight(light);
 			this.destroy(player);
+			if(locationSet.containsKey(this.redstoneBlock)) locationSet.remove(this.redstoneBlock);
 		}
 	}
 	
@@ -79,27 +78,9 @@ public class streetlamp extends Furniture implements Listener{
 			setLight(true);
 		}
 	}
-
-	@EventHandler
-	private void onBlockPowered(BlockRedstoneEvent e){
-		if(getObjID()==null){return;} 
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)){return;}
-		if(e.getBlock()==null){return;}
-		if(!redstoneBlock.getWorld().equals(e.getBlock().getWorld())) return;
-		if(redstoneBlock.distance(e.getBlock().getLocation()) <= 1){
-			if(e.getNewCurrent()==0){
-				setLight(false);
-				redstone = false;
-			}else{
-				setLight(true);
-				redstone = true;
-			}
-			return;
-		}
-	}
 	
-	private void setLight(Boolean b){
-		if(!b){
+	public void setLight(Boolean b){
+		if(b == false){
 			fEntity packet = getPacket();
 			if(packet==null) return;
 			packet.getInventory().setHelmet(new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "REDSTONE_TORCH" : "REDSTONE_LAMP_OFF")));
@@ -125,7 +106,7 @@ public class streetlamp extends Furniture implements Listener{
 		return null;
 	}
 	
-	private boolean isOn(){
+	public boolean isOn(){
 		for(fEntity as : getManager().getfArmorStandByObjectID(getObjID())){
 			if(as.getName().equalsIgnoreCase("#LAMP#")){
 				switch (as.getInventory().getHelmet().getType()) {
