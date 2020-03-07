@@ -1,9 +1,10 @@
 package de.Ste3et_C0st.Furniture.Objects.garden;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
+import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
+import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,75 +13,79 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
-import de.Ste3et_C0st.FurnitureLib.main.Furniture;
-import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
-import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
-import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class TFlowerPot extends Furniture{
+public class TFlowerPot extends Furniture {
 
-	Block pot;
-	public TFlowerPot(ObjectID id){
-		super(id);
-		setPotState();
-		if(isFinish()){
-			return;
-		}
-		spawn(id.getStartLocation());
-	}
-	
-	private void setPotState(){
-		pot=getLocation().getBlock();
-		
-		if(FurnitureHook.isNewVersion()) {
-			if(pot.getType()==null||!org.bukkit.Tag.FLOWER_POTS.isTagged(pot.getType())){pot.setType(Material.FLOWER_POT);}
-		}else {
-			if(pot.getType()==null||!pot.getType().equals(Material.FLOWER_POT)){pot.setType(Material.FLOWER_POT);}
-		}
-		
-		
-		getObjID().addBlock(Arrays.asList(pot));
-	}
+    Block pot;
 
-	@Override
-	public void spawn(Location paramLocation) {
-		List<fArmorStand> packetList = new ArrayList<fArmorStand>();
-		float yaw = 90;
-		for(int i = 0; i<=3;i++){
-			Location location = getLutil().getRelative(getCenter(), getLutil().yawToFace(yaw), .53, .08);
-			location.add(0,-1.7,0);
-			location.setYaw(90+yaw);
-			
-			fArmorStand asp = getManager().createArmorStand(getObjID(), location);
-			asp.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-115,45,0)));
-			asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
-			
-			packetList.add(asp);
-			yaw+=90;
-		}
-		
-		for(fArmorStand asp : packetList){
-			asp.setInvisible(true);
-			asp.setBasePlate(false);
-			asp.setMarker(false);
-		}
-		send();
-		Bukkit.getPluginManager().registerEvents(this, getPlugin());
-	}
-	
-	@Override
-	public void onClick(Player p) {}
-	
-	@Override
-	public void onBreak(Player player) {
-		if(getObjID() == null) return;
-		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
-		if(player == null) return;
-		if(canBuild(player)) {
-			pot.setType(Material.AIR);
-			pot=null;
-			this.destroy(player);
-		}
-	}
+    public TFlowerPot(ObjectID id) {
+        super(id);
+        setPotState();
+        if (isFinish()) {
+            return;
+        }
+        spawn(id.getStartLocation());
+    }
+
+    private void setPotState() {
+        pot = getLocation().getBlock();
+
+        if (FurnitureHook.isNewVersion()) {
+            if (pot.getType() == null || !org.bukkit.Tag.FLOWER_POTS.isTagged(pot.getType())) {
+                pot.setType(Material.FLOWER_POT);
+            }
+        } else {
+            if (pot.getType() == null || !pot.getType().equals(Material.FLOWER_POT)) {
+                pot.setType(Material.FLOWER_POT);
+            }
+        }
+
+
+        getObjID().addBlock(Collections.singletonList(pot));
+    }
+
+    @Override
+    public void spawn(Location paramLocation) {
+        List<fArmorStand> packetList = new ArrayList<>();
+        float yaw = 90;
+        for (int i = 0; i <= 3; i++) {
+            Location location = getLutil().getRelative(getCenter(), getLutil().yawToFace(yaw), .53, .08);
+            location.add(0, -1.7, 0);
+            location.setYaw(90 + yaw);
+
+            fArmorStand asp = getManager().createArmorStand(getObjID(), location);
+            asp.setRightArmPose(getLutil().degresstoRad(new EulerAngle(-115, 45, 0)));
+            asp.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
+
+            packetList.add(asp);
+            yaw += 90;
+        }
+
+        for (fArmorStand asp : packetList) {
+            asp.setInvisible(true);
+            asp.setBasePlate(false);
+            asp.setMarker(false);
+        }
+        send();
+        Bukkit.getPluginManager().registerEvents(this, getPlugin());
+    }
+
+    @Override
+    public void onClick(Player p) {
+    }
+
+    @Override
+    public void onBreak(Player player) {
+        if (getObjID() == null) return;
+        if (getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
+        if (player == null) return;
+        if (canBuild(player)) {
+            pot.setType(Material.AIR);
+            pot = null;
+            this.destroy(player);
+        }
+    }
 }

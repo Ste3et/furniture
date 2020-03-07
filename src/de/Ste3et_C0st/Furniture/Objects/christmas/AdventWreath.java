@@ -1,16 +1,16 @@
 package de.Ste3et_C0st.Furniture.Objects.christmas;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-public class AdventWreath extends Furniture  {
+public class AdventWreath extends Furniture {
 
-	public AdventWreath(ObjectID id) {
-		super(id);
-		// TODO Auto-generated constructor stub
-	}
+    public AdventWreath(ObjectID id) {
+        super(id);
+        // TODO Auto-generated constructor stub
+    }
 //	double sub = .9;
 //	
 //	List<Location> locationList = Arrays.asList(
@@ -207,21 +207,21 @@ public class AdventWreath extends Furniture  {
 //		return 360/j;
 //	}
 
-	@Override
-	public void spawn(Location arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void spawn(Location arg0) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onBreak(Player arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void onClick(Player arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onBreak(Player arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onClick(Player arg0) {
+        // TODO Auto-generated method stub
+
+    }
 }
