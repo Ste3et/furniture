@@ -69,7 +69,7 @@ public class campfire_2 extends Furniture {
 			return;
 		if (player == null)
 			return;
-		if (canBuild(player)) {
+		if (canBuild(player, false)) {
 			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
 			final ItemStack itemStack = player.getInventory().getItemInMainHand();
 			fArmorStand packet = null;
@@ -91,7 +91,7 @@ public class campfire_2 extends Furniture {
 			}
 		}
 		
-		if(canInteract(player)) {
+		if(canInteract(player, false)) {
 			final ItemStack itemStack = player.getInventory().getItemInMainHand();
 			
 			fArmorStand packet = null;

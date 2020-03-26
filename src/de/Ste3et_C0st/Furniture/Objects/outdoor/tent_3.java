@@ -34,7 +34,7 @@ public class tent_3 extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		if(canBuild(player)) {
+		if(canBuild(player, false)) {
 			if(FurnitureHook.isNewVersion()) {
 				if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
 					getLib().getColorManager().color(player, true, "BANNER", getObjID(), ColorType.BANNER, 1);
@@ -48,11 +48,12 @@ public class tent_3 extends Furniture{
 			}
 		}
 		
-		if(canInteract(player)) {
+		if(canInteract(player, false)) {
 			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().equalsIgnoreCase("#SITZ#")){
 					packet.setPassenger(player);
 					packet.update();
+					return;
 				}
 			}
 		}

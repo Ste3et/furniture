@@ -21,7 +21,7 @@ public class tent_1 extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		if(canBuild(player)) {
+		if(canBuild(player, false)) {
 			if(FurnitureHook.isNewVersion()) {
 				if(DyeColor.getDyeColor(player.getInventory().getItemInMainHand().getType()) != null){
 					getLib().getColorManager().color(player, true, "_CARPET", getObjID(), ColorType.BLOCK, 1);
