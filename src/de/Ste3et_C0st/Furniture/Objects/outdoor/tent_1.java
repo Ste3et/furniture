@@ -33,9 +33,8 @@ public class tent_1 extends Furniture{
 					return;
 				}
 			}
-			
-			player.openWorkbench(null, true);
 		}
+		player.openWorkbench(null, true);
 	}
 	
 	@Override

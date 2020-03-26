@@ -46,7 +46,9 @@ public class tent_3 extends Furniture{
 					return;
 				}
 			}
-			
+		}
+		
+		if(canInteract(player)) {
 			for(fEntity packet : getManager().getfArmorStandByObjectID(getObjID())){
 				if(packet.getName().equalsIgnoreCase("#SITZ#")){
 					packet.setPassenger(player);

@@ -88,7 +88,27 @@ public class campfire_2 extends Furniture {
 				setfire(false);
 			} else if (itemStack.getType().equals(Material.FLINT_AND_STEEL) && !packet.isFire()) {
 				setfire(true);
-			} else if (items.contains(itemStack.getType()) && packet.isFire() && armorS == null) {
+			}
+		}
+		
+		if(canInteract(player)) {
+			final ItemStack itemStack = player.getInventory().getItemInMainHand();
+			
+			fArmorStand packet = null;
+			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			for (fEntity pack : aspList) {
+				if (pack instanceof fArmorStand) {
+					fArmorStand stand = (fArmorStand) pack;
+					if (stand.isSmall() && pack.isInvisible()) {
+						packet = stand;
+						if (packet.isFire()) {
+							break;
+						}
+					}
+				}
+			}
+			if(Objects.isNull(packet)) return;
+			if (items.contains(itemStack.getType()) && packet.isFire() && armorS == null) {
 				is = itemStack.clone();
 				is.setAmount(1);
 
