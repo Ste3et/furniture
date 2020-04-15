@@ -2,6 +2,7 @@ package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +71,7 @@ public class campfire_2 extends Furniture {
 		if (player == null)
 			return;
 		if (canBuild(player, false)) {
-			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			HashSet<fEntity> aspList = getObjID().getPacketList();
 			final ItemStack itemStack = player.getInventory().getItemInMainHand();
 			fArmorStand packet = null;
 			for (fEntity pack : aspList) {
@@ -95,7 +96,7 @@ public class campfire_2 extends Furniture {
 			final ItemStack itemStack = player.getInventory().getItemInMainHand();
 			
 			fArmorStand packet = null;
-			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			HashSet<fEntity> aspList = getObjID().getPacketList();
 			for (fEntity pack : aspList) {
 				if (pack instanceof fArmorStand) {
 					fArmorStand stand = (fArmorStand) pack;

@@ -1,5 +1,7 @@
 package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
+import java.util.Objects;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,13 +28,15 @@ public class barrels extends Furniture{
 		if(player == null) return;
 		if(canBuild(player)) {
 			if(!player.getInventory().getItemInMainHand().getType().isBlock()&&!player.getInventory().getItemInMainHand().getType().equals(Material.AIR)){return;}
-			fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
-			if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
-				ItemStack is = packet.getInventory().getHelmet();
-				is.setAmount(1);
-				getWorld().dropItem(getLocation(), is);
+			fEntity packet = getObjID().getPacketList().stream().findFirst().orElse(null);
+			if(Objects.nonNull(packet)) {
+				if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getHelmet();
+					is.setAmount(1);
+					getWorld().dropItem(getLocation(), is);
+				}
+				packet.getInventory().setHelmet(player.getInventory().getItemInMainHand());
 			}
-			packet.getInventory().setHelmet(player.getInventory().getItemInMainHand());
 			update();
 			consumeItem(player);
 		}
@@ -44,11 +48,13 @@ public class barrels extends Furniture{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
-			fEntity packet = getManager().getfArmorStandByObjectID(getObjID()).get(0);
-			if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
-				ItemStack is = packet.getInventory().getHelmet();
-				is.setAmount(1);
-				getWorld().dropItem(getLocation(), is);
+			fEntity packet = getObjID().getPacketList().stream().findFirst().orElse(null);
+			if(Objects.nonNull(packet)) {
+				if(packet.getInventory().getHelmet()!=null&&!packet.getInventory().getHelmet().getType().equals(Material.AIR)){
+					ItemStack is = packet.getInventory().getHelmet();
+					is.setAmount(1);
+					getWorld().dropItem(getLocation(), is);
+				}
 			}
 			this.destroy(player);
 		}

@@ -5,6 +5,7 @@
 # ------------------------------------  #
 
 Billboard:
+  enabled: false
   system-ID: Billboard
   displayName: '&cBillboard'
   itemGlowEffect: false

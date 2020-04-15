@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.Ste3et_C0st.furniture</groupId>
   <artifactId>DiceFurniture</artifactId>
-  <version>3.4.2</version>
+  <version>3.4.3</version>
   <build>
 	<defaultGoal>clean package install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
@@ -100,7 +100,7 @@
 		<dependency>
 		    <groupId>com.github.Ste3et</groupId>
 		    <artifactId>FurnitureLib</artifactId>
-		    <version>0bfb20fa81</version>
+		    <version>427b17286b</version>
 		</dependency>
 	 </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package de.Ste3et_C0st.Furniture.Objects.outdoor;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -43,7 +44,7 @@ public class campfire_1 extends Furniture{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
-			List<fEntity> aspList = getManager().getfArmorStandByObjectID(getObjID());
+			HashSet<fEntity> aspList = getObjID().getPacketList();
 			ItemStack is = player.getInventory().getItemInMainHand();
 			if(is.getType().equals(Material.WATER_BUCKET)){
 				for(fEntity packet : aspList){

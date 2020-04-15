@@ -1,6 +1,7 @@
 package de.Ste3et_C0st.Furniture.Objects.RPG;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -55,7 +56,7 @@ public class weaponStand extends Furniture implements Listener{
 				p.closeInventory();
 				inv = null;
 			}
-			List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+			HashSet<fEntity> asList = getObjID().getPacketList();
 			for(fEntity packet : asList){
 				if(packet.getName()!=null&&!packet.getName().equalsIgnoreCase("")){
 					if(packet.getInventory().getItemInMainHand()!=null){
@@ -104,7 +105,7 @@ public class weaponStand extends Furniture implements Listener{
 			
 			inv = Bukkit.createInventory(null, 45, "§cWeaponBox");
 
-			List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+			HashSet<fEntity> asList = getObjID().getPacketList();
 			
 			int j = 1;
 			for(int i = 0; i<inv.getSize();i++){
@@ -164,7 +165,7 @@ public class weaponStand extends Furniture implements Listener{
 		if(inv==null){return;}
 		if(!e.getView().getTopInventory().equals(this.inv)){return;}
 		
-		List<fEntity> asList = getManager().getfArmorStandByObjectID(getObjID());
+		HashSet<fEntity> asList = getObjID().getPacketList();
 		int j = 1;
 		for(int i = 0; i<inv.getSize();i++){
 			if(slotList2.contains(i)){
