@@ -3,6 +3,7 @@ package de.Ste3et_C0st.Furniture.Objects.RPG;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -86,6 +88,12 @@ public class Guillotine extends Furniture implements Listener{
 		invI = Bukkit.createInventory(null, 9, s + "I");
 		invII = Bukkit.createInventory(null, 54, s + "II");
 		invIII = Bukkit.createInventory(null, 54, s + "III");
+	}
+	
+	public void forceCloseInventory() {
+		if(Objects.nonNull(this.invI)) this.invI.getViewers().forEach(HumanEntity::closeInventory);
+		if(Objects.nonNull(this.invII)) this.invI.getViewers().forEach(HumanEntity::closeInventory);
+		if(Objects.nonNull(this.invIII)) this.invI.getViewers().forEach(HumanEntity::closeInventory);
 	}
 	
 	private void setDefault(){
@@ -184,6 +192,7 @@ public class Guillotine extends Furniture implements Listener{
 				im.setDisplayName(packet1.getName());
 				getWorld().dropItem(getLocation(), is);
 			}
+			forceCloseInventory();
 			this.destroy(player);
 		}
 	}

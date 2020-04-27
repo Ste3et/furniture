@@ -3,10 +3,12 @@ package de.Ste3et_C0st.Furniture.Objects.RPG;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,6 +68,7 @@ public class weaponStand extends Furniture implements Listener{
 					}
 				}
 			}
+			forceCloseInventory();
 			this.destroy(player);
 		}
 	}
@@ -129,6 +132,10 @@ public class weaponStand extends Furniture implements Listener{
 			this.p.openInventory(inv);
 			this.p.updateInventory();
 		}
+	}
+	
+	public void forceCloseInventory() {
+		if(Objects.nonNull(this.inv)) this.inv.getViewers().forEach(HumanEntity::closeInventory);
 	}
 	
 	@EventHandler
