@@ -16,11 +16,11 @@ public class redstoneEvent implements Listener {
 
 	@EventHandler
 	private void onBlockPowered(BlockRedstoneEvent e){
-		World w = e.getBlock().getWorld();
+		World world = e.getBlock().getWorld();
 		Block block = e.getBlock();
 		Location location = block.getLocation();
 		Entry<Location, streetlamp> object = streetlamp.locationSet.entrySet().stream()
-				.filter(entry -> entry.getValue().getObjID().getWorldName().equalsIgnoreCase(w.getName()))
+				.filter(entry -> entry.getValue().getObjID().getWorld().equals(world))
 				.filter(entry -> entry.getKey().distance(location) <= 1).findFirst().orElse(null);
 		if(Objects.nonNull(object)) {
 			if(e.getNewCurrent()==0){
