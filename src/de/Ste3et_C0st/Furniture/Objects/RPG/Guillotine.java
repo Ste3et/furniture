@@ -441,6 +441,8 @@ public class Guillotine extends Furniture implements Listener{
 				
 				if(invII.getItem(16)!=null){
 					packet1.getInventory().setItemInMainHand(invII.getItem(16));
+				}else {
+					packet1.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 				}
 			}else{
 				if(invII.getItem(43)!=null&&!invII.getItem(43).getType().equals(Material.AIR)){getWorld().dropItem(getLocation().clone().add(0, 1, 0), invII.getItem(43));}
