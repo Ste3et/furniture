@@ -41,26 +41,25 @@ public class sunshade extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		if(canBuild(player)) {
-			ItemStack is = player.getInventory().getItemInMainHand();
-			if(is.getType().name().contains("BANNER")){
-				for(fEntity packet : getfAsList()){
-					if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
-						packet.getInventory().setHelmet(is.clone());
-					}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
-						ItemStack item = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "WHITE_CARPET" : "CARPET"));
-						packet.getInventory().setHelmet(item);
-					}
-				}
-				update();
-				consumeItem(player);
-			}else{
-				if(!isOpen()){
-					open();
-				}else{
-					close();
+		ItemStack is = player.getInventory().getItemInMainHand();
+		if(is.getType().name().contains("BANNER")){
+			if(canBuild(player, false)) {
+			for(fEntity packet : getfAsList()){
+				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
+					packet.getInventory().setHelmet(is.clone());
+				}else if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("CARPET")){
+					ItemStack item = new ItemStack(Material.valueOf(FurnitureHook.isNewVersion() ? "WHITE_CARPET" : "CARPET"));
+					packet.getInventory().setHelmet(item);
 				}
 			}
+			update();
+			consumeItem(player);
+			return;
+			}
+		}else if(!isOpen()){
+			open();
+		}else{
+			close();
 		}
 	}
 
