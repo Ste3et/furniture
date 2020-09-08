@@ -43,7 +43,7 @@ public class sunshade extends Furniture{
 		if(player == null) return;
 		ItemStack is = player.getInventory().getItemInMainHand();
 		if(is.getType().name().contains("BANNER")){
-			if(canBuild(player, false)) {
+			if(canBuild(player)) {
 			for(fEntity packet : getfAsList()){
 				if(packet.getInventory().getHelmet()!=null&&packet.getInventory().getHelmet().getType().name().contains("BANNER")){
 					packet.getInventory().setHelmet(is.clone());
@@ -54,12 +54,16 @@ public class sunshade extends Furniture{
 			}
 			update();
 			consumeItem(player);
-			return;
 			}
-		}else if(!isOpen()){
-			open();
-		}else{
-			close();
+			return;
+		}else {
+			if(canInteract(player)){
+				if(!isOpen()){
+					open();
+				}else{
+					close();
+				}
+			}
 		}
 	}
 
