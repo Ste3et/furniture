@@ -1,6 +1,6 @@
 Billboard:
   enabled: false
-  system-ID: 'Billboard'
+  system-ID: Billboard
   name: '&cBillboard'
   material: 383
   glow: false

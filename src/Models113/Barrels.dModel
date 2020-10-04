@@ -1,9 +1,3 @@
-# ------------------------------------  #
-#                                       #
-#       never touch the system-ID !     #
-#                                       #
-# ------------------------------------  #
-
 Barrels:
   system-ID: Barrels
   displayName: '&cBarrels'
@@ -22,7 +16,7 @@ Barrels:
       X: STICK
   projectData:
     entities:
-      '0': H4sIAAAAAAAAAI2Ru07DMBSGT5VL3fACzOw8Q0moc5Gai5oKmi6VQW4V4SRSElrxCIxMPE7FUjEysPMALDwCTuMkhQoJT+f/ff7P9rEGIMGJRxJ6FRfxDaMAlTMwSEEDRspK9yRQwoQwVu/JZpyLNlnPk0IknHTdEnhCdUl+R/Na9C2WbeJ0VbVqoOF7RnM9XTGqARpjc7oYY0uF3mz79GGdvV8seB2BWLyeNz4PyzbWR1Xvwf6P3qaGhq1P3D17d336+Risj9jCr9iGP4r+yR5MHMvu4G8vwfMrMn4Hhh1cBMRLh3+8tPH3R/CR0rTM8gcEyqWNwynInu9hVA+hEX3fNG3dazVydcc7NGR+ZtgKE2PBAa6qn69Hld2SMs5SFdDs3F8uC1p290LzYysS1varthSQIrKp629xXMrVVgIAAA==
+      '0': H4sIAAAAAAAAAONiYOBg4HLNK8ksqQypLEhl4HYM8vUPig8OcfRzYWbg9MwryyzOTMpJZWBgYGRmYPNNLMpOLQJxuBg4fPKTE0sy8/PYGDgidP3T0opTSxigACgUhSbEysAakFmSnAGVjoRK7/8Ak2aOTCyHsAETTrmtlgAAAA==
     blockList:
       '0':
         xOffset: 0.0
