@@ -2,7 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.Ste3et_C0st.furniture</groupId>
   <artifactId>DiceFurniture</artifactId>
-  <version>3.4.6</version>
+  
+  <properties>
+		<furniture.tag></furniture.tag>
+  </properties>
+  
+  <version>3.4.6${furniture.tag}</version>
   <build>
 	<defaultGoal>clean package install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
