@@ -36,22 +36,27 @@ public class streetlamp extends Furniture{
 	public void spawn(Location location){}
 	
 	private void setBlock(){
-		List<Block> blockLocation = new ArrayList<Block>();
-		Location location = getLocation().getBlock().getLocation();
+		List<Location> blockLocation = new ArrayList<Location>();
+		Location location = getLocation();
 		location.setY(location.getY()-1);
 		for(int i = 0; i<=3;i++){
 			location.setY(location.getY()+1);
-			Block block = location.getBlock();
-			block.setType(Material.BARRIER);
-			blockLocation.add(block);
+			blockLocation.add(location);
+			if(!this.getObjID().isFinish()) {
+				Block block = location.getBlock();
+				block.setType(Material.BARRIER);
+			}
+			
 			if(i==3){
 				Location loc =getLutil().getRelative(location, getBlockFace(), -1D, 0D);
-				Block blocks = loc.getBlock();
-				blocks.setType(Material.BARRIER);
-				blockLocation.add(blocks);
+				if(!this.getObjID().isFinish()) {
+					Block blocks = loc.getBlock();
+					blocks.setType(Material.BARRIER);
+				}
+				blockLocation.add(loc);
 			}
 		}
-		getObjID().addBlock(blockLocation);
+		getObjID().addBlockLocations(blockLocation);
 	}
 	
 	@Override

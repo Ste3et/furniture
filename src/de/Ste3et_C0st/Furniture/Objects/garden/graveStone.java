@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +16,6 @@ import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 public class graveStone extends Furniture{
 
 	private Location signLoc;
-	private Block sign;
 	private String[] lines = new String[4];
 	
 	public graveStone(ObjectID id) {
@@ -27,7 +25,7 @@ public class graveStone extends Furniture{
 	
 	private void setBlock(){
 		this.signLoc = getObjID().getBlockList().stream().filter(b -> b.getBlock().getType().name().contains("SIGN")).findFirst().orElse(null);
-		if(this.signLoc != null) this.sign = this.signLoc.getBlock();
+		//if(this.signLoc != null) this.sign = this.signLoc.getBlock();
 		this.lines = getText();
 	}
 	
@@ -38,8 +36,8 @@ public class graveStone extends Furniture{
 		if(player == null) return;
 		if(canBuild(player)) {
 			this.destroy(player);
-			if(sign!=null){
-				sign.setType(Material.AIR);
+			if(getSignLocation()!=null){
+				getSignLocation().getBlock().setType(Material.AIR);
 			}
 		}
 	}
@@ -61,7 +59,6 @@ public class graveStone extends Furniture{
 		Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				sign = getLutil().setSign(getBlockFace(), signLoc);
 				placetext();
 			}
 		});
@@ -70,9 +67,8 @@ public class graveStone extends Furniture{
 	public Location getSignLocation(){return this.signLoc;}
 	
 	public void removeSign(){
-		if(sign!=null){
-			sign.setType(Material.AIR);
-			sign = null;
+		if(signLoc!=null){
+			signLoc.getBlock().setType(Material.AIR);
 			getManager().remove(getObjID());
 			delete();
 		}
@@ -108,8 +104,8 @@ public class graveStone extends Furniture{
 	}
 	
 	public void placetext(){
-		if ((this.sign.getState() instanceof Sign) && lines != null){
-			Sign sign = (Sign) this.sign.getState();
+		if ((this.getSignLocation().getBlock().getState() instanceof Sign) && lines != null){
+			Sign sign = (Sign) this.getSignLocation().getBlock().getState();
 			Integer i = 0;
 			for(String s : lines){
 				if(i>3){break;}
@@ -121,15 +117,15 @@ public class graveStone extends Furniture{
 	}
 	
 	public String[] getText(){
-		if(sign==null || !sign.getType().name().contains("SIGN")){return null;}
-		Sign sign = (Sign) this.sign.getState();
+		if(signLoc==null || !getSignLocation().getBlock().getType().name().contains("SIGN")){return null;}
+		Sign sign = (Sign) this.getSignLocation().getBlock().getState();
 		return sign.getLines();
 	}
 	
 	public void setText(Integer line, String text){
 		if(line==null || text == null){return;}
-		if(sign==null || !sign.getType().name().contains("SIGN")){return;}
-		Sign sign = (Sign) this.sign.getState();
+		if(getSignLocation()==null || !getSignLocation().getBlock().getType().name().contains("SIGN")){return;}
+		Sign sign = (Sign) this.getSignLocation().getBlock().getState();
 		sign.setLine(line, text);
 		sign.update(true, false);
 		lines[line] = text;
