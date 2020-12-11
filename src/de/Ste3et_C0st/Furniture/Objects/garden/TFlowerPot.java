@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -48,7 +49,7 @@ public class TFlowerPot extends Furniture{
 		List<fArmorStand> packetList = new ArrayList<fArmorStand>();
 		float yaw = 90;
 		for(int i = 0; i<=3;i++){
-			Location location = getLutil().getRelative(getCenter(), getLutil().yawToFace(yaw), .53, .08);
+			Location location = getLutil().getRelative(getCenter(), LocationUtil.yawToFace(yaw), .53, .08);
 			location.add(0,-1.7,0);
 			location.setYaw(90+yaw);
 			

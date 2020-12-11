@@ -10,6 +10,7 @@ import org.bukkit.map.MapView;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass;
 import de.Ste3et_C0st.Furniture.Camera.Utils.RenderClass.ScaleMode;
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
+import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.Relative;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
@@ -80,7 +81,7 @@ public class camera extends Furniture{
 		Location locCopy = getLocation().getBlock().getLocation().clone();
 		pLocation.setYaw(locCopy.getYaw());
 		if(pLocation.equals(locCopy)){
-			if(getLutil().yawToFace(player.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
+			if(LocationUtil.yawToFace(player.getLocation().getYaw()).getOppositeFace().equals(getBlockFace())){
 				if(canBuild(player)){
 					if(!player.getInventory().getItemInMainHand().getType().equals(Material.valueOf(FurnitureHook.isNewVersion() ? "FILLED_MAP" : "MAP"))){
 						if(entity  == null || entity2 == null)return;

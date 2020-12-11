@@ -36,7 +36,7 @@ public class largeTable extends Furniture{
 	public void setTeller(HashMap<Integer, ItemStack> itemList){
 		int i = 0;
 		for(Integer id : tellerIDs){
-			fEntity as = getManager().getfArmorStandByID(id);
+			fEntity as = getManager().getByArmorStandID(getWorld(), id);
 			as.getInventory().setItemInMainHand(itemList.get(i));
 			i++;
 		}
@@ -49,7 +49,7 @@ public class largeTable extends Furniture{
 		if(player == null) return;
 		if(canBuild(player)) {
 			for(Integer id : tellerIDs){
-				fEntity asp = getManager().getfArmorStandByID(id);
+				fEntity asp = getManager().getByArmorStandID(getWorld(), id);
 				if(asp!=null&&asp.getInventory().getItemInMainHand()!=null){
 					if(asp.getName().startsWith("#TELLER")){
 						fEntity packet = asp;
@@ -118,7 +118,7 @@ public class largeTable extends Furniture{
 		HashMap<Integer, ItemStack> teller = new HashMap<Integer, ItemStack>();
 		for(Integer id : tellerIDs){
 			try{
-				fEntity as = getManager().getfArmorStandByID(id);
+				fEntity as = getManager().getByArmorStandID(getWorld(), id);
 				teller.put(teller.size(), as.getInventory().getItemInMainHand());
 			}catch(Exception e){
 				teller.put(teller.size(), new ItemStack(Material.AIR));

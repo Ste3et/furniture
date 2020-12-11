@@ -105,7 +105,7 @@
 		<dependency>
 		    <groupId>com.github.Ste3et</groupId>
 		    <artifactId>FurnitureLib</artifactId>
-		    <version>9d4941bc50</version>
+		    <version>115d27f400</version>
 		</dependency>
 	 </dependencies>
 </project>
