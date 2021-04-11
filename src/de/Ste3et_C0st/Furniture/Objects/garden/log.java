@@ -55,6 +55,14 @@ public class log extends Furniture implements Listener{
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
 		if(canBuild(player)) {
+			fEntity entity = entityByCustomName(this.mode + "");
+			if(entity != null) {
+				if(entity.getItemInMainHand() != null) {
+					if(entity.getItemInMainHand().getType() != Material.AIR) {
+						player.getWorld().dropItemNaturally(getCenter().add(0, 1, 0), entity.getItemInMainHand());
+					}
+				}
+			}
 			this.destroy(player);
 		}
 	}
