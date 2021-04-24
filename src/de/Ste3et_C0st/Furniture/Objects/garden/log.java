@@ -23,6 +23,7 @@ import de.Ste3et_C0st.FurnitureLib.Crafting.Project;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.HiddenStringUtils;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.ManageInv;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -170,7 +171,7 @@ public class log extends Furniture implements Listener{
 	}
 	
 	public void removeItem(Player p){
-		Boolean useGameMode = FurnitureLib.getInstance().useGamemode();
+		Boolean useGameMode = FurnitureConfig.getFurnitureConfig().useGamemode();
 		if(useGameMode&&p.getGameMode().equals(GameMode.CREATIVE)){return;}
 		Integer slot = p.getInventory().getHeldItemSlot();
 		ItemStack itemStack = p.getInventory().getItemInMainHand().clone();

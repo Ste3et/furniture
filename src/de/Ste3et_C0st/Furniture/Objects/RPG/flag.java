@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fEntity;
@@ -93,7 +94,7 @@ public class flag extends Furniture {
 			if(player.getInventory().getItemInMainHand()!=null&&player.getInventory().getItemInMainHand().getType()!=null){
 				if(player.getInventory().getItemInMainHand().getType().name().contains("BANNER")){
 					getStand().setHelmet(player.getInventory().getItemInMainHand());update();
-					if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+					if(player.getGameMode().equals(GameMode.CREATIVE) && FurnitureConfig.getFurnitureConfig().useGamemode()) return;
 					Integer i = player.getInventory().getHeldItemSlot();
 					ItemStack is = player.getInventory().getItemInMainHand();
 					is.setAmount(is.getAmount()-1);

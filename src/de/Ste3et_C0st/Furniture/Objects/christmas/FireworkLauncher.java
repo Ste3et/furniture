@@ -17,6 +17,7 @@ import org.bukkit.util.EulerAngle;
 
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
 import de.Ste3et_C0st.FurnitureLib.main.entity.fArmorStand;
@@ -79,7 +80,7 @@ public class FireworkLauncher extends Furniture{
 							}
 						}, 5);
 						
-						if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+						if(player.getGameMode().equals(GameMode.CREATIVE) && FurnitureConfig.getFurnitureConfig().useGamemode()) return;
 						Integer i = player.getInventory().getHeldItemSlot();
 						ItemStack is = player.getInventory().getItemInMainHand();
 						is.setAmount(is.getAmount()-1);

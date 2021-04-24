@@ -12,6 +12,7 @@ import org.bukkit.util.Vector;
 
 import de.Ste3et_C0st.Furniture.Objects.garden.config;
 import de.Ste3et_C0st.FurnitureLib.Utilitis.LocationUtil;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.FurnitureLib;
 
 public class main extends JavaPlugin{
@@ -34,7 +35,6 @@ public class main extends JavaPlugin{
 			furniturePlugin.saveRessource("config.yml", "/fence/whiteList.yml");
 			furniturePlugin.saveRessource("damage.yml", "/bearTrap/damage.yml");
 			furniturePlugin.saveRessource("range.yml", "/catapult/range.yml");
-			
 			furniturePlugin.register();
 			setDefaults();
 			setDefaults_2();

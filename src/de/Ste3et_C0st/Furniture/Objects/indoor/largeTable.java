@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.ColorType;
 import de.Ste3et_C0st.FurnitureLib.main.Type.DyeColor;
@@ -105,7 +106,7 @@ public class largeTable extends Furniture{
 			
 			update();
 			
-			if(player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode()) return;
+			if(player.getGameMode().equals(GameMode.CREATIVE) && FurnitureConfig.getFurnitureConfig().useGamemode()) return;
 			Integer i = player.getInventory().getHeldItemSlot();
 			ItemStack itemstack = is.clone();
 			itemstack.setAmount(itemstack.getAmount()-1);

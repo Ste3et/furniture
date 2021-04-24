@@ -21,6 +21,7 @@ import org.bukkit.util.Vector;
 import de.Ste3et_C0st.Furniture.Main.FurnitureHook;
 import de.Ste3et_C0st.Furniture.Main.main;
 import de.Ste3et_C0st.FurnitureLib.main.Furniture;
+import de.Ste3et_C0st.FurnitureLib.main.FurnitureConfig;
 import de.Ste3et_C0st.FurnitureLib.main.ObjectID;
 import de.Ste3et_C0st.FurnitureLib.main.Type.BodyPart;
 import de.Ste3et_C0st.FurnitureLib.main.Type.SQLAction;
@@ -115,7 +116,7 @@ public class campfire_2 extends Furniture {
 
 				setGrill();
 
-				if (player.getGameMode().equals(GameMode.CREATIVE) && getLib().useGamemode())
+				if (player.getGameMode().equals(GameMode.CREATIVE) && FurnitureConfig.getFurnitureConfig().useGamemode())
 					return;
 				Integer i = player.getInventory().getHeldItemSlot();
 				ItemStack item = player.getInventory().getItemInMainHand();
