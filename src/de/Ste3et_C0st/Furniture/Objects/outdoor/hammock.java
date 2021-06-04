@@ -21,11 +21,12 @@ public class hammock extends Furniture{
 		if(getObjID() == null) return;
 		if(getObjID().getSQLAction().equals(SQLAction.REMOVE)) return;
 		if(player == null) return;
-		if(canBuild(player)) {
-			ItemStack stack = player.getInventory().getItemInMainHand();
-			if(stack!=null){
-				if(isMaterial(stack.getType())){
-					if(stack.getType().name().contains("BANNER")){
+		ItemStack stack = player.getInventory().getItemInMainHand();
+		
+		if(stack!=null){
+			if(isMaterial(stack.getType())){
+				if(stack.getType().name().contains("BANNER")){
+					if(canBuild(player)) {
 						for(fEntity entity : getfAsList()){
 							if(entity.getHelmet()!=null){
 								if(entity.getHelmet().getType().name().contains("BANNER")){
@@ -35,7 +36,10 @@ public class hammock extends Furniture{
 						}
 						consumeItem(player);
 						update();
-					}else{
+						return;
+					}
+				}else{
+					if(canBuild(player)) {
 						for(fEntity entity : getfAsList()){
 							if(entity.getHelmet()!=null){
 								if(entity.getHelmet().getType().toString().toLowerCase().endsWith("log")){
@@ -45,17 +49,18 @@ public class hammock extends Furniture{
 						}
 						consumeItem(player);
 						update();
-					}
-				}else {
-					for(fEntity entity : getfAsList()){
-						if(entity.getName().startsWith("#SITZ#")){
-							if(entity.getPassenger()==null||entity.getPassenger().isEmpty()){
-								entity.setPassenger(player);
-							}
-							return;
-						}
+						return;
 					}
 				}
+			}
+		}
+		
+		for(fEntity entity : getfAsList()){
+			if(entity.getName().startsWith("#SITZ#")){
+				if(entity.getPassenger()==null||entity.getPassenger().isEmpty()){
+					entity.setPassenger(player);
+				}
+				return;
 			}
 		}
 	}
