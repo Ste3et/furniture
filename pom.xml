@@ -73,10 +73,10 @@
   </build>
   
     <repositories>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
+	    <repository>
+	        <id>spigot-repo</id>
+	        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+	    </repository>
 	    
 		<repository>
 		    <id>jitpack.io</id>
@@ -85,19 +85,12 @@
 	</repositories>
 	
 	<dependencies>
-	 	<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.17-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-			
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.17-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
+	    <dependency>
+	           <groupId>org.spigotmc</groupId>
+	           <artifactId>spigot-api</artifactId>
+	           <version>1.17-R0.1-SNAPSHOT</version>
+	           <scope>provided</scope>
+	    </dependency>
 		
 		<dependency>
 		    <groupId>com.github.Ste3et</groupId>
