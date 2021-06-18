@@ -7,7 +7,7 @@
 		<furniture.tag></furniture.tag>
   </properties>
   
-  <version>3.4.8${furniture.tag}</version>
+  <version>3.5${furniture.tag}</version>
   <build>
 	<defaultGoal>clean package install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
@@ -89,23 +89,24 @@
 	</repositories>
 	
 	<dependencies>
-	  	<dependency>
-	  		<groupId>org.spigotmc</groupId>
-	  		<artifactId>spigot-api</artifactId>
-	  		<version>1.13-R0.1-SNAPSHOT</version>
-	  		<scope>provided</scope>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.bukkit</groupId>
-	  		<artifactId>bukkit</artifactId>
-	  		<version>1.13-R0.1-SNAPSHOT</version>
-	  		<scope>provided</scope>
-	  	</dependency>
+	 	<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.17-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+			
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.17-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 		    <groupId>com.github.Ste3et</groupId>
 		    <artifactId>FurnitureLib</artifactId>
-		    <version>3c143b81</version>
+		    <version>22fb4086de</version>
 		</dependency>
 	 </dependencies>
 </project>
