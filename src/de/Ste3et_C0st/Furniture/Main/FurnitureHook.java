@@ -1,5 +1,7 @@
 package de.Ste3et_C0st.Furniture.Main;
 
+import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import de.Ste3et_C0st.Furniture.Main.Event.redstoneEvent;
@@ -96,7 +98,9 @@ public class FurnitureHook extends FurniturePlugin{
 			new Project("AdventCalender", getPlugin(), getResource(modelFolder + "AdventCalender" + ending), PlaceableSide.TOP, AdventCalender::new).setSize(1, 1, 1, CenterType.RIGHT);
 			new Project("FireworkLauncher", getPlugin(), getResource(modelFolder + "FireworkLauncher" + ending), PlaceableSide.TOP, FireworkLauncher::new).setSize(1, 1, 1, CenterType.CENTER);
 			
-			FurnitureLib.getInstance().getFurnitureManager().getProjects().stream().filter(pro -> pro.getPlugin().equals(getPlugin())).forEach(pro -> pro.setEditorProject(editModels));
+			FurnitureLib.getInstance().getFurnitureManager().getProjects().stream().filter(pro -> pro.getPlugin().equals(getPlugin())).forEach(pro -> {
+				if(Objects.nonNull(pro)) pro.setEditorProject(editModels);
+			});
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

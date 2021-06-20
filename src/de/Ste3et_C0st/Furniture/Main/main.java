@@ -27,8 +27,19 @@ public class main extends JavaPlugin{
 	public static HashMap<String, Vector> catapultRange = new HashMap<String, Vector>();
 	
 	public void onEnable(){
-		if(!Bukkit.getPluginManager().isPluginEnabled("FurnitureLib")){Bukkit.getPluginManager().disablePlugin(this);}
+		if(getServer().getPluginManager().isPluginEnabled("FurnitureLib") == false){
+			this.disablePlugin("[DiceFurniture] FurnitureLib is missing please install it!");
+			System.out.println("You can find the download here: https://www.spigotmc.org/resources/furniturelibary-protectionlib.9368/");
+			return;
+		}
+		
 		instance = this;
+		
+		if(FurnitureLib.getInstance().isEnabledPlugin() == false) {
+			this.disablePlugin("[DiceFurniture] Plugin disabled because FurnitureLib is incorectly installed!");
+			return;
+		}
+		
 		util = FurnitureLib.getInstance().getLocationUtil();
 		if(FurnitureLib.getInstance().getDescription().getVersion().startsWith("2.")){
 			FurnitureHook furniturePlugin = new FurnitureHook(getInstance());
@@ -41,8 +52,15 @@ public class main extends JavaPlugin{
 		}else{
 			FurnitureLib.getInstance().send("FurnitureLib Version > 2.x not found");
 			FurnitureLib.getInstance().send("DiceFurniture deos not load");
+			this.disablePlugin("");
+			return;
 		}
 		
+	}
+	
+	private void disablePlugin(String string) {
+		if(string.isEmpty() == false) System.out.println(string);
+		Bukkit.getPluginManager().disablePlugin(this);
 	}
 
 	private void setDefaults_2(){
