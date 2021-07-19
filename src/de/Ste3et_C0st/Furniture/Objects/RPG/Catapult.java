@@ -46,10 +46,10 @@ public class Catapult extends Furniture implements Listener{
 		for(fEntity stand : id.getPacketList()){
 			if(stand.getCustomName().toLowerCase().startsWith("#range")){
 				stand1 = (fArmorStand) stand;
-				stand1.setNameVasibility(false);
 				if(stand1.getCustomName().equalsIgnoreCase("#range")){
 					stand1.setName("#range:1");
 				}
+				stand1.setNameVasibility(false);
 			}
 		}
 	}
